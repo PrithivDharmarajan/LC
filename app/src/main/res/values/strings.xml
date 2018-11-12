@@ -1,0 +1,15 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">Lipcap</string>
+
+    <!--General-->
+    <string name="go_settings_per">You have denied the app permissions. Go to Settings and Enable the Permissions.</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="no_internet"> Please Verify Your Internet Connection.</string>
+    <string name="connect_time_out">Could not connect to LipCap App Server. Please try again.</string>
+    <string name="retry">Retry</string>
+    <string name="ok" tools:ignore="ButtonCase,Typos">Ok</string>
+    <string name="logged_in_success">Logged In Successfully</string>
+    <string name="logout_msg">Are you sure you want to Logout?</string>
+    <string name="exit_msg">Press again to exit</string>
+</resources>

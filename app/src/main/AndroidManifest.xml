@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.lipcap">
+
+    <!-- permissions -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:name=".main.LipCapApplication"
+        android:allowBackup="false"
+        android:fullBackupContent="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
+
+        <!-- First launch screen -->
+        <activity
+            android:name=".ui.Splash"
+            android:theme="@style/AppSplashTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Fabric plugin -->
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="3d9401c1c67a72ae6b1a323c0ac9c7f0ff3addf5" />
+
+
+    </application>
+
+</manifest>

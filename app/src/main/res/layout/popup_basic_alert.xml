@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/LayoutWidMatch_HeiWrap"
+    android:layout_margin="@dimen/size15">
+
+    <LinearLayout
+        style="@style/LayoutWidMatch_HeiWrap"
+        android:layout_margin="@dimen/size1"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/TextOpenSansSemiBold"
+            android:paddingBottom="@dimen/size10"
+            android:paddingTop="@dimen/size10"
+            android:text="@string/app_name"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text15" />
+        <View
+            style="@style/LayoutWidMatch_HeiWrap"
+            android:layout_height="@dimen/size1"
+            android:background="@color/white"/>
+
+        <TextView
+            android:id="@+id/alert_msg_txt"
+            style="@style/TextOpenSansSemiBold"
+            android:padding="@dimen/size25"
+            android:textSize="@dimen/text12" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size37"
+            android:layout_marginBottom="@dimen/size15"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingEnd="@dimen/size25"
+            android:paddingStart="@dimen/size25"
+            android:weightSum="2">
+
+            <Button
+                android:id="@+id/alert_negative_btn"
+                style="@style/ButtonOpenSansSemiBold"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/size10"
+                android:layout_weight="1"
+                android:textAllCaps="false"
+                android:textSize="@dimen/text13"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/alert_positive_btn"
+                style="@style/ButtonOpenSansSemiBold"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/size10"
+                android:layout_weight="1"
+                android:textAllCaps="false"
+                android:textSize="@dimen/text13" />
+
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>
+
+

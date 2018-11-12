@@ -1,0 +1,64 @@
+
+buildscript {
+    repositories {
+        google()
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+
+}
+apply plugin: 'com.android.application'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+
+apply plugin: 'io.fabric'
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "com.lipcap"
+        minSdkVersion 19
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+
+    /*Material design plugin*/
+    implementation 'com.android.support:design:28.0.0'
+
+    /*ButterKnife for variable initialization. Please refer - http://jakewharton.github.io/butterknife/*/
+    implementation 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+
+    /*calligraphy for apply font style. please refer - https://futurestud.io/tutorials/custom-fonts-on-android-library-recommendations*/
+    implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
+
+    /*Fabric for crashlytics tracker */
+    implementation('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
+        transitive = true
+    }
+
+    /*Retrofit for API call*/
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+}

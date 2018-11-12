@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/login_parent_lay"
+    style="@style/LayoutMatch"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:id="@+id/header_left_img_lay"
+        android:layout_width="@dimen/size45"
+        android:layout_height="@dimen/size45"
+        android:background="?android:attr/selectableItemBackground" >
+
+        <ImageView
+            android:layout_width="@dimen/size20"
+            android:layout_height="@dimen/size20"
+            android:layout_centerInParent="true"
+            android:adjustViewBounds="true"
+            android:clickable="false"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/back_icon" />
+    </RelativeLayout>
+
+    <ScrollView style="@style/LayoutMatch"
+        android:layout_above="@+id/bottom_lay"
+        android:layout_below="@+id/header_left_img_lay">
+
+        <LinearLayout
+            style="@style/LayoutWidMatch_HeiWrap"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
+
+
+        </LinearLayout>
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/bottom_lay"
+        android:layout_height="@dimen/size110"
+        android:layout_alignParentBottom="true"
+        android:background="@color/brown"
+        style="@style/LayoutWidMatch_HeiWrap">
+
+        <TextView
+            style="@style/TextOpenSansRegular"
+            android:layout_marginBottom="@dimen/size30"
+            android:layout_alignParentBottom="true"/>
+
+
+    </RelativeLayout>
+
+</RelativeLayout>
