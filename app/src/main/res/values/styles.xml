@@ -80,9 +80,11 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/size37</item>
         <item name="android:paddingStart">@dimen/size15</item>
+        <item name="android:paddingEnd">@dimen/size15</item>
         <item name="android:textColor">@color/black</item>
+        <item name="android:gravity">center</item>
         <item name="android:background">@drawable/edt_bg</item>
-        <item name="android:textColorHint">@color/gray</item>
+        <item name="android:textColorHint">@color/brown</item>
         <item name="android:importantForAutofill" tools:targetApi="o">noExcludeDescendants</item>
         <item name="colorAccent">@color/black</item>
         <item name="android:textSize">@dimen/text12</item>
@@ -96,7 +98,7 @@
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">@dimen/text13</item>
         <item name="android:gravity">center</item>
-        <!--<item name="android:background">@drawable/white_btn</item>-->
+        <item name="android:background">@drawable/green_btn</item>
         <item name="android:textAllCaps">false</item>
         <item name="fontPath">fonts/OpenSans-Semi-Bold.otf</item>
     </style>

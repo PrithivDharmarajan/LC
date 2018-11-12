@@ -29,6 +29,18 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".ui.Login"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+
+        <activity
+            android:name=".ui.SelectUserType"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+
+        <activity
+            android:name=".ui.CustomerRegistration"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+
         <!-- Fabric plugin -->
         <meta-data
             android:name="io.fabric.ApiKey"

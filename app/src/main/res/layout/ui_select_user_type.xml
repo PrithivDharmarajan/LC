@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/login_parent_lay"
+    android:id="@+id/select_user_parent_lay"
     style="@style/LayoutMatch"
     android:background="@color/white">
 
@@ -44,22 +44,19 @@
                 android:textAllCaps="true"
                 android:textSize="@dimen/text17" />
 
-            <EditText
-                android:id="@+id/phone_num_edt"
-                style="@style/EditTextOpenSansRegular"
-                android:layout_marginTop="@dimen/size35"
-                android:hint="@string/phone_num"
-                android:imeActionId="100"
-                android:imeActionLabel="@string/login"
-                android:imeOptions="actionDone|flagNoExtractUi"
-                android:inputType="phone"
-                android:maxLines="1"
-                tools:ignore="Autofill" />
 
             <Button
-                android:id="@+id/login_btn"
-                android:textColor="@color/black"
-                android:text="@string/login"
+                android:id="@+id/service_provider_btn"
+                android:layout_marginTop="@dimen/size35"
+                android:textColor="@color/white"
+                android:background="@drawable/blue_btn"
+                android:text="@string/service_provider"
+                style="@style/ButtonOpenSansSemiBold"/>
+            <Button
+                android:id="@+id/customer_btn"
+                android:text="@string/customer"
+                android:textColor="@color/white"
+                android:background="@drawable/orange_btn"
                 android:layout_marginTop="@dimen/size20"
                 style="@style/ButtonOpenSansSemiBold"/>
 
@@ -72,17 +69,6 @@
         android:layout_height="@dimen/size110"
         android:layout_alignParentBottom="true"
         android:background="@color/brown"
-        style="@style/LayoutWidMatch_HeiWrap">
-
-        <TextView
-            android:id="@+id/sign_up_txt"
-            style="@style/TextOpenSansRegular"
-            android:padding="@dimen/size5"
-            android:text="@string/dont_have_acc"
-            android:layout_marginBottom="@dimen/size27"
-            android:layout_alignParentBottom="true"/>
-
-
-    </RelativeLayout>
+        style="@style/LayoutWidMatch_HeiWrap"> </RelativeLayout>
 
 </RelativeLayout>

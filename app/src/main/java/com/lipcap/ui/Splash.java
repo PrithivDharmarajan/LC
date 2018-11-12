@@ -53,11 +53,11 @@ public class Splash extends BaseActivity {
             @Override
             public void run() {
                 removeHandler();
-//                Class<?> nextScreenClass = GeneralWelcome.class;
+                Class<?> nextScreenClass = Login.class;
 //                if (PreferenceUtil.getBoolPreferenceValue(Splash.this, AppConstants.LOGIN_STATUS)) {
 //                    nextScreenClass = PreferenceUtil.getBoolPreferenceValue(Splash.this, AppConstants.CURRENT_USER_ADMIN) ? BeltList.class : UserDashboard.class;
 //                }
-//                nextScreen(nextScreenClass);
+                nextScreen(nextScreenClass);
             }
         };
         mHandler = new Handler();

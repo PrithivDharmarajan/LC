@@ -14,6 +14,7 @@
             android:paddingBottom="@dimen/size10"
             android:paddingTop="@dimen/size10"
             android:text="@string/app_name"
+            android:background="@color/brown"
             android:textColor="@color/white"
             android:textSize="@dimen/text15" />
         <View
@@ -24,6 +25,7 @@
         <TextView
             android:id="@+id/alert_msg_txt"
             style="@style/TextOpenSansSemiBold"
+            android:textColor="@color/black"
             android:padding="@dimen/size25"
             android:textSize="@dimen/text12" />
 

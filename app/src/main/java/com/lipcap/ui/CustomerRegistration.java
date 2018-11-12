@@ -19,10 +19,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class Login extends BaseActivity {
+public class CustomerRegistration extends BaseActivity {
 
-    @BindView(R.id.login_parent_lay)
-    ViewGroup mLoginViewGroup;
+    @BindView(R.id.cus_reg_parent_lay)
+    ViewGroup mCusRegViewGroup;
+
+    @BindView(R.id.name_edt)
+    EditText mNameEdt;
 
     @BindView(R.id.phone_num_edt)
     EditText mPhoneNumEdt;
@@ -30,7 +33,7 @@ public class Login extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.ui_login);
+        setContentView(R.layout.ui_cutomer_registration);
         initView();
     }
 
@@ -41,7 +44,7 @@ public class Login extends BaseActivity {
         ButterKnife.bind(this);
 
         /*Keypad to be hidden when a touch made outside the edit text*/
-        setupUI(mLoginViewGroup);
+        setupUI(mCusRegViewGroup);
 
         /*Keypad button action*/
         mPhoneNumEdt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -61,13 +64,13 @@ public class Login extends BaseActivity {
     private void setHeaderAdjustmentView() {
         /*Set header adjustment - status bar we applied transparent color so header tack full view*/
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            mLoginViewGroup.post(new Runnable() {
+            mCusRegViewGroup.post(new Runnable() {
                 @Override
                 public void run() {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            mLoginViewGroup.setPadding(0, getStatusBarHeight( Login.this), 0, 0);
+                            mCusRegViewGroup.setPadding(0, getStatusBarHeight( CustomerRegistration.this), 0, 0);
                         }
                     });
                 }
@@ -83,27 +86,29 @@ public class Login extends BaseActivity {
     }
 
     /*View onClick*/
-    @OnClick({R.id.header_left_img_lay,R.id.login_btn, R.id.sign_up_txt})
+    @OnClick({R.id.header_left_img_lay,R.id.submit_btn})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.header_left_img_lay:
                 onBackPressed();
                 break;
-            case R.id.login_btn:
+            case R.id.submit_btn:
                 validateFields();
                 break;
-            case R.id.sign_up_txt:
-                nextScreen(SelectUserType.class);
-                break;
+
         }
     }
 
     /*validate fields*/
     private void validateFields() {
         hideSoftKeyboard(this);
+        String nameStr = mNameEdt.getText().toString().trim();
         String phoneNumStr = mPhoneNumEdt.getText().toString().trim();
 
-        if (phoneNumStr.isEmpty()) {
+        if (nameStr.isEmpty()) {
+            mNameEdt.requestFocus();
+            DialogManager.getInstance().showAlertPopup(this, getString(R.string.plz_enter_name), this);
+        } else if (phoneNumStr.isEmpty()) {
             mPhoneNumEdt.requestFocus();
             DialogManager.getInstance().showAlertPopup(this, getString(R.string.plz_enter_phone_num), this);
         }  else {
@@ -111,5 +116,9 @@ public class Login extends BaseActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        backScreen();
+    }
 }
 

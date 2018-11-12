@@ -7,4 +7,13 @@
     <color name="green">#6FCE16</color>
     <color name="dark_green">#53CE00</color>
     <color name="brown">#5A4F55</color>
+
+    <color name="blue">#1696CF</color>
+    <color name="dark_blue">#007ECF</color>
+
+    <color name="orange">#EC832C</color>
+    <color name="dark_orange">#EC7000</color>
+
+    <color name="red">#FF0202</color>
+
 </resources>

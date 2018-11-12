@@ -1,5 +1,24 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+
     <string name="app_name">Lipcap</string>
+
+    <!--Login-->
+    <string name="phone_num">Phone Number</string>
+    <string name="login">Login</string>
+    <string name="dont_have_acc">Don\'t have an account? <u>Sign Up</u></string>
+
+    <string name="plz_enter_phone_num">Please Enter Phone Number</string>
+
+    <!--User Selection-->
+    <string name="service_provider">Service Provider</string>
+    <string name="customer">Customer</string>
+
+    <!--Customer Registration -->
+    <string name="you_are_reg_customer"> You are registration as customer</string>
+    <string name="name">Name</string>
+    <string name="submit">Submit</string>
+
+    <string name="plz_enter_name">Please Enter Name</string>
 
     <!--General-->
     <string name="go_settings_per">You have denied the app permissions. Go to Settings and Enable the Permissions.</string>
@@ -12,4 +31,5 @@
     <string name="logged_in_success">Logged In Successfully</string>
     <string name="logout_msg">Are you sure you want to Logout?</string>
     <string name="exit_msg">Press again to exit</string>
+
 </resources>

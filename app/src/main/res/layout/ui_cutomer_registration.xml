@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/login_parent_lay"
+    android:id="@+id/cus_reg_parent_lay"
     style="@style/LayoutMatch"
     android:background="@color/white">
 
@@ -28,6 +28,7 @@
         <LinearLayout
             style="@style/LayoutWidMatch_HeiWrap"
             android:focusable="true"
+            android:layout_gravity="center"
             android:layout_marginStart="@dimen/size25"
             android:layout_marginEnd="@dimen/size25"
             android:focusableInTouchMode="true"
@@ -35,19 +36,26 @@
 
             <TextView
                 style="@style/TextOpenSansRegular"
-                android:text="@string/app_name"
-                android:layout_gravity="center_horizontal"
-                android:layout_width="wrap_content"
-                android:background="@drawable/brown_circle_bg"
-                android:padding="@dimen/size2"
-                android:textColor="@color/white"
-                android:textAllCaps="true"
-                android:textSize="@dimen/text17" />
+                android:padding="@dimen/size5"
+                android:minHeight="@dimen/size37"
+                android:textSize="@dimen/text8"
+                android:textColor="@color/red"
+                android:text="@string/you_are_reg_customer"  />
+
+            <EditText
+                android:id="@+id/name_edt"
+                style="@style/EditTextOpenSansRegular"
+                android:layout_marginTop="@dimen/size20"
+                android:hint="@string/name"
+                android:imeOptions="actionNext|flagNoExtractUi"
+                android:inputType="textPersonName|textCapWords"
+                android:maxLines="1"
+                tools:ignore="Autofill" />
 
             <EditText
                 android:id="@+id/phone_num_edt"
                 style="@style/EditTextOpenSansRegular"
-                android:layout_marginTop="@dimen/size35"
+                android:layout_marginTop="@dimen/size20"
                 android:hint="@string/phone_num"
                 android:imeActionId="100"
                 android:imeActionLabel="@string/login"
@@ -57,12 +65,12 @@
                 tools:ignore="Autofill" />
 
             <Button
-                android:id="@+id/login_btn"
-                android:textColor="@color/black"
-                android:text="@string/login"
+                android:id="@+id/submit_btn"
+                android:textColor="@color/white"
+                android:text="@string/submit"
+                android:background="@drawable/orange_btn"
                 android:layout_marginTop="@dimen/size20"
                 style="@style/ButtonOpenSansSemiBold"/>
-
 
         </LinearLayout>
     </ScrollView>
@@ -74,13 +82,6 @@
         android:background="@color/brown"
         style="@style/LayoutWidMatch_HeiWrap">
 
-        <TextView
-            android:id="@+id/sign_up_txt"
-            style="@style/TextOpenSansRegular"
-            android:padding="@dimen/size5"
-            android:text="@string/dont_have_acc"
-            android:layout_marginBottom="@dimen/size27"
-            android:layout_alignParentBottom="true"/>
 
 
     </RelativeLayout>
