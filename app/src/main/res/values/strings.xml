@@ -13,12 +13,26 @@
     <string name="service_provider">Service Provider</string>
     <string name="customer">Customer</string>
 
+    <!--Provider Registration -->
+    <string name="you_are_reg_provider"> You are registration as service provider</string>
+
     <!--Customer Registration -->
     <string name="you_are_reg_customer"> You are registration as customer</string>
     <string name="name">Name</string>
     <string name="submit">Submit</string>
 
     <string name="plz_enter_name">Please Enter Name</string>
+
+    <!--Customer Home -->
+    <string name="profile">Profile</string>
+    <string name="issue_list">Issue List</string>
+    <string name="notification">Notification</string>
+    <string name="rate_service_provider">Rate the Service Provider</string>
+    <string name="contact">Contact</string>
+    <string name="support">Support</string>
+    <string name="about_the_app">About the app</string>
+    <string name="logout">logout</string>
+
 
     <!--General-->
     <string name="go_settings_per">You have denied the app permissions. Go to Settings and Enable the Permissions.</string>
@@ -31,5 +45,6 @@
     <string name="logged_in_success">Logged In Successfully</string>
     <string name="logout_msg">Are you sure you want to Logout?</string>
     <string name="exit_msg">Press again to exit</string>
+    <string name="err_create_frag">Error in creating fragment</string>
 
 </resources>

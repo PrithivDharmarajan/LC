@@ -172,8 +172,8 @@ public class BaseActivity extends AppCompatActivity implements InterfaceTwoBtnCa
     /*Clear the all background activity*/
     private boolean clearBackGroundScreen(Class<?> clazz) {
         String classStr = clazz.getSimpleName();
-        return classStr.equalsIgnoreCase(AppConstants.GENERAL_WELCOME) ||
-                classStr.equalsIgnoreCase(AppConstants.BELT_LIST);
+        return classStr.equalsIgnoreCase(AppConstants.Login) ||
+                classStr.equalsIgnoreCase(AppConstants.CustomerHome);
 
     }
 

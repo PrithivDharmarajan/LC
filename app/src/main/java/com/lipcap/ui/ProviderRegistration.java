@@ -12,19 +12,20 @@ import android.widget.TextView;
 
 import com.lipcap.R;
 import com.lipcap.main.BaseActivity;
-import com.lipcap.utils.AppConstants;
 import com.lipcap.utils.DialogManager;
-import com.lipcap.utils.PreferenceUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class Login extends BaseActivity {
+public class ProviderRegistration extends BaseActivity {
 
-    @BindView(R.id.login_parent_lay)
-    ViewGroup mLoginViewGroup;
+    @BindView(R.id.prov_reg_parent_lay)
+    ViewGroup mProvRegViewGroup;
+
+    @BindView(R.id.name_edt)
+    EditText mNameEdt;
 
     @BindView(R.id.phone_num_edt)
     EditText mPhoneNumEdt;
@@ -32,7 +33,7 @@ public class Login extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.ui_login);
+        setContentView(R.layout.ui_provider_registration);
         initView();
     }
 
@@ -43,7 +44,7 @@ public class Login extends BaseActivity {
         ButterKnife.bind(this);
 
         /*Keypad to be hidden when a touch made outside the edit text*/
-        setupUI(mLoginViewGroup);
+        setupUI(mProvRegViewGroup);
 
         /*Keypad button action*/
         mPhoneNumEdt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -63,13 +64,13 @@ public class Login extends BaseActivity {
     private void setHeaderAdjustmentView() {
         /*Set header adjustment - status bar we applied transparent color so header tack full view*/
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            mLoginViewGroup.post(new Runnable() {
+            mProvRegViewGroup.post(new Runnable() {
                 @Override
                 public void run() {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            mLoginViewGroup.setPadding(0, getStatusBarHeight( Login.this), 0, 0);
+                            mProvRegViewGroup.setPadding(0, getStatusBarHeight( ProviderRegistration.this), 0, 0);
                         }
                     });
                 }
@@ -85,34 +86,39 @@ public class Login extends BaseActivity {
     }
 
     /*View onClick*/
-    @OnClick({R.id.header_start_img_lay,R.id.login_btn, R.id.sign_up_txt})
+    @OnClick({R.id.header_start_img_lay,R.id.submit_btn})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.header_start_img_lay:
                 onBackPressed();
                 break;
-            case R.id.login_btn:
+            case R.id.submit_btn:
                 validateFields();
                 break;
-            case R.id.sign_up_txt:
-                nextScreen(SelectUserType.class);
-                break;
+
         }
     }
 
     /*validate fields*/
     private void validateFields() {
         hideSoftKeyboard(this);
+        String nameStr = mNameEdt.getText().toString().trim();
         String phoneNumStr = mPhoneNumEdt.getText().toString().trim();
 
-        if (phoneNumStr.isEmpty()) {
+        if (nameStr.isEmpty()) {
+            mNameEdt.requestFocus();
+            DialogManager.getInstance().showAlertPopup(this, getString(R.string.plz_enter_name), this);
+        } else if (phoneNumStr.isEmpty()) {
             mPhoneNumEdt.requestFocus();
             DialogManager.getInstance().showAlertPopup(this, getString(R.string.plz_enter_phone_num), this);
         }  else {
-            PreferenceUtil.storeBoolPreferenceValue(this,AppConstants.LOGIN_STATUS_BOOL,true);
-            DialogManager.getInstance().showToast(this,"Successfully logged in");
+            DialogManager.getInstance().showToast(this,"Successfully Registered");
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        backScreen();
+    }
 }
 

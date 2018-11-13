@@ -6,6 +6,8 @@ import android.view.ViewGroup;
 
 import com.lipcap.R;
 import com.lipcap.main.BaseActivity;
+import com.lipcap.utils.AppConstants;
+import com.lipcap.utils.PreferenceUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -54,9 +56,9 @@ public class Splash extends BaseActivity {
             public void run() {
                 removeHandler();
                 Class<?> nextScreenClass = Login.class;
-//                if (PreferenceUtil.getBoolPreferenceValue(Splash.this, AppConstants.LOGIN_STATUS)) {
-//                    nextScreenClass = PreferenceUtil.getBoolPreferenceValue(Splash.this, AppConstants.CURRENT_USER_ADMIN) ? BeltList.class : UserDashboard.class;
-//                }
+                if (PreferenceUtil.getBoolPreferenceValue(Splash.this, AppConstants.LOGIN_STATUS_BOOL)) {
+//                    nextScreenClass = PreferenceUtil.getBoolPreferenceValue(Splash.this, AppConstants.IS_USER_BOOL) ? BeltList.class : UserDashboard.class;
+                }
                 nextScreen(nextScreenClass);
             }
         };

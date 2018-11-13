@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/cus_reg_parent_lay"
+    android:id="@+id/prov_reg_parent_lay"
     style="@style/LayoutMatch"
     android:background="@color/white">
 
@@ -40,7 +40,7 @@
                 android:minHeight="@dimen/size37"
                 android:textSize="@dimen/text8"
                 android:textColor="@color/red"
-                android:text="@string/you_are_reg_customer"  />
+                android:text="@string/you_are_reg_provider"  />
 
             <EditText
                 android:id="@+id/name_edt"
@@ -68,7 +68,7 @@
                 android:id="@+id/submit_btn"
                 android:textColor="@color/white"
                 android:text="@string/submit"
-                android:background="@drawable/orange_btn"
+                android:background="@drawable/blue_btn"
                 android:layout_marginTop="@dimen/size20"
                 style="@style/ButtonOpenSansSemiBold"/>
 
@@ -79,7 +79,7 @@
         android:id="@+id/bottom_lay"
         android:layout_height="@dimen/size110"
         android:layout_alignParentBottom="true"
-        android:background="@color/brown"
+        android:background="@color/blue"
         style="@style/LayoutWidMatch_HeiWrap">
 
 

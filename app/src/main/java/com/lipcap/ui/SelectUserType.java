@@ -64,16 +64,15 @@ public class SelectUserType extends BaseActivity {
     }
 
     /*View onClick*/
-    @OnClick({R.id.header_left_img_lay,R.id.service_provider_btn, R.id.customer_btn})
+    @OnClick({R.id.header_start_img_lay,R.id.service_provider_btn, R.id.customer_btn})
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.header_left_img_lay:
+            case R.id.header_start_img_lay:
                 onBackPressed();
                 break;
             case R.id.service_provider_btn:
-                break;
             case R.id.customer_btn:
-                nextScreen(CustomerRegistration.class);
+                nextScreen(v.getId()==R.id.service_provider_btn?ProviderRegistration.class:CustomerRegistration.class);
                 break;
         }
     }

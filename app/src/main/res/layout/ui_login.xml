@@ -6,7 +6,7 @@
     android:background="@color/white">
 
     <RelativeLayout
-        android:id="@+id/header_left_img_lay"
+        android:id="@+id/header_start_img_lay"
         android:layout_width="@dimen/size45"
         android:layout_height="@dimen/size45"
         android:background="?android:attr/selectableItemBackground" >
@@ -18,12 +18,12 @@
             android:adjustViewBounds="true"
             android:clickable="false"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/back_icon" />
+            android:src="@drawable/back_black" />
     </RelativeLayout>
 
     <ScrollView style="@style/LayoutMatch"
         android:layout_above="@+id/bottom_lay"
-        android:layout_below="@+id/header_left_img_lay">
+        android:layout_below="@+id/header_start_img_lay">
 
         <LinearLayout
             style="@style/LayoutWidMatch_HeiWrap"

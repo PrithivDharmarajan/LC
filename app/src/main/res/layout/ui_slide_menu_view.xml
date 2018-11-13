@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/LayoutMatch">
+
+    <ScrollView
+        style="@style/LayoutMatch"
+        android:layout_above="@+id/bottom_lay">
+
+        <LinearLayout
+            style="@style/LayoutWidMatch_HeiWrap"
+            android:layout_marginTop="@dimen/size50"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/profile_lay"
+                style="@style/LayoutWidMatch_HeiWrap"
+                android:layout_height="@dimen/size45"
+                android:background="?android:attr/selectableItemBackground"
+                android:paddingStart="@dimen/size30"
+                android:paddingEnd="0dip"
+                tools:ignore="UseCompoundDrawables">
+
+                <ImageView
+                    android:layout_width="@dimen/size27"
+                    android:layout_height="@dimen/size27"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@string/app_name"
+                    android:padding="@dimen/size3"
+                    android:src="@mipmap/ic_launcher" />
+
+                <TextView
+                    style="@style/TextOpenSansRegular"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/size15"
+                    android:gravity="start"
+                    android:text="@string/profile"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text14" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size1"
+                android:layout_marginStart="@dimen/size30"
+                android:background="@color/orange" />
+
+            <LinearLayout
+                android:id="@+id/issue_list_lay"
+                style="@style/LayoutWidMatch_HeiWrap"
+                android:layout_height="@dimen/size45"
+                android:background="?android:attr/selectableItemBackground"
+                android:paddingStart="@dimen/size30"
+                android:paddingEnd="0dip"
+                tools:ignore="UseCompoundDrawables">
+
+                <ImageView
+                    android:layout_width="@dimen/size27"
+                    android:layout_height="@dimen/size27"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@string/app_name"
+                    android:padding="@dimen/size3"
+                    android:src="@mipmap/ic_launcher" />
+
+                <TextView
+                    style="@style/TextOpenSansRegular"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/size15"
+                    android:gravity="start"
+                    android:text="@string/issue_list"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text14" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size1"
+                android:layout_marginStart="@dimen/size30"
+                android:background="@color/orange" />
+
+            <LinearLayout
+                android:id="@+id/notification_lay"
+                style="@style/LayoutWidMatch_HeiWrap"
+                android:layout_height="@dimen/size45"
+                android:background="?android:attr/selectableItemBackground"
+                android:paddingStart="@dimen/size30"
+                android:paddingEnd="0dip"
+                tools:ignore="UseCompoundDrawables">
+
+                <ImageView
+                    android:layout_width="@dimen/size27"
+                    android:layout_height="@dimen/size27"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@string/app_name"
+                    android:padding="@dimen/size3"
+                    android:src="@mipmap/ic_launcher" />
+
+                <TextView
+                    style="@style/TextOpenSansRegular"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/size15"
+                    android:gravity="start"
+                    android:text="@string/notification"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text14" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size1"
+                android:layout_marginStart="@dimen/size30"
+                android:background="@color/orange" />
+
+            <LinearLayout
+                android:id="@+id/rate_service_provider_lay"
+                style="@style/LayoutWidMatch_HeiWrap"
+                android:layout_height="@dimen/size45"
+                android:background="?android:attr/selectableItemBackground"
+                android:paddingStart="@dimen/size30"
+                android:paddingEnd="0dip"
+                tools:ignore="UseCompoundDrawables">
+
+                <ImageView
+                    android:layout_width="@dimen/size27"
+                    android:layout_height="@dimen/size27"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@string/app_name"
+                    android:padding="@dimen/size3"
+                    android:src="@mipmap/ic_launcher" />
+
+                <TextView
+                    style="@style/TextOpenSansRegular"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/size15"
+                    android:gravity="start"
+                    android:text="@string/rate_service_provider"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text14" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size1"
+                android:layout_marginStart="@dimen/size30"
+                android:background="@color/orange" />
+
+            <LinearLayout
+                android:id="@+id/contact_lay"
+                style="@style/LayoutWidMatch_HeiWrap"
+                android:layout_height="@dimen/size45"
+                android:background="?android:attr/selectableItemBackground"
+                android:paddingStart="@dimen/size30"
+                android:paddingEnd="0dip"
+                tools:ignore="UseCompoundDrawables">
+
+                <ImageView
+                    android:layout_width="@dimen/size27"
+                    android:layout_height="@dimen/size27"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@string/app_name"
+                    android:padding="@dimen/size3"
+                    android:src="@mipmap/ic_launcher" />
+
+                <TextView
+                    style="@style/TextOpenSansRegular"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/size15"
+                    android:gravity="start"
+                    android:text="@string/contact"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text14" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size1"
+                android:layout_marginStart="@dimen/size30"
+                android:background="@color/orange" />
+
+            <LinearLayout
+                android:id="@+id/support_lay"
+                style="@style/LayoutWidMatch_HeiWrap"
+                android:layout_height="@dimen/size45"
+                android:background="?android:attr/selectableItemBackground"
+                android:paddingStart="@dimen/size30"
+                android:paddingEnd="0dip"
+                tools:ignore="UseCompoundDrawables">
+
+                <ImageView
+                    android:layout_width="@dimen/size27"
+                    android:layout_height="@dimen/size27"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@string/app_name"
+                    android:padding="@dimen/size3"
+                    android:src="@mipmap/ic_launcher" />
+
+                <TextView
+                    style="@style/TextOpenSansRegular"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/size15"
+                    android:gravity="start"
+                    android:text="@string/support"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text14" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size1"
+                android:layout_marginStart="@dimen/size30"
+                android:background="@color/orange" />
+
+            <LinearLayout
+                android:id="@+id/about_the_app_lay"
+                style="@style/LayoutWidMatch_HeiWrap"
+                android:layout_height="@dimen/size45"
+                android:background="?android:attr/selectableItemBackground"
+                android:paddingStart="@dimen/size30"
+                android:paddingEnd="0dip"
+                tools:ignore="UseCompoundDrawables">
+
+                <ImageView
+                    android:layout_width="@dimen/size27"
+                    android:layout_height="@dimen/size27"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@string/app_name"
+                    android:padding="@dimen/size3"
+                    android:src="@mipmap/ic_launcher" />
+
+                <TextView
+                    style="@style/TextOpenSansRegular"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/size15"
+                    android:gravity="start"
+                    android:text="@string/about_the_app"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text14" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size1"
+                android:layout_marginStart="@dimen/size30"
+                android:background="@color/orange" />
+        </LinearLayout>
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/bottom_lay"
+        style="@style/LayoutWidMatch_HeiWrap"
+        android:layout_height="@dimen/size110"
+        android:layout_alignParentBottom="true"
+        android:background="@color/brown">
+
+
+        <LinearLayout
+            android:id="@+id/logout_lay"
+            style="@style/LayoutWidMatch_HeiWrap"
+            android:layout_height="@dimen/size45"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/size27"
+            android:background="?android:attr/selectableItemBackground"
+            android:paddingStart="@dimen/size30"
+            android:paddingEnd="0dip"
+            tools:ignore="UseCompoundDrawables">
+
+            <ImageView
+                android:layout_width="@dimen/size27"
+                android:layout_height="@dimen/size27"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/app_name"
+                android:padding="@dimen/size3"
+                android:src="@mipmap/ic_launcher" />
+
+            <TextView
+                style="@style/TextOpenSansRegular"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/size15"
+                android:gravity="start"
+                android:text="@string/logout"
+                android:textSize="@dimen/text14" />
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

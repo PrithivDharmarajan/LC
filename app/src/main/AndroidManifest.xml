@@ -38,7 +38,15 @@
             android:configChanges="keyboardHidden|orientation|screenSize" />
 
         <activity
+            android:name=".ui.ProviderRegistration"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+
+        <activity
             android:name=".ui.CustomerRegistration"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+
+        <activity
+            android:name=".ui.CustomerHome"
             android:configChanges="keyboardHidden|orientation|screenSize" />
 
         <!-- Fabric plugin -->

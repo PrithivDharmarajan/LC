@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/coordinator_ay"
+    style="@style/LayoutMatch"
+    android:fitsSystemWindows="true">
+
+    <android.support.design.widget.AppBarLayout
+        style="@style/LayoutWidMatch_HeiWrap">
+
+        <RelativeLayout
+            style="@style/LayoutWidMatch_HeiWrap"
+            android:background="@color/orange">
+
+            <include layout="@layout/ui_general_header_view" />
+        </RelativeLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <FrameLayout
+        android:id="@+id/content_frame_lay"
+        style="@style/LayoutMatch"
+        android:background="@color/white"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+</android.support.design.widget.CoordinatorLayout>

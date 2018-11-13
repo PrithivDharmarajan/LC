@@ -86,10 +86,10 @@ public class CustomerRegistration extends BaseActivity {
     }
 
     /*View onClick*/
-    @OnClick({R.id.header_left_img_lay,R.id.submit_btn})
+    @OnClick({R.id.header_start_img_lay,R.id.submit_btn})
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.header_left_img_lay:
+            case R.id.header_start_img_lay:
                 onBackPressed();
                 break;
             case R.id.submit_btn:
@@ -112,7 +112,8 @@ public class CustomerRegistration extends BaseActivity {
             mPhoneNumEdt.requestFocus();
             DialogManager.getInstance().showAlertPopup(this, getString(R.string.plz_enter_phone_num), this);
         }  else {
-
+            DialogManager.getInstance().showToast(this,"Successfully Registered");
+            nextScreen(CustomerHome.class);
         }
     }
 

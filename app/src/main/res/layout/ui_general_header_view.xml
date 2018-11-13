@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/LayoutWidMatch_HeiWrap">
+
+    <RelativeLayout
+        style="@style/LayoutWidMatch_HeiWrap"
+        android:layout_height="@dimen/size45">
+
+        <TextView
+            android:id="@+id/header_txt"
+            style="@style/TextOpenSansSemiBold"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/header_end_img_lay"
+            android:layout_toEndOf="@+id/header_start_img_lay"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:text="@string/app_name"
+            android:singleLine="true"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text17" />
+
+        <RelativeLayout
+            android:id="@+id/header_start_img_lay"
+            android:layout_width="@dimen/size45"
+            android:layout_height="@dimen/size45"
+            android:background="?android:attr/selectableItemBackground" >
+
+            <ImageView
+                android:id="@+id/header_start_img"
+                android:layout_width="@dimen/size20"
+                android:layout_height="@dimen/size20"
+                android:layout_centerInParent="true"
+                android:adjustViewBounds="true"
+                android:clickable="false"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/back_white" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/header_end_img_lay"
+            android:layout_width="@dimen/size45"
+            android:visibility="invisible"
+            android:layout_height="@dimen/size45"
+            android:background="?android:attr/selectableItemBackground" >
+
+            <ImageView
+                android:layout_width="@dimen/size20"
+                android:layout_height="@dimen/size20"
+                android:layout_centerInParent="true"
+                android:adjustViewBounds="true"
+                android:clickable="false"
+                android:contentDescription="@string/app_name"  />
+        </RelativeLayout>
+    </RelativeLayout>
+</RelativeLayout>
