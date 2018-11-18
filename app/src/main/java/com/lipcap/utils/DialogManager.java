@@ -1,12 +1,12 @@
 package com.lipcap.utils;
 
-import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -17,18 +17,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lipcap.R;
+import com.lipcap.adapter.SelectIssueListAdapter;
+import com.lipcap.model.output.IssueListEntity;
+
+import java.util.ArrayList;
 
 
 public class DialogManager {
 
     /*Init variable*/
-    private Dialog mProgressDialog, mNetworkErrorDialog, mAlertDialog, mOptionDialog, mLogoutDialog, mDeviceDisconnectOptionDialog, mDeviceDisconnectScheduleDialog, mForgotPwdDialog, mEdtDeviceNameDialog, mEdtDeviceLocDialog, mEdtDeviceNameLocDialog, mDevelopmentDialog, mAgentDialog;
+    private Dialog mProgressDialog, mNetworkErrorDialog, mAlertDialog, mOptionDialog,   mDevelopmentDialog, mIssueListDialog;
     private Toast mToast;
 
-    private DatePickerDialog mDatePicker;
-    private TimePickerDialog mTimePicker;
-    private TextView mCurrentTxt;
-    private Context mContext;
 
     /*Init dialog instance*/
     private static final DialogManager sDialogInstance = new DialogManager();
@@ -173,6 +173,59 @@ public class DialogManager {
 
     }
 
+    public Dialog showIssuesListPopup(final Context context, ArrayList<IssueListEntity> agentListArrList,
+                                     final InterfaceEdtBtnCallback dialogAlertInterface) {
+        alertDismiss(mIssueListDialog);
+        mIssueListDialog = getDialog(context, R.layout.popup_select_issue_list_view);
+
+        WindowManager.LayoutParams LayoutParams = new WindowManager.LayoutParams();
+        Window window = mIssueListDialog.getWindow();
+
+        if (window != null) {
+            LayoutParams.copyFrom(window.getAttributes());
+            LayoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+            LayoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            window.setAttributes(LayoutParams);
+            window.setGravity(Gravity.CENTER);
+        }
+
+        RecyclerView issueListRecyclerView;
+        Button positiveBtn, negativeBtn;
+//        LinearLayout agentParentLay;
+
+        /*Init view*/
+        issueListRecyclerView = mIssueListDialog.findViewById(R.id.issue_list_recycler_view);
+        positiveBtn = mIssueListDialog.findViewById(R.id.alert_positive_btn);
+        negativeBtn = mIssueListDialog.findViewById(R.id.alert_negative_btn);
+//        agentParentLay = mAgentDialog.findViewById(R.id.agent_parent_lay);
+
+
+        /*Set Adapter*/
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+        issueListRecyclerView.setLayoutManager(linearLayoutManager);
+        issueListRecyclerView.setAdapter(new SelectIssueListAdapter(agentListArrList, dialogAlertInterface, context));
+
+
+        positiveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mIssueListDialog.dismiss();
+                dialogAlertInterface.onPositiveClick("1");
+            }
+        });
+        negativeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mIssueListDialog.dismiss();
+                dialogAlertInterface.onNegativeClick();
+            }
+        });
+
+//        mAgentDialog.setCancelable(true);
+//        mAgentDialog.setCanceledOnTouchOutside(true);
+        alertShowing(mIssueListDialog);
+        return mIssueListDialog;
+    }
 
     public void showNetworkErrorPopup(Context context, String errorStr, final InterfaceBtnCallback dialogAlertInterface) {
 
@@ -275,7 +328,6 @@ public class DialogManager {
         }
 
     }
-
 
 
 }

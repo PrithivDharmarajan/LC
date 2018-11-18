@@ -69,17 +69,16 @@
 
     <RelativeLayout
         android:id="@+id/bottom_lay"
-        android:layout_height="@dimen/size110"
+        android:layout_height="@dimen/size150"
         android:layout_alignParentBottom="true"
-        android:background="@color/brown"
+        android:background="@drawable/bottom_brown_bg"
         style="@style/LayoutWidMatch_HeiWrap">
-
         <TextView
             android:id="@+id/sign_up_txt"
             style="@style/TextOpenSansRegular"
             android:padding="@dimen/size5"
             android:text="@string/dont_have_acc"
-            android:layout_marginBottom="@dimen/size27"
+            android:layout_marginBottom="@dimen/size23"
             android:layout_alignParentBottom="true"/>
 
 

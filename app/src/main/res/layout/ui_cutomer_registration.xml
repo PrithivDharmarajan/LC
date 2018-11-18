@@ -77,13 +77,11 @@
 
     <RelativeLayout
         android:id="@+id/bottom_lay"
-        android:layout_height="@dimen/size110"
+        android:layout_height="@dimen/size150"
         android:layout_alignParentBottom="true"
-        android:background="@color/brown"
-        style="@style/LayoutWidMatch_HeiWrap">
+        android:background="@drawable/bottom_orange_bg"
+        style="@style/LayoutWidMatch_HeiWrap"/>
 
 
-
-    </RelativeLayout>
 
 </RelativeLayout>

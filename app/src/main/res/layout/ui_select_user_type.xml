@@ -66,9 +66,9 @@
 
     <RelativeLayout
         android:id="@+id/bottom_lay"
-        android:layout_height="@dimen/size110"
+        android:layout_height="@dimen/size150"
         android:layout_alignParentBottom="true"
-        android:background="@color/brown"
-        style="@style/LayoutWidMatch_HeiWrap"> </RelativeLayout>
+        android:background="@drawable/bottom_brown_bg"
+        style="@style/LayoutWidMatch_HeiWrap"/>
 
 </RelativeLayout>

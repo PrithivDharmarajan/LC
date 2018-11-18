@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "280136005121",
+    "firebase_url": "https://lipcap-5807d.firebaseio.com",
+    "project_id": "lipcap-5807d",
+    "storage_bucket": "lipcap-5807d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:280136005121:android:9a280eeeabeab516",
+        "android_client_info": {
+          "package_name": "com.lipcap"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "280136005121-pabjfueg7nfjvtturnei420us3ok2ap2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lipcap",
+            "certificate_hash": "53a82224e07e4501b13fd4af82ffa0c065ff498a"
+          }
+        },
+        {
+          "client_id": "280136005121-sungpg222g2unlaummaecv4g04d85t6l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCz9bWZOF02LCaWPsIBY_YkEEkO-LRhrkE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "280136005121-sungpg222g2unlaummaecv4g04d85t6l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

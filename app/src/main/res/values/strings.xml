@@ -1,6 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <string name="app_name">Lipcap</string>
+    <string name="app_name">LipCap</string>
+
+    <string name="google_map_id">AIzaSyCtqgVoaaVtdq-JvOawDYIByXDpeo0Cvt0</string>
 
     <!--Login-->
     <string name="phone_num">Phone Number</string>
@@ -8,6 +10,7 @@
     <string name="dont_have_acc">Don\'t have an account? <u>Sign Up</u></string>
 
     <string name="plz_enter_phone_num">Please Enter Phone Number</string>
+    <string name="login_success">Successfully logged in</string>
 
     <!--User Selection-->
     <string name="service_provider">Service Provider</string>
@@ -33,6 +36,18 @@
     <string name="about_the_app">About the app</string>
     <string name="logout">logout</string>
 
+    <!--Customer Map-->
+    <string name="select_issue">Select the issue</string>
+    <string name="cancel">Cancel</string>
+
+
+    <!--Home Screen-->
+    <string name="book_appointment">Book Appointment</string>
+    <string name="user_not_update"> User does not update location setting</string>
+    <string name="appointment_accepted"> Appointment Accepted</string>
+    <string name="call_shoe_repairer"> Call Shoe Repairer</string>
+    <string name="cancel_appointment"> Cancel the Appointment</string>
+
 
     <!--General-->
     <string name="go_settings_per">You have denied the app permissions. Go to Settings and Enable the Permissions.</string>
@@ -43,8 +58,12 @@
     <string name="retry">Retry</string>
     <string name="ok" tools:ignore="ButtonCase,Typos">Ok</string>
     <string name="logged_in_success">Logged In Successfully</string>
+    <string name="registered_success">Registered Successfully</string>
     <string name="logout_msg">Are you sure you want to Logout?</string>
     <string name="exit_msg">Press again to exit</string>
     <string name="err_create_frag">Error in creating fragment</string>
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+
+
 
 </resources>

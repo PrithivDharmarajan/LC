@@ -1,14 +1,24 @@
 package com.lipcap.main;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 
 import com.crashlytics.android.BuildConfig;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
+import com.lipcap.ui.CustomerHome;
+import com.lipcap.ui.Login;
+import com.lipcap.ui.ProviderHome;
+import com.lipcap.utils.AppConstants;
+import com.lipcap.utils.PreferenceUtil;
 
 import java.lang.Thread.UncaughtExceptionHandler;
+import java.util.ArrayList;
 
 import io.fabric.sdk.android.Fabric;
+
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 
 public class LipCapApplication extends android.app.Application {
@@ -83,26 +93,26 @@ public class LipCapApplication extends android.app.Application {
             Crashlytics.logException(ex);
 
             /*Restart application*/
-//            if (activityVisible) {
-//                Class<?> nextScreenClass = GeneralWelcome.class;
-//                if (PreferenceUtil.getBoolPreferenceValue(mInstance, AppConstants.LOGIN_STATUS)) {
-//                    nextScreenClass = PreferenceUtil.getBoolPreferenceValue(mInstance, AppConstants.CURRENT_USER_ADMIN) ? BeltList.class : UserDashboard.class;
-//                }
-//
-//                /*for back screen process*/
-//                AppConstants.PREVIOUS_SCREEN = new ArrayList<>();
-//                AppConstants.PREVIOUS_SCREEN.add(nextScreenClass.getCanonicalName());
-//
-//                Intent intent = new Intent(mInstance, nextScreenClass);
-//                intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
-//                getContext().startActivity(intent);
-//
-//                if (getContext() instanceof Activity) {
-//                    ((Activity) getContext()).finish();
-//                }
-//
-//                Runtime.getRuntime().exit(0);
-//            }
+            if (activityVisible) {
+                Class<?> nextScreenClass = Login.class;
+                if (PreferenceUtil.getBoolPreferenceValue(mInstance, AppConstants.LOGIN_STATUS)) {
+                    nextScreenClass = PreferenceUtil.getBoolPreferenceValue(mInstance, AppConstants.CURRENT_USER_IS_PROVIDER) ? ProviderHome.class : CustomerHome.class;
+                }
+
+                /*for back screen process*/
+                AppConstants.PREVIOUS_SCREEN_ARR_LIST = new ArrayList<>();
+                AppConstants.PREVIOUS_SCREEN_ARR_LIST.add(nextScreenClass.getCanonicalName());
+
+                Intent intent = new Intent(mInstance, nextScreenClass);
+                intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+                getContext().startActivity(intent);
+
+                if (getContext() instanceof Activity) {
+                    ((Activity) getContext()).finish();
+                }
+
+                Runtime.getRuntime().exit(0);
+            }
         }
     }
 }

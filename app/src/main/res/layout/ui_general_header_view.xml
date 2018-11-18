@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/orange"
     style="@style/LayoutWidMatch_HeiWrap">
 
     <RelativeLayout
@@ -16,11 +17,12 @@
             android:layout_toEndOf="@+id/header_start_img_lay"
             android:ellipsize="end"
             android:gravity="center"
+
             android:text="@string/app_name"
             android:singleLine="true"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="@dimen/text17" />
+            android:textSize="@dimen/text16" />
 
         <RelativeLayout
             android:id="@+id/header_start_img_lay"
@@ -43,6 +45,7 @@
             android:id="@+id/header_end_img_lay"
             android:layout_width="@dimen/size45"
             android:visibility="invisible"
+            android:layout_alignParentEnd="true"
             android:layout_height="@dimen/size45"
             android:background="?android:attr/selectableItemBackground" >
 

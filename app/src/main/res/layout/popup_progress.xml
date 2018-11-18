@@ -3,5 +3,4 @@
     style="@style/LayoutWrap"
     android:layout_gravity="center"
     android:indeterminate="true"
-    android:indeterminateDrawable="@color/gray"
     tools:targetApi="lollipop" />

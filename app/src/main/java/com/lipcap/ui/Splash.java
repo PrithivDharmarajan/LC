@@ -56,8 +56,8 @@ public class Splash extends BaseActivity {
             public void run() {
                 removeHandler();
                 Class<?> nextScreenClass = Login.class;
-                if (PreferenceUtil.getBoolPreferenceValue(Splash.this, AppConstants.LOGIN_STATUS_BOOL)) {
-//                    nextScreenClass = PreferenceUtil.getBoolPreferenceValue(Splash.this, AppConstants.IS_USER_BOOL) ? BeltList.class : UserDashboard.class;
+                if (PreferenceUtil.getBoolPreferenceValue(Splash.this, AppConstants.LOGIN_STATUS)) {
+                    nextScreenClass = PreferenceUtil.getBoolPreferenceValue(Splash.this, AppConstants.CURRENT_USER_IS_PROVIDER) ? ProviderHome.class : CustomerHome.class;
                 }
                 nextScreen(nextScreenClass);
             }

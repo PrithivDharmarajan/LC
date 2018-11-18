@@ -149,9 +149,9 @@ public class BaseActivity extends AppCompatActivity implements InterfaceTwoBtnCa
                 R.anim.slide_out_left);
 
         if (clearBackGroundScreen(clazz)) {
-            AppConstants.PREVIOUS_SCREEN = new ArrayList<>();
+            AppConstants.PREVIOUS_SCREEN_ARR_LIST = new ArrayList<>();
         }
-        AppConstants.PREVIOUS_SCREEN.add(clazz.getCanonicalName());
+        AppConstants.PREVIOUS_SCREEN_ARR_LIST.add(clazz.getCanonicalName());
         mActivity.finish();
 
     }
@@ -163,9 +163,9 @@ public class BaseActivity extends AppCompatActivity implements InterfaceTwoBtnCa
         mActivity.overridePendingTransition(R.anim.slide_out_right,
                 R.anim.slide_in_left);
         if (clearBackGroundScreen(clazz)) {
-            AppConstants.PREVIOUS_SCREEN = new ArrayList<>();
+            AppConstants.PREVIOUS_SCREEN_ARR_LIST = new ArrayList<>();
         }
-        AppConstants.PREVIOUS_SCREEN.add(clazz.getCanonicalName());
+        AppConstants.PREVIOUS_SCREEN_ARR_LIST.add(clazz.getCanonicalName());
         mActivity.finish();
     }
 
@@ -178,11 +178,11 @@ public class BaseActivity extends AppCompatActivity implements InterfaceTwoBtnCa
     }
 
     public void backScreen() {
-        if (AppConstants.PREVIOUS_SCREEN != null && AppConstants.PREVIOUS_SCREEN.size() > 1) {
-            AppConstants.PREVIOUS_SCREEN.remove(AppConstants.PREVIOUS_SCREEN.size() - 1);
+        if (AppConstants.PREVIOUS_SCREEN_ARR_LIST != null && AppConstants.PREVIOUS_SCREEN_ARR_LIST.size() > 1) {
+            AppConstants.PREVIOUS_SCREEN_ARR_LIST.remove(AppConstants.PREVIOUS_SCREEN_ARR_LIST.size() - 1);
             Class<?> clazz = null;
             try {
-                clazz = Class.forName(AppConstants.PREVIOUS_SCREEN.get(AppConstants.PREVIOUS_SCREEN.size() - 1));
+                clazz = Class.forName(AppConstants.PREVIOUS_SCREEN_ARR_LIST.get(AppConstants.PREVIOUS_SCREEN_ARR_LIST.size() - 1));
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
@@ -308,7 +308,7 @@ public class BaseActivity extends AppCompatActivity implements InterfaceTwoBtnCa
     }
 
 
-    /*Temp*/
+    /*CustomerMapFragment*/
     public void sysOut(String printStr) {
         System.out.println(printStr);
     }

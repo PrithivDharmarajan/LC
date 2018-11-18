@@ -9,7 +9,7 @@
 
         <LinearLayout
             style="@style/LayoutWidMatch_HeiWrap"
-            android:layout_marginTop="@dimen/size50"
+            android:layout_marginTop="@dimen/size40"
             android:orientation="vertical">
 
             <LinearLayout
@@ -27,8 +27,8 @@
                     android:layout_gravity="center"
                     android:adjustViewBounds="true"
                     android:contentDescription="@string/app_name"
-                    android:padding="@dimen/size3"
-                    android:src="@mipmap/ic_launcher" />
+                    android:padding="@dimen/size5"
+                    android:src="@drawable/profile" />
 
                 <TextView
                     style="@style/TextOpenSansRegular"
@@ -37,7 +37,7 @@
                     android:gravity="start"
                     android:text="@string/profile"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/text14" />
+                    android:textSize="@dimen/text13" />
             </LinearLayout>
 
             <View
@@ -61,8 +61,8 @@
                     android:layout_gravity="center"
                     android:adjustViewBounds="true"
                     android:contentDescription="@string/app_name"
-                    android:padding="@dimen/size3"
-                    android:src="@mipmap/ic_launcher" />
+                    android:padding="@dimen/size5"
+                    android:src="@drawable/issue_list" />
 
                 <TextView
                     style="@style/TextOpenSansRegular"
@@ -71,7 +71,7 @@
                     android:gravity="start"
                     android:text="@string/issue_list"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/text14" />
+                    android:textSize="@dimen/text13" />
             </LinearLayout>
 
             <View
@@ -95,8 +95,8 @@
                     android:layout_gravity="center"
                     android:adjustViewBounds="true"
                     android:contentDescription="@string/app_name"
-                    android:padding="@dimen/size3"
-                    android:src="@mipmap/ic_launcher" />
+                    android:padding="@dimen/size5"
+                    android:src="@drawable/notification" />
 
                 <TextView
                     style="@style/TextOpenSansRegular"
@@ -105,7 +105,7 @@
                     android:gravity="start"
                     android:text="@string/notification"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/text14" />
+                    android:textSize="@dimen/text13" />
             </LinearLayout>
 
             <View
@@ -129,8 +129,8 @@
                     android:layout_gravity="center"
                     android:adjustViewBounds="true"
                     android:contentDescription="@string/app_name"
-                    android:padding="@dimen/size3"
-                    android:src="@mipmap/ic_launcher" />
+                    android:padding="@dimen/size5"
+                    android:src="@drawable/rate_service_provider" />
 
                 <TextView
                     style="@style/TextOpenSansRegular"
@@ -139,7 +139,7 @@
                     android:gravity="start"
                     android:text="@string/rate_service_provider"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/text14" />
+                    android:textSize="@dimen/text13" />
             </LinearLayout>
 
             <View
@@ -163,8 +163,8 @@
                     android:layout_gravity="center"
                     android:adjustViewBounds="true"
                     android:contentDescription="@string/app_name"
-                    android:padding="@dimen/size3"
-                    android:src="@mipmap/ic_launcher" />
+                    android:padding="@dimen/size5"
+                    android:src="@drawable/contact" />
 
                 <TextView
                     style="@style/TextOpenSansRegular"
@@ -173,7 +173,7 @@
                     android:gravity="start"
                     android:text="@string/contact"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/text14" />
+                    android:textSize="@dimen/text13" />
             </LinearLayout>
 
             <View
@@ -197,8 +197,8 @@
                     android:layout_gravity="center"
                     android:adjustViewBounds="true"
                     android:contentDescription="@string/app_name"
-                    android:padding="@dimen/size3"
-                    android:src="@mipmap/ic_launcher" />
+                    android:padding="@dimen/size5"
+                    android:src="@drawable/support" />
 
                 <TextView
                     style="@style/TextOpenSansRegular"
@@ -207,7 +207,7 @@
                     android:gravity="start"
                     android:text="@string/support"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/text14" />
+                    android:textSize="@dimen/text13" />
             </LinearLayout>
 
             <View
@@ -230,9 +230,10 @@
                     android:layout_height="@dimen/size27"
                     android:layout_gravity="center"
                     android:adjustViewBounds="true"
+
                     android:contentDescription="@string/app_name"
-                    android:padding="@dimen/size3"
-                    android:src="@mipmap/ic_launcher" />
+                    android:padding="@dimen/size5"
+                    android:src="@drawable/about_the_app" />
 
                 <TextView
                     style="@style/TextOpenSansRegular"
@@ -241,7 +242,7 @@
                     android:gravity="start"
                     android:text="@string/about_the_app"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/text14" />
+                    android:textSize="@dimen/text13" />
             </LinearLayout>
 
             <View
@@ -255,9 +256,9 @@
     <RelativeLayout
         android:id="@+id/bottom_lay"
         style="@style/LayoutWidMatch_HeiWrap"
-        android:layout_height="@dimen/size110"
+        android:layout_height="@dimen/size130"
         android:layout_alignParentBottom="true"
-        android:background="@color/brown">
+        android:background="@drawable/bottom_orange_bg">
 
 
         <LinearLayout
@@ -265,7 +266,7 @@
             style="@style/LayoutWidMatch_HeiWrap"
             android:layout_height="@dimen/size45"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="@dimen/size27"
+            android:layout_marginBottom="@dimen/size20"
             android:background="?android:attr/selectableItemBackground"
             android:paddingStart="@dimen/size30"
             android:paddingEnd="0dip"
@@ -277,8 +278,8 @@
                 android:layout_gravity="center"
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/app_name"
-                android:padding="@dimen/size3"
-                android:src="@mipmap/ic_launcher" />
+                android:padding="@dimen/size5"
+                android:src="@drawable/notification" />
 
             <TextView
                 style="@style/TextOpenSansRegular"
@@ -286,7 +287,7 @@
                 android:layout_marginStart="@dimen/size15"
                 android:gravity="start"
                 android:text="@string/logout"
-                android:textSize="@dimen/text14" />
+                android:textSize="@dimen/text13" />
         </LinearLayout>
 
 

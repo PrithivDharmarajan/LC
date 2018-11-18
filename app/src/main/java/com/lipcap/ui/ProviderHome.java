@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import com.lipcap.R;
 import com.lipcap.fragment.CustomerMapFragment;
-import com.lipcap.fragment.TestFragment;
 import com.lipcap.main.BaseActivity;
 import com.lipcap.main.BaseFragment;
 import com.lipcap.utils.AppConstants;
@@ -29,7 +28,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class CustomerHome extends BaseActivity implements View.OnClickListener {
+public class ProviderHome extends BaseActivity implements View.OnClickListener {
 
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
@@ -95,7 +94,7 @@ public class CustomerHome extends BaseActivity implements View.OnClickListener {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            mDrawerLayout.setPadding(0, getStatusBarHeight(CustomerHome.this), 0, 0);
+                            mDrawerLayout.setPadding(0, getStatusBarHeight(ProviderHome.this), 0, 0);
                         }
                     });
                 }
@@ -150,7 +149,7 @@ public class CustomerHome extends BaseActivity implements View.OnClickListener {
                     if (backStackEntryCount > 0) {
                         BaseFragment currFrag = (BaseFragment) manager.findFragmentById(R.id.content_frame_lay);
                         if (currFrag != null) {
-                            hideSoftKeyboard(CustomerHome.this);
+                            hideSoftKeyboard(ProviderHome.this);
                             mFragment = currFrag;
                             currFrag.onFragmentResume();
                         } else {
@@ -211,41 +210,27 @@ public class CustomerHome extends BaseActivity implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.profile_lay:
                 mDrawerLayout.closeDrawer(GravityCompat.START);
-                AppConstants.TEMP_HEADER=getString(R.string.profile);
-                addFragment(new TestFragment());
 //                 if (!(mFragment instanceof NotificationFragment)) {
 //                     addFragment(new NotificationFragment());
 //                 }
                 break;
             case R.id.issue_list_lay:
                 mDrawerLayout.closeDrawer(GravityCompat.START);
-                AppConstants.TEMP_HEADER=getString(R.string.issue_list);
-                addFragment(new TestFragment());
                 break;
             case R.id.notification_lay:
                 mDrawerLayout.closeDrawer(GravityCompat.START);
-                AppConstants.TEMP_HEADER=getString(R.string.notification);
-                addFragment(new TestFragment());
                 break;
             case R.id.rate_service_provider_lay:
                 mDrawerLayout.closeDrawer(GravityCompat.START);
-                AppConstants.TEMP_HEADER=getString(R.string.service_provider);
-                addFragment(new TestFragment());
                 break;
             case R.id.contact_lay:
                 mDrawerLayout.closeDrawer(GravityCompat.START);
-                AppConstants.TEMP_HEADER=getString(R.string.contact);
-                addFragment(new TestFragment());
                 break;
             case R.id.support_lay:
                 mDrawerLayout.closeDrawer(GravityCompat.START);
-                AppConstants.TEMP_HEADER=getString(R.string.support);
-                addFragment(new TestFragment());
                 break;
             case R.id.about_the_app_lay:
                 mDrawerLayout.closeDrawer(GravityCompat.START);
-                AppConstants.TEMP_HEADER=getString(R.string.about_the_app);
-                addFragment(new TestFragment());
                 break;
             case R.id.logout_lay:
                 mDrawerLayout.closeDrawer(GravityCompat.START);
@@ -253,7 +238,7 @@ public class CustomerHome extends BaseActivity implements View.OnClickListener {
                 DialogManager.getInstance().showOptionPopup(this, getString(R.string.logout_msg), getString(R.string.yes), getString(R.string.no), new InterfaceTwoBtnCallback() {
                     @Override
                     public void onPositiveClick() {
-                        PreferenceUtil.storeBoolPreferenceValue(CustomerHome.this, AppConstants.LOGIN_STATUS, false);
+                        PreferenceUtil.storeBoolPreferenceValue(ProviderHome.this, AppConstants.LOGIN_STATUS, false);
                         previousScreen(Login.class);
                     }
 
@@ -270,7 +255,7 @@ public class CustomerHome extends BaseActivity implements View.OnClickListener {
     /*Default back button action*/
     @Override
     public void onBackPressed() {
-        hideSoftKeyboard(CustomerHome.this);
+        hideSoftKeyboard(ProviderHome.this);
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {

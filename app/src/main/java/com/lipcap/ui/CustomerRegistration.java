@@ -12,7 +12,16 @@ import android.widget.TextView;
 
 import com.lipcap.R;
 import com.lipcap.main.BaseActivity;
+import com.lipcap.model.output.LoginResponse;
+import com.lipcap.model.output.UserDetailsEntity;
+import com.lipcap.services.APIRequestHandler;
+import com.lipcap.utils.AppConstants;
+import com.lipcap.utils.DateUtil;
 import com.lipcap.utils.DialogManager;
+import com.lipcap.utils.InterfaceBtnCallback;
+import com.lipcap.utils.PreferenceUtil;
+
+import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -112,8 +121,47 @@ public class CustomerRegistration extends BaseActivity {
             mPhoneNumEdt.requestFocus();
             DialogManager.getInstance().showAlertPopup(this, getString(R.string.plz_enter_phone_num), this);
         }  else {
-            DialogManager.getInstance().showToast(this,"Successfully Registered");
-            nextScreen(CustomerHome.class);
+
+            UserDetailsEntity userDetailsEntity=new UserDetailsEntity();
+            userDetailsEntity.setName(nameStr);
+            userDetailsEntity.setMobileNo(phoneNumStr);
+            userDetailsEntity.setCreatedDT(DateUtil.getCurrentDate());
+            userDetailsEntity.setUserType(1);
+            userDetailsEntity.setDeviceId(PreferenceUtil.getStringPreferenceValue(this,AppConstants.PUSH_DEVICE_ID));
+
+            APIRequestHandler.getInstance().registrationAPICall(userDetailsEntity,this);
+        }
+    }
+
+    /*API request success and failure*/
+    @Override
+    public void onRequestSuccess(Object resObj) {
+        super.onRequestSuccess(resObj);
+        if (resObj instanceof LoginResponse) {
+            LoginResponse loginResponse = (LoginResponse) resObj;
+            if(loginResponse.getMsgCode().equals(AppConstants.SUCCESS_CODE)){
+                PreferenceUtil.storeBoolPreferenceValue(this, AppConstants.LOGIN_STATUS, true);
+                DialogManager.getInstance().showToast(this, getString(R.string.registered_success));
+                nextScreen(CustomerHome.class);
+            }else{
+                DialogManager.getInstance().showAlertPopup(this, loginResponse.getMessage(),this);
+            }
+
+        }
+
+    }
+
+    @Override
+    public void onRequestFailure(final Object resObj, Throwable t) {
+        super.onRequestFailure(resObj, t);
+        if (t instanceof IOException) {
+            DialogManager.getInstance().showAlertPopup(this,
+                    (t instanceof java.net.ConnectException || t instanceof java.net.UnknownHostException ? getString(R.string.no_internet) : getString(R.string
+                            .connect_time_out)), new InterfaceBtnCallback() {
+                        @Override
+                        public void onPositiveClick() {
+                        }
+                    });
         }
     }
 

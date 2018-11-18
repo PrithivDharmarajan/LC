@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/LayoutMatch">
+
+    <RelativeLayout
+        android:layout_above="@+id/book_appointment_btn"
+        style="@style/LayoutMatch">
+        <fragment
+            android:id="@+id/map"
+            class="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:id="@+id/show_current_location_img"
+            android:layout_width="@dimen/size40"
+            android:layout_height="@dimen/size40"
+            android:layout_alignParentEnd="true"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/app_name"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/size25"
+            android:layout_marginEnd="@dimen/size20"
+            android:src="@drawable/location" />
+    </RelativeLayout>
+
+
+    <Button
+        android:id="@+id/book_appointment_btn"
+        style="@style/ButtonOpenSansSemiBold"
+        android:layout_alignParentBottom="true"
+        android:background="@color/orange"
+        android:text="@string/book_appointment"
+        android:textColor="@color/white" />
+</RelativeLayout>

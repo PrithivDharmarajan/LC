@@ -5,6 +5,8 @@
 
     <!-- permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:name=".main.LipCapApplication"
@@ -38,22 +40,50 @@
             android:configChanges="keyboardHidden|orientation|screenSize" />
 
         <activity
-            android:name=".ui.ProviderRegistration"
+            android:name=".ui.CustomerRegistration"
             android:configChanges="keyboardHidden|orientation|screenSize" />
 
         <activity
-            android:name=".ui.CustomerRegistration"
+            android:name=".ui.ProviderRegistration"
             android:configChanges="keyboardHidden|orientation|screenSize" />
 
         <activity
             android:name=".ui.CustomerHome"
             android:configChanges="keyboardHidden|orientation|screenSize" />
 
-        <!-- Fabric plugin -->
+        <activity
+            android:name=".ui.ProviderHome"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+
+        <!-- Fabric API key -->
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="3d9401c1c67a72ae6b1a323c0ac9c7f0ff3addf5" />
 
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="@string/google_map_id" />
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <!-- Get and Reg FireBase Device ID -->
+
+        <!-- FireBase Push notification Service -->
+
+        <service android:name=".main.FireBasePushMessagingService"
+            tools:ignore="ExportedService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/default_notification_channel_id" />
+        <meta-data
+            android:name="firebase_messaging_auto_init_enabled"
+            android:value="true" />
 
     </application>
 

@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 
 import com.lipcap.R;
 import com.lipcap.main.BaseActivity;
+import com.lipcap.utils.AppConstants;
+import com.lipcap.utils.PreferenceUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -72,6 +74,7 @@ public class SelectUserType extends BaseActivity {
                 break;
             case R.id.service_provider_btn:
             case R.id.customer_btn:
+                PreferenceUtil.storeBoolPreferenceValue(this,AppConstants.CURRENT_USER_IS_PROVIDER,v.getId()==R.id.service_provider_btn);
                 nextScreen(v.getId()==R.id.service_provider_btn?ProviderRegistration.class:CustomerRegistration.class);
                 break;
         }

@@ -12,9 +12,14 @@ import android.widget.TextView;
 
 import com.lipcap.R;
 import com.lipcap.main.BaseActivity;
+import com.lipcap.model.output.LoginResponse;
+import com.lipcap.services.APIRequestHandler;
 import com.lipcap.utils.AppConstants;
 import com.lipcap.utils.DialogManager;
+import com.lipcap.utils.InterfaceBtnCallback;
 import com.lipcap.utils.PreferenceUtil;
+
+import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -69,7 +74,7 @@ public class Login extends BaseActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            mLoginViewGroup.setPadding(0, getStatusBarHeight( Login.this), 0, 0);
+                            mLoginViewGroup.setPadding(0, getStatusBarHeight(Login.this), 0, 0);
                         }
                     });
                 }
@@ -85,7 +90,7 @@ public class Login extends BaseActivity {
     }
 
     /*View onClick*/
-    @OnClick({R.id.header_start_img_lay,R.id.login_btn, R.id.sign_up_txt})
+    @OnClick({R.id.header_start_img_lay, R.id.login_btn, R.id.sign_up_txt})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.header_start_img_lay:
@@ -108,9 +113,41 @@ public class Login extends BaseActivity {
         if (phoneNumStr.isEmpty()) {
             mPhoneNumEdt.requestFocus();
             DialogManager.getInstance().showAlertPopup(this, getString(R.string.plz_enter_phone_num), this);
-        }  else {
-            PreferenceUtil.storeBoolPreferenceValue(this,AppConstants.LOGIN_STATUS_BOOL,true);
-            DialogManager.getInstance().showToast(this,"Successfully logged in");
+        } else {
+            APIRequestHandler.getInstance().loginAPICall(phoneNumStr,this);
+        }
+    }
+
+
+    /*API request success and failure*/
+    @Override
+    public void onRequestSuccess(Object resObj) {
+        super.onRequestSuccess(resObj);
+        if (resObj instanceof LoginResponse) {
+            LoginResponse loginResponse = (LoginResponse) resObj;
+            if(loginResponse.getMsgCode().equals(AppConstants.SUCCESS_CODE)){
+                PreferenceUtil.storeBoolPreferenceValue(this, AppConstants.LOGIN_STATUS, true);
+                DialogManager.getInstance().showToast(this, getString(R.string.logged_in_success));
+                nextScreen(CustomerHome.class);
+            }else{
+                DialogManager.getInstance().showAlertPopup(this, loginResponse.getMessage(),this);
+            }
+
+        }
+
+    }
+
+    @Override
+    public void onRequestFailure(final Object resObj, Throwable t) {
+        super.onRequestFailure(resObj, t);
+        if (t instanceof IOException) {
+            DialogManager.getInstance().showAlertPopup(this,
+                    (t instanceof java.net.ConnectException || t instanceof java.net.UnknownHostException ? getString(R.string.no_internet) : getString(R.string
+                            .connect_time_out)), new InterfaceBtnCallback() {
+                        @Override
+                        public void onPositiveClick() {
+                        }
+                    });
         }
     }
 
