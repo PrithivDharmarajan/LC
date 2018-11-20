@@ -31,6 +31,7 @@
                 android:contentDescription="@string/app_name"
                 android:src="@drawable/location" />
             <android.support.v7.widget.CardView
+
                 android:id="@+id/appointment_card_view"
                 style="@style/LayoutWidMatch_HeiWrap"
                 android:visibility="gone"
@@ -99,6 +100,7 @@
                         style="@style/LayoutWidMatch_HeiWrap">
 
                         <LinearLayout
+                            android:id="@+id/call_shoe_repairer_lay"
                             style="@style/LayoutWidWei_HeiWrap"
                             android:orientation="vertical"
                             android:gravity="center"
@@ -125,6 +127,7 @@
                             android:background="@color/gray"
                             android:layout_width="@dimen/size1"/>
                         <LinearLayout
+                            android:id="@+id/cancel_appointment_lay"
                             style="@style/LayoutWidWei_HeiWrap"
                             android:orientation="vertical"
                             android:gravity="center"
@@ -154,9 +157,6 @@
 
 
     </RelativeLayout>
-
-
-
 
         <Button
             android:id="@+id/book_appointment_btn"

@@ -9,14 +9,18 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -52,20 +56,31 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class CustomerMapFragment extends BaseFragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, OnMapReadyCallback, LocationListener
         , GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener {
 
+
     private final int REQUEST_CHECK_SETTINGS = 300;
+    @BindView(R.id.appointment_card_view)
+    CardView mAppointmentCardView;
+    @BindView(R.id.appointment_accepted_txt)
+    TextView mAppointmentAcceptedTxt;
+    @BindView(R.id.book_appointment_btn)
+    Button mBookAppointmentBtn;
     private GoogleMap mGoogleMap;
     private GoogleApiClient mGoogleApiClient;
+    private Handler mHandler = new Handler();
+    private Runnable mRunnable;
+    private boolean isDialogShowing = false;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.frag_provider_map, container, false);
+        View rootView = inflater.inflate(R.layout.frag_cutomer_map, container, false);
         /*ButterKnife for variable initialization*/
         ButterKnife.bind(this, rootView);
 
@@ -121,18 +136,72 @@ public class CustomerMapFragment extends BaseFragment implements GoogleApiClient
 
 
     /*Click Event*/
-    @OnClick({R.id.book_appointment_btn, R.id.show_current_location_img})
+    @OnClick({R.id.show_current_location_img, R.id.book_appointment_btn, R.id.cancel_appointment_lay})
     public void onClick(View v) {
         if (getActivity() != null) {
             switch (v.getId()) {
-                case R.id.book_appointment_btn:
-                    issueListAPICall();
-                    break;
                 case R.id.show_current_location_img:
                     setCurrentLocation();
                     break;
+                case R.id.book_appointment_btn:
+                    issueListAPICall();
+
+                    break;
+                case R.id.cancel_appointment_lay:
+                    isDialogShowing = true;
+                    DialogManager.getInstance().showReasonForCancelPopup(getActivity(), new InterfaceEdtBtnCallback() {
+                        @Override
+                        public void onPositiveClick(String editStr) {
+                            isDialogShowing = false;
+                        }
+
+                        @Override
+                        public void onNegativeClick() {
+                            isDialogShowing = false;
+                            commentDialog();
+                        }
+                    });
+                    break;
             }
         }
+    }
+
+    private void commentDialog() {
+
+        mHandler = new Handler();
+        mRunnable = new Runnable() {
+            @Override
+            public void run() {
+                removeDialog();
+                if (!isDialogShowing) {
+                    DialogManager.getInstance().showCommentsPopup(getActivity(), new InterfaceEdtBtnCallback() {
+                        @Override
+                        public void onPositiveClick(String editStr) {
+                            mAppointmentCardView.setVisibility(View.GONE);
+                            mBookAppointmentBtn.setVisibility(View.VISIBLE);
+                        }
+
+                        @Override
+                        public void onNegativeClick() {
+
+                            mAppointmentCardView.setVisibility(View.GONE);
+                            mBookAppointmentBtn.setVisibility(View.VISIBLE);
+                        }
+                    });
+                }
+
+            }
+        };
+
+        mHandler.postDelayed(mRunnable, 2000);
+
+    }
+
+    private void removeDialog() {
+
+        if (mHandler != null)
+            mHandler.removeCallbacks(mRunnable);
+
     }
 
     private void issueListAPICall() {
@@ -285,7 +354,7 @@ public class CustomerMapFragment extends BaseFragment implements GoogleApiClient
         if (getActivity() != null) {
 
             LocationManager mLocManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-            if (mLocManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            if (mLocManager != null && mLocManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                 if (mGoogleApiClient != null && !mGoogleApiClient.isConnected()) {
                     initGoogleAPIClient();
                 } else {
@@ -465,11 +534,13 @@ public class CustomerMapFragment extends BaseFragment implements GoogleApiClient
             IssuesListResponse issuesListResponse = (IssuesListResponse) resObj;
             if (issuesListResponse.getMsgCode().equals(AppConstants.SUCCESS_CODE)) {
 
-                if (issuesListResponse.getIssueType().size() > 0) {
-                    DialogManager.getInstance().showIssuesListPopup(getActivity(), issuesListResponse.getIssueType(), new InterfaceEdtBtnCallback() {
+                if (issuesListResponse.getIssueType().getResult().size() > 0) {
+                    DialogManager.getInstance().showIssuesListPopup(getActivity(), issuesListResponse.getIssueType().getResult(), new InterfaceEdtBtnCallback() {
                         @Override
                         public void onPositiveClick(String editStr) {
-
+                            mAppointmentCardView.setVisibility(View.VISIBLE);
+                            mBookAppointmentBtn.setVisibility(View.GONE);
+                            commentDialog();
                         }
 
                         @Override

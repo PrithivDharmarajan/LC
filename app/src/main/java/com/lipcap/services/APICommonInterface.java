@@ -2,10 +2,9 @@ package com.lipcap.services;
 
 import com.lipcap.model.output.IssuesListResponse;
 import com.lipcap.model.output.LoginResponse;
-import com.lipcap.model.output.UserDetailsEntity;
 
 import retrofit2.Call;
-import retrofit2.http.Body;
+import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
@@ -20,7 +19,7 @@ public interface APICommonInterface {
     /*Registration API*/
     @FormUrlEncoded
     @POST("User/postUser")
-    Call<String> registrationAPI(@Body UserDetailsEntity userDetailsEntity);
+    Call<LoginResponse> registrationAPI(@Field("Name")String nameStr,@Field("MobileNo")String mobileNoStr,@Field("DeviceId")String deviceIdStr,@Field("CreatedDT")String createdDTStr,@Field("UserType")String userTypeStr);
 
     /*Registration API*/
     @GET("Issue/GetIssueType")

@@ -7,7 +7,6 @@ import com.lipcap.main.BaseActivity;
 import com.lipcap.main.BaseFragment;
 import com.lipcap.model.output.IssuesListResponse;
 import com.lipcap.model.output.LoginResponse;
-import com.lipcap.model.output.UserDetailsEntity;
 import com.lipcap.utils.AppConstants;
 import com.lipcap.utils.DialogManager;
 import com.lipcap.utils.PreferenceUtil;
@@ -59,23 +58,23 @@ public class APIRequestHandler {
 
 
     /*Registration API*/
-    public void registrationAPICall(UserDetailsEntity userDetailsEntity, final BaseActivity baseActivity) {
+    public void registrationAPICall(String nameStr,  String mobileNoStr,  String deviceIdStr,  String createdDTStr, String userTypeStr, final BaseActivity baseActivity) {
         DialogManager.getInstance().showProgress(baseActivity);
-        mServiceInterface.registrationAPI(userDetailsEntity).enqueue(new Callback<String>() {
+        mServiceInterface.registrationAPI( nameStr,   mobileNoStr,   deviceIdStr,   createdDTStr,  userTypeStr).enqueue(new Callback<LoginResponse>() {
             @Override
-            public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
+            public void onResponse(@NonNull Call<LoginResponse> call, @NonNull Response<LoginResponse> response) {
                 DialogManager.getInstance().hideProgress();
                 if (response.isSuccessful() && response.body() != null) {
                     baseActivity.onRequestSuccess(response.body());
                 } else {
-                    baseActivity.onRequestFailure("", new Throwable(response.raw().message()));
+                    baseActivity.onRequestFailure(new LoginResponse(), new Throwable(response.raw().message()));
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<LoginResponse> call, @NonNull Throwable t) {
                 DialogManager.getInstance().hideProgress();
-                baseActivity.onRequestFailure("", t);
+                baseActivity.onRequestFailure(new LoginResponse(), t);
             }
         });
     }

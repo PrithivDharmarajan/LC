@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,14 +27,11 @@ import java.util.ArrayList;
 
 public class DialogManager {
 
-    /*Init variable*/
-    private Dialog mProgressDialog, mNetworkErrorDialog, mAlertDialog, mOptionDialog,   mDevelopmentDialog, mIssueListDialog;
-    private Toast mToast;
-
-
     /*Init dialog instance*/
     private static final DialogManager sDialogInstance = new DialogManager();
-
+    /*Init variable*/
+    private Dialog mProgressDialog, mNetworkErrorDialog, mAlertDialog, mOptionDialog, mIssueListDialog, mReasonForCancelDialog,mCommentsDialog;
+    private Toast mToast;
 
     public static DialogManager getInstance() {
         return sDialogInstance;
@@ -174,7 +173,7 @@ public class DialogManager {
     }
 
     public Dialog showIssuesListPopup(final Context context, ArrayList<IssueListEntity> agentListArrList,
-                                     final InterfaceEdtBtnCallback dialogAlertInterface) {
+                                      final InterfaceEdtBtnCallback dialogAlertInterface) {
         alertDismiss(mIssueListDialog);
         mIssueListDialog = getDialog(context, R.layout.popup_select_issue_list_view);
 
@@ -226,6 +225,166 @@ public class DialogManager {
         alertShowing(mIssueListDialog);
         return mIssueListDialog;
     }
+
+
+    public Dialog showReasonForCancelPopup(final Context context,
+                                           final InterfaceEdtBtnCallback dialogAlertInterface) {
+        alertDismiss(mReasonForCancelDialog);
+        mReasonForCancelDialog = getDialog(context, R.layout.popup_reason_for_cancellation);
+
+        WindowManager.LayoutParams LayoutParams = new WindowManager.LayoutParams();
+        Window window = mReasonForCancelDialog.getWindow();
+
+        if (window != null) {
+            LayoutParams.copyFrom(window.getAttributes());
+            LayoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+            LayoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            window.setAttributes(LayoutParams);
+            window.setGravity(Gravity.CENTER);
+        }
+
+        Button positiveBtn, negativeBtn;
+        final RadioButton expectShortWaitTimeBtn, unableContactBtn, cobblerDeniedWorkBtn;
+
+        /*Init view*/
+
+        expectShortWaitTimeBtn = mReasonForCancelDialog.findViewById(R.id.expect_short_wait_time_btn);
+        unableContactBtn = mReasonForCancelDialog.findViewById(R.id.unable_contact_btn);
+        cobblerDeniedWorkBtn = mReasonForCancelDialog.findViewById(R.id.cobbler_denied_work_btn);
+
+        positiveBtn = mReasonForCancelDialog.findViewById(R.id.alert_positive_btn);
+        negativeBtn = mReasonForCancelDialog.findViewById(R.id.alert_negative_btn);
+
+
+        expectShortWaitTimeBtn.setChecked(true);
+        expectShortWaitTimeBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if(isChecked){
+                    unableContactBtn.setChecked(false);
+                    cobblerDeniedWorkBtn.setChecked(false);
+                }
+
+            }
+        });
+
+        unableContactBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if(isChecked){
+                    expectShortWaitTimeBtn.setChecked(false);
+                    cobblerDeniedWorkBtn.setChecked(false);
+                }
+
+            }
+        });
+        cobblerDeniedWorkBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if(isChecked){
+                    expectShortWaitTimeBtn.setChecked(false);
+                    unableContactBtn.setChecked(false);
+                }
+
+            }
+        });
+
+
+        positiveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mReasonForCancelDialog.dismiss();
+                dialogAlertInterface.onPositiveClick("1");
+            }
+        });
+        negativeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mReasonForCancelDialog.dismiss();
+                dialogAlertInterface.onNegativeClick();
+            }
+        });
+
+//        mAgentDialog.setCancelable(true);
+//        mAgentDialog.setCanceledOnTouchOutside(true);
+        alertShowing(mReasonForCancelDialog);
+        return mReasonForCancelDialog;
+    }
+
+
+    public Dialog showCommentsPopup(final Context context,
+                                           final InterfaceEdtBtnCallback dialogAlertInterface) {
+        alertDismiss(mCommentsDialog);
+        mCommentsDialog = getDialog(context, R.layout.popup_comments);
+
+        WindowManager.LayoutParams LayoutParams = new WindowManager.LayoutParams();
+        Window window = mCommentsDialog.getWindow();
+
+        if (window != null) {
+            LayoutParams.copyFrom(window.getAttributes());
+            LayoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+            LayoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            window.setAttributes(LayoutParams);
+            window.setGravity(Gravity.CENTER);
+        }
+
+        Button positiveBtn, negativeBtn;
+        final RadioButton workCompletedOnTimeBtn, workedProperlyBtn;
+
+        /*Init view*/
+
+        workCompletedOnTimeBtn = mCommentsDialog.findViewById(R.id.work_completed_on_time_btn);
+        workedProperlyBtn = mCommentsDialog.findViewById(R.id.worked_properly_btn);
+
+        positiveBtn = mCommentsDialog.findViewById(R.id.alert_positive_btn);
+        negativeBtn = mCommentsDialog.findViewById(R.id.alert_negative_btn);
+
+        workCompletedOnTimeBtn.setChecked(true);
+        workCompletedOnTimeBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if(isChecked){
+                    workedProperlyBtn.setChecked(false);
+                }
+
+            }
+        });
+
+        workedProperlyBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if(isChecked){
+                    workCompletedOnTimeBtn.setChecked(false);
+                }
+
+            }
+        });
+
+
+        positiveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCommentsDialog.dismiss();
+                dialogAlertInterface.onPositiveClick("1");
+            }
+        });
+        negativeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCommentsDialog.dismiss();
+                dialogAlertInterface.onNegativeClick();
+            }
+        });
+
+        alertShowing(mCommentsDialog);
+        return mCommentsDialog;
+    }
+
 
     public void showNetworkErrorPopup(Context context, String errorStr, final InterfaceBtnCallback dialogAlertInterface) {
 

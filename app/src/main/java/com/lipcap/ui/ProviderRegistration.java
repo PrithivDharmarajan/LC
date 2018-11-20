@@ -129,7 +129,7 @@ public class ProviderRegistration extends BaseActivity {
             userDetailsEntity.setUserType(2);
             userDetailsEntity.setDeviceId(PreferenceUtil.getStringPreferenceValue(this,AppConstants.PUSH_DEVICE_ID));
 
-            APIRequestHandler.getInstance().registrationAPICall(userDetailsEntity,this);
+            APIRequestHandler.getInstance().registrationAPICall(nameStr,   phoneNumStr,   PreferenceUtil.getStringPreferenceValue(this,AppConstants.PUSH_DEVICE_ID),   DateUtil.getCurrentDate(),  1+"",this);
         }
     }
     /*API request success and failure*/

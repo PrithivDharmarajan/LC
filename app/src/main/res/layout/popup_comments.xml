@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/LayoutWidMatch_HeiWrap"
+    android:layout_margin="@dimen/size20"
+    android:layout_marginTop="@dimen/text18"
+    android:orientation="vertical"
+    app:cardCornerRadius="@dimen/size3">
+
+    <LinearLayout
+        style="@style/LayoutWidMatch_HeiWrap"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/TextOpenSansSemiBold"
+            android:padding="@dimen/size10"
+            android:text="@string/comment"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text16" />
+
+        <View
+            style="@style/LayoutWidMatch_HeiWrap"
+            android:layout_height="@dimen/size1"
+            android:layout_marginStart="@dimen/size18"
+            android:layout_marginEnd="@dimen/size18"
+            android:background="@color/gray" />
+
+        <RelativeLayout
+            style="@style/LayoutWidMatch_HeiWrap"
+            android:layout_marginStart="@dimen/size23"
+            android:layout_marginTop="@dimen/size6"
+            android:layout_marginEnd="@dimen/size23"
+            android:layout_marginBottom="@dimen/size6">
+
+            <TextView
+                android:gravity="start|center_vertical"
+                style="@style/TextOpenSansRegular"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/size2"
+                android:text="@string/work_completed_on_time"
+                android:layout_marginTop="@dimen/size4"
+                android:layout_marginBottom="@dimen/size4"
+                android:layout_toStartOf="@+id/work_completed_on_time_btn"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text12" />
+
+            <RadioButton
+                android:id="@+id/work_completed_on_time_btn"
+                style="@style/LayoutWrap"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:buttonTint="@color/orange"
+                tools:targetApi="lollipop" />
+        </RelativeLayout>
+        <RelativeLayout
+            style="@style/LayoutWidMatch_HeiWrap"
+            android:layout_marginStart="@dimen/size23"
+            android:layout_marginTop="@dimen/size6"
+            android:layout_marginEnd="@dimen/size23"
+            android:layout_marginBottom="@dimen/size6">
+
+            <TextView
+                android:gravity="start|center_vertical"
+                style="@style/TextOpenSansRegular"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/size2"
+                android:text="@string/worked_properly"
+                android:layout_marginTop="@dimen/size4"
+                android:layout_marginBottom="@dimen/size4"
+                android:layout_toStartOf="@+id/worked_properly_btn"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text12" />
+
+            <RadioButton
+                android:id="@+id/worked_properly_btn"
+                style="@style/LayoutWrap"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:buttonTint="@color/orange"
+                tools:targetApi="lollipop" />
+        </RelativeLayout>
+        <LinearLayout
+            style="@style/LayoutWidMatch_HeiWrap"
+            android:layout_marginStart="@dimen/size23"
+            android:layout_marginEnd="@dimen/size23"
+            android:layout_marginBottom="@dimen/size6">
+
+            <TextView
+                android:gravity="start|center_vertical"
+                style="@style/TextOpenSansRegular"
+                android:layout_weight="1"
+                android:layout_width="0dip"
+                android:layout_marginEnd="@dimen/size2"
+                android:text="@string/rate"
+                android:layout_marginTop="@dimen/size4"
+                android:layout_marginBottom="@dimen/size4"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text12" />
+
+            <RatingBar
+                android:id="@+id/friendliness_rating_bar"
+                style="?android:attr/ratingBarStyleIndicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:isIndicator="false"
+                android:numStars="5"
+                android:scaleX="0.6"
+                android:scaleY="0.6"
+                android:progressTint="@color/orange"
+                android:rating="1"
+                android:stepSize="1"
+                tools:targetApi="lollipop" />
+        </LinearLayout>
+        <TextView
+            android:gravity="start|center_vertical"
+            style="@style/TextOpenSansRegular"
+            android:layout_marginStart="@dimen/size23"
+            android:layout_marginTop="@dimen/size6"
+            android:layout_marginEnd="@dimen/size23"
+            android:text="@string/review"
+            android:layout_marginBottom="@dimen/size4"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text12" />
+        <EditText
+            android:id="@+id/type_edt"
+            android:layout_marginStart="@dimen/size23"
+            android:layout_marginTop="@dimen/size8"
+            android:padding="@dimen/size3"
+            android:layout_marginEnd="@dimen/size23"
+            android:layout_marginBottom="@dimen/size4"
+            style="@style/EditTextOpenSansRegular"
+            android:hint="@string/type"
+            android:gravity="start"
+            android:imeActionId="100"
+            android:background="@drawable/edt_gray_bg"
+            android:imeActionLabel="@string/cancel"
+            android:imeOptions="actionDone|flagNoExtractUi"
+            android:inputType="textCapWords"
+            android:maxLines="1"
+            tools:ignore="Autofill" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size40"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <Button
+                android:id="@+id/alert_negative_btn"
+                style="@style/ButtonOpenSansSemiBold"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/gray"
+                android:text="@string/cancel"
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
+
+            <Button
+                android:id="@+id/alert_positive_btn"
+                style="@style/ButtonOpenSansSemiBold"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/orange"
+                android:text="@string/submit"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text14" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+</android.support.v7.widget.CardView>

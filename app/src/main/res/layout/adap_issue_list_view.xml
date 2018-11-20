@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/LayoutWidMatch_HeiWrap"
-    android:orientation="vertical">
+    style="@style/LayoutWidMatch_HeiWrap" >
 
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/spinner_txt"

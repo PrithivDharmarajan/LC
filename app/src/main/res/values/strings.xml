@@ -38,7 +38,19 @@
 
     <!--Customer Map-->
     <string name="select_issue">Select the issue</string>
+    <string name="reason_cancel">Reason for cancellation</string>
+    <string name="expect_short_wait_time">Expected a Short wait time</string>
+    <string name="unable_contact">Unable to contact</string>
+    <string name="cobbler_denied_work">Cobbler denied to work</string>
+    <string name="others">Others</string>
+    <string name="type">Type</string>
+    <string name="dont_cancel">Don\'t Cancel</string>
     <string name="cancel">Cancel</string>
+    <string name="comment">Comment</string>
+    <string name="work_completed_on_time">Work completed on time</string>
+    <string name="worked_properly">Worked properly</string>
+    <string name="rate">Rate</string>
+    <string name="review">Review</string>
 
 
     <!--Home Screen-->

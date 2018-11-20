@@ -1,19 +1,16 @@
 package com.lipcap.model.output;
 
-import java.util.ArrayList;
-
 public class IssuesListResponse extends CommonResponse {
 
-    private ArrayList<IssueListEntity> IssueType=new ArrayList<>();
+    private ResultListEntity IssueType = new ResultListEntity();
 
-    public ArrayList<IssueListEntity> getIssueType() {
+    public ResultListEntity getIssueType() {
         return IssueType;
     }
 
-    public void setIssueType(ArrayList<IssueListEntity> issueType) {
+    public void setIssueType(ResultListEntity issueType) {
         IssueType = issueType;
     }
-
 
 
 }

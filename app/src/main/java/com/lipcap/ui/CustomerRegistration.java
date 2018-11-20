@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.lipcap.R;
 import com.lipcap.main.BaseActivity;
 import com.lipcap.model.output.LoginResponse;
-import com.lipcap.model.output.UserDetailsEntity;
 import com.lipcap.services.APIRequestHandler;
 import com.lipcap.utils.AppConstants;
 import com.lipcap.utils.DateUtil;
@@ -122,14 +121,7 @@ public class CustomerRegistration extends BaseActivity {
             DialogManager.getInstance().showAlertPopup(this, getString(R.string.plz_enter_phone_num), this);
         }  else {
 
-            UserDetailsEntity userDetailsEntity=new UserDetailsEntity();
-            userDetailsEntity.setName(nameStr);
-            userDetailsEntity.setMobileNo(phoneNumStr);
-            userDetailsEntity.setCreatedDT(DateUtil.getCurrentDate());
-            userDetailsEntity.setUserType(1);
-            userDetailsEntity.setDeviceId(PreferenceUtil.getStringPreferenceValue(this,AppConstants.PUSH_DEVICE_ID));
-
-            APIRequestHandler.getInstance().registrationAPICall(userDetailsEntity,this);
+            APIRequestHandler.getInstance().registrationAPICall(nameStr,   phoneNumStr,   PreferenceUtil.getStringPreferenceValue(this,AppConstants.PUSH_DEVICE_ID),   DateUtil.getCurrentDate(),  1+"",this);
         }
     }
 
