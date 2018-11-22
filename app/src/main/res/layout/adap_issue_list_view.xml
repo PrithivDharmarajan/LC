@@ -1,25 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/LayoutWidMatch_HeiWrap" >
+    style="@style/LayoutWidMatch_HeiWrap">
 
-    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/spinner_txt"
-        android:gravity="start|center_vertical"
+    <TextView
+        android:id="@+id/issue_name_txt"
         style="@style/TextOpenSansRegular"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="@dimen/size2"
         android:layout_marginTop="@dimen/size4"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:layout_marginEnd="@dimen/size2"
         android:layout_marginBottom="@dimen/size4"
-        android:layout_toStartOf="@+id/issue_radio_btn"
+        android:layout_toStartOf="@+id/issue_status_btn"
+        android:gravity="start|center_vertical"
         android:textColor="@color/black"
         android:textSize="@dimen/text12" />
 
-    <RadioButton
-        android:id="@+id/issue_radio_btn"
-        style="@style/LayoutWrap"
+    <Button
+        android:id="@+id/issue_status_btn"
+        style="@style/ButtonOpenSansSemiBold"
+        android:layout_width="wrap_content"
+        android:paddingStart="@dimen/size15"
+        android:layout_marginTop="@dimen/size5"
+        android:layout_marginBottom="@dimen/size5"
+        android:paddingEnd="@dimen/size15"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:buttonTint="@color/orange"
+        android:text="@string/completed"
         tools:targetApi="lollipop" />
 </RelativeLayout>

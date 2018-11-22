@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/LayoutWidMatch_HeiWrap" >
+
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/spinner_txt"
+        android:gravity="start|center_vertical"
+        style="@style/TextOpenSansRegular"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/size2"
+        android:layout_marginTop="@dimen/size4"
+        android:layout_marginBottom="@dimen/size4"
+        android:layout_toStartOf="@+id/issue_radio_btn"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text12" />
+
+    <RadioButton
+        android:id="@+id/issue_radio_btn"
+        style="@style/LayoutWrap"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:buttonTint="@color/orange"
+        tools:targetApi="lollipop" />
+</RelativeLayout>

@@ -534,8 +534,8 @@ public class CustomerMapFragment extends BaseFragment implements GoogleApiClient
             IssuesListResponse issuesListResponse = (IssuesListResponse) resObj;
             if (issuesListResponse.getMsgCode().equals(AppConstants.SUCCESS_CODE)) {
 
-                if (issuesListResponse.getIssueType().getResult().size() > 0) {
-                    DialogManager.getInstance().showIssuesListPopup(getActivity(), issuesListResponse.getIssueType().getResult(), new InterfaceEdtBtnCallback() {
+                if (issuesListResponse.getIssueType().size() > 0) {
+                    DialogManager.getInstance().showIssuesListPopup(getActivity(), issuesListResponse.getIssueType(), new InterfaceEdtBtnCallback() {
                         @Override
                         public void onPositiveClick(String editStr) {
                             mAppointmentCardView.setVisibility(View.VISIBLE);

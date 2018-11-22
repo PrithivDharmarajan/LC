@@ -60,6 +60,11 @@
     <string name="call_shoe_repairer"> Call Shoe Repairer</string>
     <string name="cancel_appointment"> Cancel the Appointment</string>
 
+    <!--Issue List-->
+    <string name="completed">Completed</string>
+    <string name="in_progress">In-Progress</string>
+    <string name="canceled">Canceled</string>
+
 
     <!--General-->
     <string name="go_settings_per">You have denied the app permissions. Go to Settings and Enable the Permissions.</string>

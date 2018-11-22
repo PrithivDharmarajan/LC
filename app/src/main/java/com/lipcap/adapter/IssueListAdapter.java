@@ -20,13 +20,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class SelectIssueListAdapter extends RecyclerView.Adapter<SelectIssueListAdapter.Holder> {
+public class IssueListAdapter extends RecyclerView.Adapter<IssueListAdapter.Holder> {
 
     private ArrayList<IssueListEntity> mIssueListArrList;
     private InterfaceEdtBtnCallback mInterfaceEdtBtnCallback;
     private CompoundButton mLastRadioBtn;
 
-    public SelectIssueListAdapter(ArrayList<IssueListEntity> agentListArrList, InterfaceEdtBtnCallback interfaceEdtBtnCallback, Context context) {
+    public IssueListAdapter(ArrayList<IssueListEntity> agentListArrList, InterfaceEdtBtnCallback interfaceEdtBtnCallback, Context context) {
         mIssueListArrList = agentListArrList;
         mInterfaceEdtBtnCallback = interfaceEdtBtnCallback;
     }
@@ -34,7 +34,7 @@ public class SelectIssueListAdapter extends RecyclerView.Adapter<SelectIssueList
     @NonNull
     @Override
     public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new Holder(LayoutInflater.from(parent.getContext()).inflate(R.layout.adap_selected_issue_list_view, parent, false));
+        return new Holder(LayoutInflater.from(parent.getContext()).inflate(R.layout.adap_issue_list_view, parent, false));
     }
 
     @Override
