@@ -7,9 +7,9 @@ import android.content.Intent;
 import com.crashlytics.android.BuildConfig;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
-import com.lipcap.ui.CustomerHome;
-import com.lipcap.ui.Login;
-import com.lipcap.ui.ProviderHome;
+import com.lipcap.ui.common.Login;
+import com.lipcap.ui.customer.CustomerHome;
+import com.lipcap.ui.provider.ProviderHome;
 import com.lipcap.utils.AppConstants;
 import com.lipcap.utils.PreferenceUtil;
 

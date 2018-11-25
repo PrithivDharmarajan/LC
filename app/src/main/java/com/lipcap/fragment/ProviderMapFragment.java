@@ -37,6 +37,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.lipcap.R;
 import com.lipcap.main.BaseFragment;
+import com.lipcap.services.APIRequestHandler;
 import com.lipcap.utils.AppConstants;
 import com.lipcap.utils.DialogManager;
 import com.lipcap.utils.InterfaceBtnCallback;
@@ -52,10 +53,9 @@ import butterknife.OnClick;
 public class ProviderMapFragment extends BaseFragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, OnMapReadyCallback, LocationListener
         , GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener {
 
-    private GoogleMap mGoogleMap;
-
-    private GoogleApiClient mGoogleApiClient;
     private final int REQUEST_CHECK_SETTINGS = 300;
+    private GoogleMap mGoogleMap;
+    private GoogleApiClient mGoogleApiClient;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -86,8 +86,6 @@ public class ProviderMapFragment extends BaseFragment implements GoogleApiClient
     /*Fragment manual onResume*/
     @Override
     public void onFragmentResume() {
-
-        /* If the value of visibleInt is zero,  the view will set gone. Or if the value of visibleInt is one,  the view will set visible. Or else, the view will set gone*/
         if (getActivity() != null) {
             initView();
         }
@@ -99,34 +97,27 @@ public class ProviderMapFragment extends BaseFragment implements GoogleApiClient
 
         AppConstants.TAG = this.getClass().getSimpleName();
 
+        initGoogleAPIClient();
 
-            initGoogleAPIClient();
+        SupportMapFragment fragment = (SupportMapFragment) this.getChildFragmentManager()
+                .findFragmentById(R.id.map);
 
-            SupportMapFragment fragment = (SupportMapFragment) this.getChildFragmentManager()
-                    .findFragmentById(R.id.map);
-
-            /* Map synchronization */
-        if(fragment!=null)
+        /* Map synchronization */
+        if (fragment != null)
             fragment.getMapAsync(this);
-
 
 
     }
 
 
-
     /*Click Event*/
-    @OnClick({R.id.book_appointment_btn,R.id.show_current_location_img})
+    @OnClick({  R.id.show_current_location_img})
     public void onClick(View v) {
         if (getActivity() != null) {
             switch (v.getId()) {
-                case R.id.book_appointment_btn:
-                    break;
-                case R.id.show_current_location_img:
+                 case R.id.show_current_location_img:
                     setCurrentLocation();
                     break;
-
-
             }
         }
     }
@@ -135,7 +126,7 @@ public class ProviderMapFragment extends BaseFragment implements GoogleApiClient
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+        if (getActivity()!=null&&ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             permissionsAccessLocation(2);
             return;
@@ -164,7 +155,6 @@ public class ProviderMapFragment extends BaseFragment implements GoogleApiClient
     }
 
 
-
     /*Init Google API clients*/
     private void initGoogleAPIClient() {
         if (getActivity() != null) {
@@ -178,9 +168,6 @@ public class ProviderMapFragment extends BaseFragment implements GoogleApiClient
     }
 
 
-
-
-
     /* Location update */
     private void startLocationUpdate() {
         if (getActivity() != null) {
@@ -188,17 +175,17 @@ public class ProviderMapFragment extends BaseFragment implements GoogleApiClient
             locationRequest.setInterval(1000);
             locationRequest.setFastestInterval(1000);
             locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-            /* location Request */
+            /* customer_location Request */
             locationRequest.setSmallestDisplacement(25f);
             if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                /*Ask for permission on location access*/
+                /*Ask for permission on customer_location access*/
                 permissionsAccessLocation(1);
             }
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, locationRequest, ProviderMapFragment.this);
         }
     }
 
-    /*Set current location to map view*/
+    /*Set current customer_location to map view*/
     private void setCurrentLocation() {
         if (getActivity() != null) {
             if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -206,28 +193,28 @@ public class ProviderMapFragment extends BaseFragment implements GoogleApiClient
                 return;
             }
             if (mGoogleMap != null) {
-                /* Enable current location */
+                /* Enable current customer_location */
                 mGoogleMap.setMyLocationEnabled(true);
                 mGoogleMap.getUiSettings().setMyLocationButtonEnabled(false);
                 Location currentLoc = getCurrentLatLong();
                 LatLng coordinate = new LatLng(currentLoc.getLatitude(), currentLoc.getLongitude());
                 hideSoftKeyboard();
 
-                    mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coordinate, 17));
+                mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coordinate, 17));
 
             }
         }
     }
 
 
-    /* Get current location */
+    /* Get current customer_location */
     private Location getCurrentLatLong() {
 
         Location location = new Location("");
         if (getActivity() != null) {
             if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 /*Ask for permission on locatio access
-                 * Set flag for call back to continue this process*/
+                 * Set flag for call_provider back to continue this process*/
                 permissionsAccessLocation(3);
             }
 
@@ -236,7 +223,6 @@ public class ProviderMapFragment extends BaseFragment implements GoogleApiClient
             if (mLastLocation != null) {
                 location.setLatitude(mLastLocation.getLatitude());
                 location.setLongitude(mLastLocation.getLongitude());
-
             }
         }
 
@@ -306,7 +292,7 @@ public class ProviderMapFragment extends BaseFragment implements GoogleApiClient
                         if (getActivity() != null) {
                             switch (status.getStatusCode()) {
                                 case LocationSettingsStatusCodes.SUCCESS:
-                                    // API call.
+                                    // API call_provider.
 
                                     if (mGoogleApiClient != null && !mGoogleApiClient.isConnected()) {
                                         initGoogleAPIClient();
@@ -360,7 +346,7 @@ public class ProviderMapFragment extends BaseFragment implements GoogleApiClient
         }
     }
 
-    /* to stop the location updates */
+    /* to stop the customer_location updates */
     private void stopLocationUpdates() {
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
             LocationServices.FusedLocationApi.removeLocationUpdates(
@@ -378,8 +364,7 @@ public class ProviderMapFragment extends BaseFragment implements GoogleApiClient
     @Override
     public void onLocationChanged(Location location) {
         if (location != null) {
-//            AppConstants.CURRENT_LATITUDE = location.getLatitude();
-//            AppConstants.CURRENT_LONGITUDE = location.getLongitude();
+            APIRequestHandler.getInstance().latAndLongUpdateAPICall(String.valueOf(location.getLatitude()),String.valueOf(location.getLongitude()),this);
         }
     }
 
@@ -433,7 +418,6 @@ public class ProviderMapFragment extends BaseFragment implements GoogleApiClient
             return false;
         }
     }
-
 
 
     @Override

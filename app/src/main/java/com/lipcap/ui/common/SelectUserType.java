@@ -1,4 +1,4 @@
-package com.lipcap.ui;
+package com.lipcap.ui.common;
 
 import android.content.res.Configuration;
 import android.os.Build;
@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 
 import com.lipcap.R;
 import com.lipcap.main.BaseActivity;
+import com.lipcap.ui.customer.CustomerRegistration;
+import com.lipcap.ui.provider.ProviderRegistration;
 import com.lipcap.utils.AppConstants;
 import com.lipcap.utils.PreferenceUtil;
 

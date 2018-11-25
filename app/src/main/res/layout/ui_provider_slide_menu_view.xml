@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/LayoutMatch">
+
+    <ScrollView
+        style="@style/LayoutMatch"
+        android:layout_above="@+id/bottom_lay">
+
+        <LinearLayout
+            style="@style/LayoutWidMatch_HeiWrap"
+            android:layout_marginTop="@dimen/size40"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/profile_lay"
+                style="@style/LayoutWidMatch_HeiWrap"
+                android:layout_height="@dimen/size45"
+                android:background="?android:attr/selectableItemBackground"
+                android:paddingStart="@dimen/size30"
+                android:paddingEnd="0dip"
+                tools:ignore="UseCompoundDrawables">
+
+                <ImageView
+                    android:layout_width="@dimen/size27"
+                    android:layout_height="@dimen/size27"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@string/app_name"
+                    android:padding="@dimen/size5"
+                    android:tint="@color/blue"
+                    android:src="@drawable/profile" />
+
+                <TextView
+                    style="@style/TextOpenSansRegular"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/size15"
+                    android:gravity="start"
+                    android:text="@string/profile"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text13" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size1"
+                android:layout_marginStart="@dimen/size30"
+                android:background="@color/blue" />
+
+            <LinearLayout
+                android:id="@+id/issue_list_lay"
+                style="@style/LayoutWidMatch_HeiWrap"
+                android:layout_height="@dimen/size45"
+                android:background="?android:attr/selectableItemBackground"
+                android:paddingStart="@dimen/size30"
+                android:paddingEnd="0dip"
+                tools:ignore="UseCompoundDrawables">
+
+                <ImageView
+                    android:layout_width="@dimen/size27"
+                    android:layout_height="@dimen/size27"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:tint="@color/blue"
+                    android:contentDescription="@string/app_name"
+                    android:padding="@dimen/size5"
+                    android:src="@drawable/issue_list" />
+
+                <TextView
+                    style="@style/TextOpenSansRegular"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/size15"
+                    android:gravity="start"
+                    android:text="@string/issue_list"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text13" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size1"
+                android:layout_marginStart="@dimen/size30"
+                android:background="@color/blue" />
+
+            <LinearLayout
+                android:id="@+id/notification_lay"
+                style="@style/LayoutWidMatch_HeiWrap"
+                android:layout_height="@dimen/size45"
+                android:background="?android:attr/selectableItemBackground"
+                android:paddingStart="@dimen/size30"
+                android:paddingEnd="0dip"
+                tools:ignore="UseCompoundDrawables">
+
+                <ImageView
+                    android:layout_width="@dimen/size27"
+                    android:layout_height="@dimen/size27"
+                    android:tint="@color/blue"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@string/app_name"
+                    android:padding="@dimen/size5"
+                    android:src="@drawable/notification" />
+
+                <TextView
+                    style="@style/TextOpenSansRegular"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/size15"
+                    android:gravity="start"
+                    android:text="@string/notification"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text13" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size1"
+                android:layout_marginStart="@dimen/size30"
+                android:background="@color/blue" />
+
+            <LinearLayout
+                android:id="@+id/rate_app_lay"
+                style="@style/LayoutWidMatch_HeiWrap"
+                android:layout_height="@dimen/size45"
+                android:background="?android:attr/selectableItemBackground"
+                android:paddingStart="@dimen/size30"
+                android:paddingEnd="0dip"
+                tools:ignore="UseCompoundDrawables">
+
+                <ImageView
+                    android:layout_width="@dimen/size27"
+                    android:layout_height="@dimen/size27"
+                    android:tint="@color/blue"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@string/app_name"
+                    android:padding="@dimen/size5"
+                    android:src="@drawable/rate_app" />
+
+                <TextView
+                    style="@style/TextOpenSansRegular"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/size15"
+                    android:gravity="start"
+                    android:text="@string/rate_app"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text13" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size1"
+                android:layout_marginStart="@dimen/size30"
+                android:background="@color/blue" />
+
+            <LinearLayout
+                android:id="@+id/contact_lay"
+                style="@style/LayoutWidMatch_HeiWrap"
+                android:layout_height="@dimen/size45"
+                android:background="?android:attr/selectableItemBackground"
+                android:paddingStart="@dimen/size30"
+                android:paddingEnd="0dip"
+                tools:ignore="UseCompoundDrawables">
+
+                <ImageView
+                    android:layout_width="@dimen/size27"
+                    android:layout_height="@dimen/size27"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:tint="@color/blue"
+                    android:contentDescription="@string/app_name"
+                    android:padding="@dimen/size5"
+                    android:src="@drawable/contact" />
+
+                <TextView
+                    style="@style/TextOpenSansRegular"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/size15"
+                    android:gravity="start"
+                    android:text="@string/contact"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text13" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size1"
+                android:layout_marginStart="@dimen/size30"
+                android:background="@color/blue" />
+
+            <LinearLayout
+                android:id="@+id/support_lay"
+                style="@style/LayoutWidMatch_HeiWrap"
+                android:layout_height="@dimen/size45"
+                android:background="?android:attr/selectableItemBackground"
+                android:paddingStart="@dimen/size30"
+                android:paddingEnd="0dip"
+                tools:ignore="UseCompoundDrawables">
+
+                <ImageView
+                    android:layout_width="@dimen/size27"
+                    android:layout_height="@dimen/size27"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@string/app_name"
+                    android:padding="@dimen/size5"
+                    android:tint="@color/blue"
+                    android:src="@drawable/support" />
+
+                <TextView
+                    style="@style/TextOpenSansRegular"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/size15"
+                    android:gravity="start"
+                    android:text="@string/lip_cap_support"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text13" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size1"
+                android:layout_marginStart="@dimen/size30"
+                android:background="@color/blue" />
+
+            <LinearLayout
+                android:id="@+id/about_the_app_lay"
+                style="@style/LayoutWidMatch_HeiWrap"
+                android:layout_height="@dimen/size45"
+                android:background="?android:attr/selectableItemBackground"
+                android:paddingStart="@dimen/size30"
+                android:paddingEnd="0dip"
+                tools:ignore="UseCompoundDrawables">
+
+                <ImageView
+                    android:layout_width="@dimen/size27"
+                    android:layout_height="@dimen/size27"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:tint="@color/blue"
+                    android:contentDescription="@string/app_name"
+                    android:padding="@dimen/size5"
+                    android:src="@drawable/about_the_app" />
+
+                <TextView
+                    style="@style/TextOpenSansRegular"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/size15"
+                    android:gravity="start"
+                    android:text="@string/about_the_app"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text13" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size1"
+                android:layout_marginStart="@dimen/size30"
+                android:background="@color/blue" />
+        </LinearLayout>
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/bottom_lay"
+        style="@style/LayoutWidMatch_HeiWrap"
+        android:layout_height="@dimen/size130"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/bottom_blue_bg">
+
+
+        <LinearLayout
+            android:id="@+id/logout_lay"
+            style="@style/LayoutWidMatch_HeiWrap"
+            android:layout_height="@dimen/size45"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/size20"
+            android:background="?android:attr/selectableItemBackground"
+            android:paddingStart="@dimen/size30"
+            android:paddingEnd="0dip"
+            tools:ignore="UseCompoundDrawables">
+
+            <ImageView
+                android:layout_width="@dimen/size27"
+                android:layout_height="@dimen/size27"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/app_name"
+                android:padding="@dimen/size5"
+                android:src="@drawable/notification" />
+
+            <TextView
+                style="@style/TextOpenSansRegular"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/size15"
+                android:gravity="start"
+                android:text="@string/logout"
+                android:textSize="@dimen/text13" />
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

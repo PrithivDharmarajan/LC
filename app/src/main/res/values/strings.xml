@@ -30,9 +30,10 @@
     <string name="profile">Profile</string>
     <string name="issue_list">Issue List</string>
     <string name="notification">Notification</string>
-    <string name="rate_service_provider">Rate the Service Provider</string>
+    <string name="rate_app">Rate the App</string>
     <string name="contact">Contact</string>
     <string name="support">Support</string>
+    <string name="lip_cap_support">Lip Cap Support</string>
     <string name="about_the_app">About the app</string>
     <string name="logout">logout</string>
 
@@ -58,7 +59,11 @@
     <string name="user_not_update"> User does not update location setting</string>
     <string name="appointment_accepted"> Appointment Accepted</string>
     <string name="call_shoe_repairer"> Call Shoe Repairer</string>
-    <string name="cancel_appointment"> Cancel the Appointment</string>
+    <string name="cancel_appointment"> Cancel the appointment</string>
+
+    <string name="customer_name"> Customer name</string>
+    <string name="call_customer">Call Customer</string>
+    <string name="accept_appointment"> Accept the appointment</string>
 
     <!--Issue List-->
     <string name="completed">Completed</string>

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:padding="@dimen/size10"
     style="@style/LayoutWidMatch_HeiWrap">
 
     <TextView
         android:id="@+id/issue_name_txt"
-        style="@style/TextOpenSansRegular"
+        style="@style/TextOpenSansSemiBold"
         android:layout_centerVertical="true"
         android:layout_marginTop="@dimen/size4"
         android:maxLines="2"
@@ -15,16 +16,19 @@
         android:layout_toStartOf="@+id/issue_status_btn"
         android:gravity="start|center_vertical"
         android:textColor="@color/black"
-        android:textSize="@dimen/text12" />
+        android:textSize="@dimen/text13" />
 
     <Button
         android:id="@+id/issue_status_btn"
         style="@style/ButtonOpenSansSemiBold"
         android:layout_width="wrap_content"
-        android:paddingStart="@dimen/size15"
-        android:layout_marginTop="@dimen/size5"
-        android:layout_marginBottom="@dimen/size5"
-        android:paddingEnd="@dimen/size15"
+        android:textSize="@dimen/text10"
+        android:minHeight="0dip"
+        android:minWidth="0dip"
+        android:padding="@dimen/size10"
+        android:layout_height="wrap_content"
+        android:background="@color/orange"
+        android:textColor="@color/white"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:text="@string/completed"

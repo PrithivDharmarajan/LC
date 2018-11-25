@@ -3,6 +3,8 @@ package com.lipcap.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.google.gson.Gson;
+import com.lipcap.model.output.UserDetailsEntity;
 
 
 public class PreferenceUtil {
@@ -82,6 +84,41 @@ public class PreferenceUtil {
     /*Get String value from preference*/
     public static String getStringPreferenceValue(Context context, String key) {
         return (String) getValueFromPreference(context, STRING_PREFERENCE, key);
+    }
+
+    /*Get user Id value from preference*/
+    public static String getUserId(Context context) {
+        return getStringPreferenceValue(context, AppConstants.USER_ID);
+    }
+
+
+    /*Store user details to preference*/
+    public static void storeUserDetails(Context context, UserDetailsEntity userDetailsEntity) {
+        String userIdStr = "", userDetailStr = "";
+        int userTypeInt = 0;
+
+        Gson gson = new Gson();
+        userIdStr = String.valueOf(userDetailsEntity.getId());
+        userTypeInt = userDetailsEntity.getUserType();
+        userDetailStr = gson.toJson(userDetailsEntity);
+
+        PreferenceUtil.storeValueToPreference(context, PreferenceUtil.STRING_PREFERENCE,
+                AppConstants.USER_DETAILS, userDetailStr);
+        PreferenceUtil.storeValueToPreference(context, PreferenceUtil.STRING_PREFERENCE,
+                AppConstants.USER_ID, userIdStr);
+        PreferenceUtil.storeBoolPreferenceValue(context,AppConstants.CURRENT_USER_IS_PROVIDER,userTypeInt==2);
+
+    }
+
+    /*Get user details from preference*/
+    public static UserDetailsEntity getUserDetailsRes(Context context) {
+        UserDetailsEntity userDetailsEntityRes = new UserDetailsEntity();
+
+        String userDetailsStr = getStringPreferenceValue(context, AppConstants.USER_DETAILS);
+        if (userDetailsStr != null && !userDetailsStr.isEmpty()) {
+            userDetailsEntityRes = new Gson().fromJson(userDetailsStr, UserDetailsEntity.class);
+        }
+        return userDetailsEntityRes;
     }
 
 }

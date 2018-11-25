@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <application
         android:name=".main.LipCapApplication"
@@ -22,7 +23,7 @@
 
         <!-- First launch screen -->
         <activity
-            android:name=".ui.Splash"
+            android:name=".ui.common.Splash"
             android:theme="@style/AppSplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,27 +33,27 @@
         </activity>
 
         <activity
-            android:name=".ui.Login"
+            android:name=".ui.common.Login"
             android:configChanges="keyboardHidden|orientation|screenSize" />
 
         <activity
-            android:name=".ui.SelectUserType"
+            android:name=".ui.common.SelectUserType"
             android:configChanges="keyboardHidden|orientation|screenSize" />
 
         <activity
-            android:name=".ui.CustomerRegistration"
+            android:name=".ui.customer.CustomerRegistration"
             android:configChanges="keyboardHidden|orientation|screenSize" />
 
         <activity
-            android:name=".ui.ProviderRegistration"
+            android:name=".ui.provider.ProviderRegistration"
             android:configChanges="keyboardHidden|orientation|screenSize" />
 
         <activity
-            android:name=".ui.CustomerHome"
+            android:name=".ui.customer.CustomerHome"
             android:configChanges="keyboardHidden|orientation|screenSize" />
 
         <activity
-            android:name=".ui.ProviderHome"
+            android:name=".ui.provider.ProviderHome"
             android:configChanges="keyboardHidden|orientation|screenSize" />
 
         <!-- Fabric API key -->

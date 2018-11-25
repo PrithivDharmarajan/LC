@@ -115,7 +115,7 @@
                 android:background="@color/orange" />
 
             <LinearLayout
-                android:id="@+id/rate_service_provider_lay"
+                android:id="@+id/rate_app_lay"
                 style="@style/LayoutWidMatch_HeiWrap"
                 android:layout_height="@dimen/size45"
                 android:background="?android:attr/selectableItemBackground"
@@ -130,14 +130,14 @@
                     android:adjustViewBounds="true"
                     android:contentDescription="@string/app_name"
                     android:padding="@dimen/size5"
-                    android:src="@drawable/rate_service_provider" />
+                    android:src="@drawable/rate_app" />
 
                 <TextView
                     style="@style/TextOpenSansRegular"
                     android:layout_gravity="center"
                     android:layout_marginStart="@dimen/size15"
                     android:gravity="start"
-                    android:text="@string/rate_service_provider"
+                    android:text="@string/rate_app"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text13" />
             </LinearLayout>
@@ -205,7 +205,7 @@
                     android:layout_gravity="center"
                     android:layout_marginStart="@dimen/size15"
                     android:gravity="start"
-                    android:text="@string/support"
+                    android:text="@string/lip_cap_support"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text13" />
             </LinearLayout>

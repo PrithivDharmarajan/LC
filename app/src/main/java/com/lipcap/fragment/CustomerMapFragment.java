@@ -41,9 +41,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.lipcap.R;
 import com.lipcap.main.BaseFragment;
-import com.lipcap.model.output.IssuesListResponse;
+import com.lipcap.model.output.SelectIssuesTypeResponse;
 import com.lipcap.services.APIRequestHandler;
-import com.lipcap.ui.CustomerHome;
+import com.lipcap.ui.provider.ProviderHome;
 import com.lipcap.utils.AppConstants;
 import com.lipcap.utils.DialogManager;
 import com.lipcap.utils.InterfaceBtnCallback;
@@ -55,6 +55,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -76,6 +78,8 @@ public class CustomerMapFragment extends BaseFragment implements GoogleApiClient
     private Handler mHandler = new Handler();
     private Runnable mRunnable;
     private boolean isDialogShowing = false;
+    private String mLatitudeStr = "", mLongitudeStr = "";
+    private Timer mAPICallTimer;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -121,8 +125,7 @@ public class CustomerMapFragment extends BaseFragment implements GoogleApiClient
 
         initGoogleAPIClient();
 
-
-        ((CustomerHome) Objects.requireNonNull(getActivity())).setHeaderTxt(getString(R.string.app_name));
+        ((ProviderHome) Objects.requireNonNull(getActivity())).setHeaderTxt(getString(R.string.app_name));
 
         SupportMapFragment fragment = (SupportMapFragment) this.getChildFragmentManager()
                 .findFragmentById(R.id.map);
@@ -130,7 +133,6 @@ public class CustomerMapFragment extends BaseFragment implements GoogleApiClient
         /* Map synchronization */
         if (fragment != null)
             fragment.getMapAsync(this);
-
 
     }
 
@@ -198,14 +200,13 @@ public class CustomerMapFragment extends BaseFragment implements GoogleApiClient
     }
 
     private void removeDialog() {
-
         if (mHandler != null)
             mHandler.removeCallbacks(mRunnable);
 
     }
 
     private void issueListAPICall() {
-        APIRequestHandler.getInstance().selectIssueListAPICall(this);
+        APIRequestHandler.getInstance().selectIssueTypeAPICall(this);
     }
 
 
@@ -252,17 +253,17 @@ public class CustomerMapFragment extends BaseFragment implements GoogleApiClient
             locationRequest.setInterval(1000);
             locationRequest.setFastestInterval(1000);
             locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-            /* location Request */
+            /* customer_location Request */
             locationRequest.setSmallestDisplacement(25f);
             if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                /*Ask for permission on location access*/
+                /*Ask for permission on customer_location access*/
                 permissionsAccessLocation(1);
             }
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, locationRequest, CustomerMapFragment.this);
         }
     }
 
-    /*Set current location to map view*/
+    /*Set current customer_location to map view*/
     private void setCurrentLocation() {
         if (getActivity() != null) {
             if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -270,7 +271,7 @@ public class CustomerMapFragment extends BaseFragment implements GoogleApiClient
                 return;
             }
             if (mGoogleMap != null) {
-                /* Enable current location */
+                /* Enable current customer_location */
                 mGoogleMap.setMyLocationEnabled(true);
                 mGoogleMap.getUiSettings().setMyLocationButtonEnabled(false);
                 Location currentLoc = getCurrentLatLong();
@@ -284,14 +285,14 @@ public class CustomerMapFragment extends BaseFragment implements GoogleApiClient
     }
 
 
-    /* Get current location */
+    /* Get current customer_location */
     private Location getCurrentLatLong() {
 
         Location location = new Location("");
         if (getActivity() != null) {
             if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 /*Ask for permission on locatio access
-                 * Set flag for call back to continue this process*/
+                 * Set flag for call_provider back to continue this process*/
                 permissionsAccessLocation(3);
             }
 
@@ -370,7 +371,7 @@ public class CustomerMapFragment extends BaseFragment implements GoogleApiClient
                         if (getActivity() != null) {
                             switch (status.getStatusCode()) {
                                 case LocationSettingsStatusCodes.SUCCESS:
-                                    // API call.
+                                    // API call_provider.
 
                                     if (mGoogleApiClient != null && !mGoogleApiClient.isConnected()) {
                                         initGoogleAPIClient();
@@ -424,7 +425,7 @@ public class CustomerMapFragment extends BaseFragment implements GoogleApiClient
         }
     }
 
-    /* to stop the location updates */
+    /* to stop the customer_location updates */
     private void stopLocationUpdates() {
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
             LocationServices.FusedLocationApi.removeLocationUpdates(
@@ -433,17 +434,40 @@ public class CustomerMapFragment extends BaseFragment implements GoogleApiClient
 
     }
 
+    private void checkForNewCustomers() {
+        cancelAPICallTimer();
+
+        mAPICallTimer = new Timer();
+        mAPICallTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                APIRequestHandler.getInstance().getProviderLocAPICall(mLatitudeStr,mLongitudeStr,CustomerMapFragment.this);
+            }
+        }, 0, 3000);
+    }
+
+    @Override
+    public void onPause() {
+        cancelAPICallTimer();
+        super.onPause();
+    }
+
     @Override
     public void onDestroy() {
         stopLocationUpdates();
         super.onDestroy();
     }
-
+    private void cancelAPICallTimer() {
+        if (mAPICallTimer != null) {
+            mAPICallTimer.cancel();
+            mAPICallTimer.purge();
+        }
+    }
     @Override
     public void onLocationChanged(Location location) {
         if (location != null) {
-//            AppConstants.CURRENT_LATITUDE = location.getLatitude();
-//            AppConstants.CURRENT_LONGITUDE = location.getLongitude();
+            mLatitudeStr=String.valueOf(location.getLatitude());
+            mLongitudeStr=String.valueOf(location.getLongitude());
         }
     }
 
@@ -530,8 +554,8 @@ public class CustomerMapFragment extends BaseFragment implements GoogleApiClient
     @Override
     public void onRequestSuccess(Object resObj) {
         super.onRequestSuccess(resObj);
-        if (resObj instanceof IssuesListResponse) {
-            IssuesListResponse issuesListResponse = (IssuesListResponse) resObj;
+        if (resObj instanceof SelectIssuesTypeResponse) {
+            SelectIssuesTypeResponse issuesListResponse = (SelectIssuesTypeResponse) resObj;
             if (issuesListResponse.getMsgCode().equals(AppConstants.SUCCESS_CODE)) {
 
                 if (issuesListResponse.getIssueType().size() > 0) {

@@ -1,12 +1,17 @@
-package com.lipcap.ui;
+package com.lipcap.ui.provider;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -16,20 +21,27 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.lipcap.R;
-import com.lipcap.fragment.CustomerMapFragment;
-import com.lipcap.fragment.TestFragment;
+import com.lipcap.fragment.AboutFragment;
+import com.lipcap.fragment.IssueListFragment;
+import com.lipcap.fragment.NotificationFragment;
+import com.lipcap.fragment.ProviderMapFragment;
+import com.lipcap.fragment.ProviderProfileFragment;
 import com.lipcap.main.BaseActivity;
 import com.lipcap.main.BaseFragment;
+import com.lipcap.ui.common.Login;
 import com.lipcap.utils.AppConstants;
 import com.lipcap.utils.DialogManager;
 import com.lipcap.utils.InterfaceTwoBtnCallback;
 import com.lipcap.utils.PreferenceUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class CustomerHome extends BaseActivity implements View.OnClickListener {
+public class ProviderHome extends BaseActivity implements View.OnClickListener {
 
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
@@ -45,17 +57,15 @@ public class CustomerHome extends BaseActivity implements View.OnClickListener {
     @BindView(R.id.header_start_img)
     ImageView mHeaderLeftFirstImg;
 
-
     /*Current Fragment*/
     private BaseFragment mFragment;
-
 
     private boolean mIsDoubleBackToExitAppBool = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.ui_home_screen);
+        setContentView(R.layout.ui_provider_home_screen);
         initView();
     }
 
@@ -78,9 +88,9 @@ public class CustomerHome extends BaseActivity implements View.OnClickListener {
         setDrawerAction(true);
 
         setHeaderTxt(getString(R.string.app_name));
-        /*Add default fragment screen*/
-        addFragment(new CustomerMapFragment());
 
+        /*Add default fragment screen*/
+        addFragment(new ProviderMapFragment());
 
     }
 
@@ -95,7 +105,7 @@ public class CustomerHome extends BaseActivity implements View.OnClickListener {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            mDrawerLayout.setPadding(0, getStatusBarHeight(CustomerHome.this), 0, 0);
+                            mDrawerLayout.setPadding(0, getStatusBarHeight(ProviderHome.this), 0, 0);
                         }
                     });
                 }
@@ -131,6 +141,7 @@ public class CustomerHome extends BaseActivity implements View.OnClickListener {
                             .replace(R.id.content_frame_lay, fmt, fmt.getClass().getSimpleName())
                             .commit();
 
+                    setHeaderTxt(mFragment);
                 } else {
                     Log.e(AppConstants.TAG, getString(R.string.err_create_frag));
                 }
@@ -139,6 +150,19 @@ public class CustomerHome extends BaseActivity implements View.OnClickListener {
 
     }
 
+    private void setHeaderTxt(BaseFragment baseFragment) {
+        String headerStr = getString(R.string.app_name);
+        if (baseFragment instanceof ProviderProfileFragment) {
+            headerStr = getString(R.string.profile);
+        } else if (baseFragment instanceof IssueListFragment) {
+            headerStr = getString(R.string.issue_list);
+        } else if (baseFragment instanceof NotificationFragment) {
+            headerStr = getString(R.string.notification);
+        } else if (baseFragment instanceof AboutFragment) {
+            headerStr = getString(R.string.about_the_app);
+        }
+        mHeaderTxt.setText(headerStr);
+    }
 
     /*Fragment popBackStack Listener*/
     private FragmentManager.OnBackStackChangedListener getListener() {
@@ -150,8 +174,9 @@ public class CustomerHome extends BaseActivity implements View.OnClickListener {
                     if (backStackEntryCount > 0) {
                         BaseFragment currFrag = (BaseFragment) manager.findFragmentById(R.id.content_frame_lay);
                         if (currFrag != null) {
-                            hideSoftKeyboard(CustomerHome.this);
+                            hideSoftKeyboard(ProviderHome.this);
                             mFragment = currFrag;
+                            setHeaderTxt(mFragment);
                             currFrag.onFragmentResume();
                         } else {
                             Log.e(AppConstants.TAG, getString(R.string.err_create_frag));
@@ -205,47 +230,54 @@ public class CustomerHome extends BaseActivity implements View.OnClickListener {
 
 
     /*Slide menu onClick*/
-    @OnClick({R.id.profile_lay, R.id.issue_list_lay, R.id.notification_lay, R.id.rate_service_provider_lay, R.id.contact_lay
+    @OnClick({R.id.profile_lay, R.id.issue_list_lay, R.id.notification_lay, R.id.rate_app_lay, R.id.contact_lay
             , R.id.support_lay, R.id.about_the_app_lay, R.id.logout_lay})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.profile_lay:
                 mDrawerLayout.closeDrawer(GravityCompat.START);
-                AppConstants.TEMP_HEADER=getString(R.string.profile);
-                addFragment(new TestFragment());
-//                 if (!(mFragment instanceof NotificationFragment)) {
-//                     addFragment(new NotificationFragment());
-//                 }
+                if (!(mFragment instanceof ProviderProfileFragment))
+                    addFragment(new ProviderProfileFragment());
                 break;
             case R.id.issue_list_lay:
                 mDrawerLayout.closeDrawer(GravityCompat.START);
-                AppConstants.TEMP_HEADER=getString(R.string.issue_list);
-                addFragment(new TestFragment());
+                if (!(mFragment instanceof IssueListFragment))
+                    addFragment(new IssueListFragment());
                 break;
             case R.id.notification_lay:
                 mDrawerLayout.closeDrawer(GravityCompat.START);
-                AppConstants.TEMP_HEADER=getString(R.string.notification);
-                addFragment(new TestFragment());
+                if (!(mFragment instanceof NotificationFragment))
+                    addFragment(new NotificationFragment());
                 break;
-            case R.id.rate_service_provider_lay:
+            case R.id.rate_app_lay:
                 mDrawerLayout.closeDrawer(GravityCompat.START);
-                AppConstants.TEMP_HEADER=getString(R.string.service_provider);
-                addFragment(new TestFragment());
+                final String appPackageName = getPackageName();
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("market://details?id=" + appPackageName)));
+                } catch (android.content.ActivityNotFoundException an) {
+                    startActivity(new Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse("https://play.google.com/store/apps/details?id="
+                                    + appPackageName)));
+                }
                 break;
             case R.id.contact_lay:
                 mDrawerLayout.closeDrawer(GravityCompat.START);
-                AppConstants.TEMP_HEADER=getString(R.string.contact);
-                addFragment(new TestFragment());
+                if (askPermissions())
+                    contactFlow();
                 break;
             case R.id.support_lay:
                 mDrawerLayout.closeDrawer(GravityCompat.START);
-                AppConstants.TEMP_HEADER=getString(R.string.support);
-                addFragment(new TestFragment());
+                Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                        "mailto", AppConstants.SUPPORT_EMAIL, null));
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.lip_cap_support));
+                startActivity(Intent.createChooser(emailIntent, getString(R.string.lip_cap_support)));
                 break;
             case R.id.about_the_app_lay:
                 mDrawerLayout.closeDrawer(GravityCompat.START);
-                AppConstants.TEMP_HEADER=getString(R.string.about_the_app);
-                addFragment(new TestFragment());
+                if (!(mFragment instanceof AboutFragment))
+                addFragment(new AboutFragment());
                 break;
             case R.id.logout_lay:
                 mDrawerLayout.closeDrawer(GravityCompat.START);
@@ -253,7 +285,7 @@ public class CustomerHome extends BaseActivity implements View.OnClickListener {
                 DialogManager.getInstance().showOptionPopup(this, getString(R.string.logout_msg), getString(R.string.yes), getString(R.string.no), new InterfaceTwoBtnCallback() {
                     @Override
                     public void onPositiveClick() {
-                        PreferenceUtil.storeBoolPreferenceValue(CustomerHome.this, AppConstants.LOGIN_STATUS, false);
+                        PreferenceUtil.storeBoolPreferenceValue(ProviderHome.this, AppConstants.LOGIN_STATUS, false);
                         previousScreen(Login.class);
                     }
 
@@ -267,10 +299,27 @@ public class CustomerHome extends BaseActivity implements View.OnClickListener {
     }
 
 
+    private void contactFlow() {
+        Intent intent = new Intent(Intent.ACTION_CALL);
+
+        intent.setData(Uri.parse("tel:" + AppConstants.CONTACT_PHONE_NUMBER));
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        startActivity(intent);
+    }
+
     /*Default back button action*/
     @Override
     public void onBackPressed() {
-        hideSoftKeyboard(CustomerHome.this);
+        hideSoftKeyboard(ProviderHome.this);
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
@@ -308,6 +357,33 @@ public class CustomerHome extends BaseActivity implements View.OnClickListener {
             }
         }, 2000);
 
+    }
+
+
+    /*To get permission for access image camera and storage*/
+    private boolean askPermissions() {
+        boolean addPermission = true;
+        List<String> listPermissionsNeeded = new ArrayList<>();
+        if (Build.VERSION.SDK_INT >= 23) {
+            int cameraPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE);
+            if (cameraPermission != PackageManager.PERMISSION_GRANTED) {
+                listPermissionsNeeded.add(Manifest.permission.CALL_PHONE);
+            }
+        }
+
+        if (!listPermissionsNeeded.isEmpty()) {
+            addPermission = askAccessPermission(listPermissionsNeeded, 1, new InterfaceTwoBtnCallback() {
+                @Override
+                public void onPositiveClick() {
+                    contactFlow();
+                }
+
+                public void onNegativeClick() {
+                }
+            });
+        }
+
+        return addPermission;
     }
 
 

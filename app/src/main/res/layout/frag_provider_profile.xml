@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cus_reg_parent_lay"
+    style="@style/LayoutMatch"
+    android:background="@color/white">
+
+
+    <ScrollView style="@style/LayoutMatch"
+        android:layout_above="@+id/bottom_lay" >
+
+        <LinearLayout
+            style="@style/LayoutWidMatch_HeiWrap"
+            android:focusable="true"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/size25"
+            android:layout_marginEnd="@dimen/size25"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/name_edt"
+                style="@style/EditTextOpenSansRegular"
+                android:layout_marginTop="@dimen/size20"
+                android:hint="@string/name"
+                android:imeOptions="actionNext|flagNoExtractUi"
+                android:inputType="textPersonName|textCapWords"
+                android:maxLines="1"
+                tools:ignore="Autofill" />
+
+            <EditText
+                android:id="@+id/phone_num_edt"
+                style="@style/EditTextOpenSansRegular"
+                android:layout_marginTop="@dimen/size20"
+                android:hint="@string/phone_num"
+                android:imeActionId="100"
+                android:imeActionLabel="@string/login"
+                android:imeOptions="actionDone|flagNoExtractUi"
+                android:inputType="phone"
+                android:maxLines="1"
+                tools:ignore="Autofill" />
+
+            <Button
+                android:id="@+id/submit_btn"
+                android:textColor="@color/white"
+                android:text="@string/submit"
+                android:background="@drawable/blue_btn"
+                android:layout_marginTop="@dimen/size20"
+                style="@style/ButtonOpenSansSemiBold"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/bottom_lay"
+        android:layout_height="@dimen/size150"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/bottom_blue_bg"
+        style="@style/LayoutWidMatch_HeiWrap"/>
+
+
+
+</RelativeLayout>

@@ -10,7 +10,7 @@
         style="@style/LayoutMatch"
         android:orientation="vertical">
 
-        <include layout="@layout/ui_home_body_content" />
+        <include layout="@layout/ui_customer_home_body_content" />
     </RelativeLayout>
 
     <android.support.design.widget.NavigationView
@@ -21,7 +21,7 @@
 
         <RelativeLayout style="@style/LayoutMatch">
 
-            <include layout="@layout/ui_slide_menu_view" />
+            <include layout="@layout/ui_customer_slide_menu_view" />
         </RelativeLayout>
     </android.support.design.widget.NavigationView>
 </android.support.v4.widget.DrawerLayout>

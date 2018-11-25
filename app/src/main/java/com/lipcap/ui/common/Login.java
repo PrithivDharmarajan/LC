@@ -1,4 +1,4 @@
-package com.lipcap.ui;
+package com.lipcap.ui.common;
 
 import android.content.res.Configuration;
 import android.os.Build;
@@ -13,10 +13,9 @@ import android.widget.TextView;
 import com.lipcap.R;
 import com.lipcap.main.BaseActivity;
 import com.lipcap.model.output.LoginResponse;
-import com.lipcap.model.output.UserDetailsEntity;
 import com.lipcap.services.APIRequestHandler;
+import com.lipcap.ui.customer.CustomerHome;
 import com.lipcap.utils.AppConstants;
-import com.lipcap.utils.DateUtil;
 import com.lipcap.utils.DialogManager;
 import com.lipcap.utils.InterfaceBtnCallback;
 import com.lipcap.utils.PreferenceUtil;
@@ -28,13 +27,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class ProviderRegistration extends BaseActivity {
+public class Login extends BaseActivity {
 
-    @BindView(R.id.prov_reg_parent_lay)
-    ViewGroup mProvRegViewGroup;
-
-    @BindView(R.id.name_edt)
-    EditText mNameEdt;
+    @BindView(R.id.login_parent_lay)
+    ViewGroup mLoginViewGroup;
 
     @BindView(R.id.phone_num_edt)
     EditText mPhoneNumEdt;
@@ -42,7 +38,7 @@ public class ProviderRegistration extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.ui_provider_registration);
+        setContentView(R.layout.ui_login);
         initView();
     }
 
@@ -53,7 +49,7 @@ public class ProviderRegistration extends BaseActivity {
         ButterKnife.bind(this);
 
         /*Keypad to be hidden when a touch made outside the edit text*/
-        setupUI(mProvRegViewGroup);
+        setupUI(mLoginViewGroup);
 
         /*Keypad button action*/
         mPhoneNumEdt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -73,13 +69,13 @@ public class ProviderRegistration extends BaseActivity {
     private void setHeaderAdjustmentView() {
         /*Set header adjustment - status bar we applied transparent color so header tack full view*/
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            mProvRegViewGroup.post(new Runnable() {
+            mLoginViewGroup.post(new Runnable() {
                 @Override
                 public void run() {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            mProvRegViewGroup.setPadding(0, getStatusBarHeight( ProviderRegistration.this), 0, 0);
+                            mLoginViewGroup.setPadding(0, getStatusBarHeight(Login.this), 0, 0);
                         }
                     });
                 }
@@ -95,55 +91,50 @@ public class ProviderRegistration extends BaseActivity {
     }
 
     /*View onClick*/
-    @OnClick({R.id.header_start_img_lay,R.id.submit_btn})
+    @OnClick({R.id.header_start_img_lay, R.id.login_btn, R.id.sign_up_txt})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.header_start_img_lay:
                 onBackPressed();
                 break;
-            case R.id.submit_btn:
+            case R.id.login_btn:
                 validateFields();
                 break;
-
+            case R.id.sign_up_txt:
+                nextScreen(SelectUserType.class);
+                break;
         }
     }
 
     /*validate fields*/
     private void validateFields() {
         hideSoftKeyboard(this);
-        String nameStr = mNameEdt.getText().toString().trim();
         String phoneNumStr = mPhoneNumEdt.getText().toString().trim();
 
-        if (nameStr.isEmpty()) {
-            mNameEdt.requestFocus();
-            DialogManager.getInstance().showAlertPopup(this, getString(R.string.plz_enter_name), this);
-        } else if (phoneNumStr.isEmpty()) {
+        if (phoneNumStr.isEmpty()) {
             mPhoneNumEdt.requestFocus();
             DialogManager.getInstance().showAlertPopup(this, getString(R.string.plz_enter_phone_num), this);
-        }  else {
-
-            UserDetailsEntity userDetailsEntity=new UserDetailsEntity();
-            userDetailsEntity.setName(nameStr);
-            userDetailsEntity.setMobileNo(phoneNumStr);
-            userDetailsEntity.setCreatedDT(DateUtil.getCurrentDate());
-            userDetailsEntity.setUserType(2);
-            userDetailsEntity.setDeviceId(PreferenceUtil.getStringPreferenceValue(this,AppConstants.PUSH_DEVICE_ID));
-
-            APIRequestHandler.getInstance().registrationAPICall(nameStr,   phoneNumStr,   PreferenceUtil.getStringPreferenceValue(this,AppConstants.PUSH_DEVICE_ID),   DateUtil.getCurrentDate(),  1+"",this);
+        } else {
+            APIRequestHandler.getInstance().loginAPICall(phoneNumStr, this);
         }
     }
+
+
     /*API request success and failure*/
     @Override
     public void onRequestSuccess(Object resObj) {
         super.onRequestSuccess(resObj);
         if (resObj instanceof LoginResponse) {
             LoginResponse loginResponse = (LoginResponse) resObj;
-            if(loginResponse.getMsgCode().equals(AppConstants.SUCCESS_CODE)){
-                PreferenceUtil.storeBoolPreferenceValue(this, AppConstants.LOGIN_STATUS, true);
-                DialogManager.getInstance().showToast(this, getString(R.string.registered_success));
-                nextScreen(ProviderHome.class);
-            }else{
-                DialogManager.getInstance().showAlertPopup(this, loginResponse.getMessage(),this);
+            if (loginResponse.getMsgCode().equals(AppConstants.SUCCESS_CODE)) {
+                if (loginResponse.getUserDetail().size() > 0) {
+                    PreferenceUtil.storeBoolPreferenceValue(this, AppConstants.LOGIN_STATUS, true);
+                    PreferenceUtil.storeUserDetails(this, loginResponse.getUserDetail().get(0));
+                    DialogManager.getInstance().showToast(this, getString(R.string.logged_in_success));
+                    nextScreen(CustomerHome.class);
+                }
+            } else {
+                DialogManager.getInstance().showAlertPopup(this, loginResponse.getMessage(), this);
             }
 
         }
@@ -163,9 +154,6 @@ public class ProviderRegistration extends BaseActivity {
                     });
         }
     }
-    @Override
-    public void onBackPressed() {
-        backScreen();
-    }
+
 }
 

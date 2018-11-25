@@ -7,22 +7,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.maps.GoogleMap;
 import com.lipcap.R;
 import com.lipcap.main.BaseFragment;
-import com.lipcap.ui.CustomerHome;
 import com.lipcap.utils.AppConstants;
-
-import java.util.Objects;
 
 import butterknife.ButterKnife;
 
-public class TestFragment extends BaseFragment   {
-
-    private final int REQUEST_CHECK_SETTINGS = 300;
-    private GoogleMap mGoogleMap;
-    private GoogleApiClient mGoogleApiClient;
+public class NotificationFragment extends BaseFragment   {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -54,8 +45,7 @@ public class TestFragment extends BaseFragment   {
     @Override
     public void onFragmentResume() {
 
-        /* If the value of visibleInt is zero,  the view will set gone. Or if the value of visibleInt is one,  the view will set visible. Or else, the view will set gone*/
-        if (getActivity() != null) {
+         if (getActivity() != null) {
             initView();
         }
     }
@@ -65,7 +55,6 @@ public class TestFragment extends BaseFragment   {
     private void initView() {
 
         AppConstants.TAG = this.getClass().getSimpleName();
-        ((CustomerHome) Objects.requireNonNull(getActivity())).setHeaderTxt(AppConstants.TEMP_HEADER);
 
     }
 

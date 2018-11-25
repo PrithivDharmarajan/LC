@@ -195,12 +195,12 @@ public class BaseActivity extends AppCompatActivity implements InterfaceTwoBtnCa
     }
 
 
-    /*API call back success*/
+    /*API call_provider back success*/
     public void onRequestSuccess(Object resObj) {
 
     }
 
-    /*API call back failure*/
+    /*API call_provider back failure*/
     public void onRequestFailure(Object inputModelObj, Throwable t) {
         sysOut("Retrofit onRequestFailure" + t.toString());
         if (t.getMessage() != null && !t.getMessage().isEmpty() && !(t instanceof IOException)) {
@@ -228,7 +228,7 @@ public class BaseActivity extends AppCompatActivity implements InterfaceTwoBtnCa
         return true;
     }
 
-    /*Permission call back*/
+    /*Permission call_provider back*/
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {

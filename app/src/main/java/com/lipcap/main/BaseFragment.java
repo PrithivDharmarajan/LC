@@ -137,11 +137,11 @@ public class BaseFragment extends Fragment implements InterfaceTwoBtnCallback {
         return true;
     }
 
-    /*Permission call back*/
+    /*Permission call_provider back*/
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
     }
 
-    /*Permission call back*/
+    /*Permission call_provider back*/
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
@@ -209,13 +209,13 @@ public class BaseFragment extends Fragment implements InterfaceTwoBtnCallback {
     }
 
 
-    /*API call back success*/
+    /*API call_provider back success*/
     public void onRequestSuccess(Object resObj) {
 
     }
 
 
-    /*API call back failure*/
+    /*API call_provider back failure*/
     public void onRequestFailure(Object inputModelObj, Throwable t) {
         if (t.getMessage() != null && !t.getMessage().isEmpty() && !(t instanceof IOException)) {
             DialogManager.getInstance().showAlertPopup(getActivity(), t.getMessage(), new InterfaceBtnCallback() {

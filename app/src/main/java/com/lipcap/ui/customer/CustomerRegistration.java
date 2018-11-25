@@ -1,4 +1,4 @@
-package com.lipcap.ui;
+package com.lipcap.ui.customer;
 
 import android.content.res.Configuration;
 import android.os.Build;
@@ -132,9 +132,14 @@ public class CustomerRegistration extends BaseActivity {
         if (resObj instanceof LoginResponse) {
             LoginResponse loginResponse = (LoginResponse) resObj;
             if(loginResponse.getMsgCode().equals(AppConstants.SUCCESS_CODE)){
-                PreferenceUtil.storeBoolPreferenceValue(this, AppConstants.LOGIN_STATUS, true);
-                DialogManager.getInstance().showToast(this, getString(R.string.registered_success));
-                nextScreen(CustomerHome.class);
+
+                if (loginResponse.getUserDetail().size() > 0) {
+                    PreferenceUtil.storeBoolPreferenceValue(this, AppConstants.LOGIN_STATUS, true);
+                    PreferenceUtil.storeUserDetails(this, loginResponse.getUserDetail().get(0));
+                    DialogManager.getInstance().showToast(this, getString(R.string.registered_success));
+                    nextScreen(CustomerHome.class);
+                }
+
             }else{
                 DialogManager.getInstance().showAlertPopup(this, loginResponse.getMessage(),this);
             }

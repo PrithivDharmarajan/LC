@@ -2,7 +2,7 @@ package com.lipcap.model.output;
 
 import java.util.ArrayList;
 
-public class LoginResponse extends CommonResponse {
+public class LoginResponse extends CommonModelResponse {
 
     public ArrayList<UserDetailsEntity> getUserDetail() {
         return UserDetail;

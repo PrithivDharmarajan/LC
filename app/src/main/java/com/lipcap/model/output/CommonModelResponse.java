@@ -2,7 +2,7 @@ package com.lipcap.model.output;
 
 import java.io.Serializable;
 
-public class CommonResponse implements Serializable {
+class CommonModelResponse implements Serializable {
 
     private String MsgCode="";
     private String Message="";
@@ -22,6 +22,4 @@ public class CommonResponse implements Serializable {
     public void setMessage(String message) {
         Message = message;
     }
-
-
 }

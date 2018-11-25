@@ -25,9 +25,10 @@ public class SelectIssueListAdapter extends RecyclerView.Adapter<SelectIssueList
     private ArrayList<IssueListEntity> mIssueListArrList;
     private InterfaceEdtBtnCallback mInterfaceEdtBtnCallback;
     private CompoundButton mLastRadioBtn;
+    private int mLastSelectedPosInt = 0;
 
-    public SelectIssueListAdapter(ArrayList<IssueListEntity> agentListArrList, InterfaceEdtBtnCallback interfaceEdtBtnCallback, Context context) {
-        mIssueListArrList = agentListArrList;
+    public SelectIssueListAdapter(ArrayList<IssueListEntity> issueListArrList, InterfaceEdtBtnCallback interfaceEdtBtnCallback, Context context) {
+        mIssueListArrList = issueListArrList;
         mInterfaceEdtBtnCallback = interfaceEdtBtnCallback;
     }
 
@@ -42,7 +43,7 @@ public class SelectIssueListAdapter extends RecyclerView.Adapter<SelectIssueList
 
         holder.mAgentListTxt.setText(mIssueListArrList.get(position).getIssueName());
 
-        if (position == 0) {
+        if (mLastSelectedPosInt == position) {
             mLastRadioBtn = holder.mIssueRadioBtn;
             holder.mIssueRadioBtn.setChecked(true);
         }
@@ -50,24 +51,25 @@ public class SelectIssueListAdapter extends RecyclerView.Adapter<SelectIssueList
 //            holder.mIssueRadioBtn.setChecked(mLastSelectedInt == position);
 //        }
 
+        holder.mIssueRadioBtn.setChecked(mLastSelectedPosInt == position);
 
-        holder.mIssueRadioBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                if ( mLastRadioBtn.getId() != buttonView.getId()) {
-                    holder.mIssueRadioBtn.setOnCheckedChangeListener(null);
-                    mLastRadioBtn.setChecked(false);
-                    mLastRadioBtn = buttonView;
-                    holder.mIssueRadioBtn.setOnCheckedChangeListener(this);
-                }
-//                if (isChecked) {
-//                notifyItemChanged(mLastSelectedInt);
-//                mLastSelectedInt = holder.getAdapterPosition();
-//                    notifyDataSetChanged();
+//        holder.mIssueRadioBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//
+//                if ( mLastRadioBtn.getId() != buttonView.getId()) {
+//                    holder.mIssueRadioBtn.setOnCheckedChangeListener(null);
+//                    mLastRadioBtn.setChecked(false);
+//                    mLastRadioBtn = buttonView;
+//                    holder.mIssueRadioBtn.setOnCheckedChangeListener(this);
 //                }
-            }
-        });
+////                if (isChecked) {
+////                notifyItemChanged(mLastSelectedInt);
+////                mLastSelectedInt = holder.getAdapterPosition();
+////                    notifyDataSetChanged();
+////                }
+//            }
+//        });
 //   mInterfaceEdtBtnCallback.onPositiveClick(String.valueOf(mIssueListArrList.get(holder.getAdapterPosition()).getId()));
 
 
@@ -90,6 +92,14 @@ public class SelectIssueListAdapter extends RecyclerView.Adapter<SelectIssueList
         public Holder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+
+            mIssueRadioBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mLastSelectedPosInt = getAdapterPosition();
+                    notifyDataSetChanged();
+                }
+            });
         }
     }
 }
