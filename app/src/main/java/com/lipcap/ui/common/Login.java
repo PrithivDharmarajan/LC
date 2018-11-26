@@ -15,6 +15,7 @@ import com.lipcap.main.BaseActivity;
 import com.lipcap.model.output.LoginResponse;
 import com.lipcap.services.APIRequestHandler;
 import com.lipcap.ui.customer.CustomerHome;
+import com.lipcap.ui.provider.ProviderHome;
 import com.lipcap.utils.AppConstants;
 import com.lipcap.utils.DialogManager;
 import com.lipcap.utils.InterfaceBtnCallback;
@@ -131,7 +132,7 @@ public class Login extends BaseActivity {
                     PreferenceUtil.storeBoolPreferenceValue(this, AppConstants.LOGIN_STATUS, true);
                     PreferenceUtil.storeUserDetails(this, loginResponse.getUserDetail().get(0));
                     DialogManager.getInstance().showToast(this, getString(R.string.logged_in_success));
-                    nextScreen(CustomerHome.class);
+                    nextScreen(PreferenceUtil.getBoolPreferenceValue(Login.this, AppConstants.CURRENT_USER_IS_PROVIDER) ? ProviderHome.class : CustomerHome.class);
                 }
             } else {
                 DialogManager.getInstance().showAlertPopup(this, loginResponse.getMessage(), this);

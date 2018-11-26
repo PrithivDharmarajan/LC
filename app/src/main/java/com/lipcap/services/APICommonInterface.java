@@ -3,6 +3,7 @@ package com.lipcap.services;
 import com.lipcap.model.output.CommonResponse;
 import com.lipcap.model.output.IssuesListResponse;
 import com.lipcap.model.output.LoginResponse;
+import com.lipcap.model.output.ProviderDetailsResponse;
 import com.lipcap.model.output.SelectIssuesTypeResponse;
 
 import retrofit2.Call;
@@ -39,7 +40,12 @@ public interface APICommonInterface {
 
     /*Location API*/
     @GET("latilongi/getLatiLongi?")
-    Call<CommonResponse> getProviderLocAPI(@Query("Latitude") String latitudeStr, @Query("Longitude") String longitudeStr);
+    Call<ProviderDetailsResponse> getProviderLocAPI(@Query("Latitude") String latitudeStr, @Query("Longitude") String longitudeStr);
+
+    /*Location API*/
+    @GET("User/putUserName?")
+    Call<CommonResponse> updateProfileAPI(@Query("MobileNo") String mobileNoStr, @Query("Name") String nameStr);
+
 
 
 }

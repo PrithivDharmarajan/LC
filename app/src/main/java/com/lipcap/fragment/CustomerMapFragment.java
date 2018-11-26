@@ -43,7 +43,6 @@ import com.lipcap.R;
 import com.lipcap.main.BaseFragment;
 import com.lipcap.model.output.SelectIssuesTypeResponse;
 import com.lipcap.services.APIRequestHandler;
-import com.lipcap.ui.provider.ProviderHome;
 import com.lipcap.utils.AppConstants;
 import com.lipcap.utils.DialogManager;
 import com.lipcap.utils.InterfaceBtnCallback;
@@ -54,7 +53,6 @@ import com.lipcap.utils.NetworkUtil;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -124,8 +122,6 @@ public class CustomerMapFragment extends BaseFragment implements GoogleApiClient
         AppConstants.TAG = this.getClass().getSimpleName();
 
         initGoogleAPIClient();
-
-        ((ProviderHome) Objects.requireNonNull(getActivity())).setHeaderTxt(getString(R.string.app_name));
 
         SupportMapFragment fragment = (SupportMapFragment) this.getChildFragmentManager()
                 .findFragmentById(R.id.map);

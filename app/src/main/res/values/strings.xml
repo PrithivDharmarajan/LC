@@ -85,6 +85,7 @@
     <string name="exit_msg">Press again to exit</string>
     <string name="err_create_frag">Error in creating fragment</string>
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+    <string name="profile_updated">Profile Updated Successfully</string>
 
 
 

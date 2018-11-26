@@ -8,6 +8,7 @@ import com.lipcap.main.BaseFragment;
 import com.lipcap.model.output.CommonResponse;
 import com.lipcap.model.output.IssuesListResponse;
 import com.lipcap.model.output.LoginResponse;
+import com.lipcap.model.output.ProviderDetailsResponse;
 import com.lipcap.model.output.SelectIssuesTypeResponse;
 import com.lipcap.utils.AppConstants;
 import com.lipcap.utils.DialogManager;
@@ -127,7 +128,7 @@ public class APIRequestHandler {
                 });
     }
 
-    /*Issues API*/
+    /*Update Lat and Long API*/
     public void latAndLongUpdateAPICall(String latStr, String longStr, final BaseFragment baseFragment) {
         mServiceInterface.latAndLongUpdateAPI(PreferenceUtil.getUserId(baseFragment.getActivity()), latStr, longStr)
                 .enqueue(new Callback<CommonResponse>() {
@@ -145,9 +146,27 @@ public class APIRequestHandler {
                 });
     }
 
-    /*Issues API*/
+    /*Provider location API*/
     public void getProviderLocAPICall(String latStr, String longStr, final BaseFragment baseFragment) {
-        mServiceInterface.getProviderLocAPI(  latStr, longStr)
+        mServiceInterface.getProviderLocAPI(latStr, longStr)
+                .enqueue(new Callback<ProviderDetailsResponse>() {
+                    @Override
+                    public void onResponse(@NonNull Call<ProviderDetailsResponse> call, @NonNull Response<ProviderDetailsResponse> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            baseFragment.onRequestSuccess(response.body());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<ProviderDetailsResponse> call, @NonNull Throwable t) {
+                        baseFragment.onRequestFailure(new CommonResponse(), t);
+                    }
+                });
+    }
+
+    /*Provider location API*/
+    public void updateProfileAPICall(String mobileNoStr, String nameStr, final BaseFragment baseFragment) {
+        mServiceInterface.updateProfileAPI(mobileNoStr, nameStr)
                 .enqueue(new Callback<CommonResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<CommonResponse> call, @NonNull Response<CommonResponse> response) {
