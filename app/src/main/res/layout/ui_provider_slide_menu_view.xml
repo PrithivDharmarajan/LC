@@ -285,7 +285,7 @@
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/app_name"
                 android:padding="@dimen/size5"
-                android:src="@drawable/notification" />
+                android:src="@drawable/logout" />
 
             <TextView
                 style="@style/TextOpenSansRegular"
