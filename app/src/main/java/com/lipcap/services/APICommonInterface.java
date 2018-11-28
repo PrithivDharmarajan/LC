@@ -11,7 +11,6 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
-import retrofit2.http.PUT;
 import retrofit2.http.Query;
 
 public interface APICommonInterface {
@@ -35,8 +34,8 @@ public interface APICommonInterface {
 
     /*Lat and Long Update API*/
     @FormUrlEncoded
-    @PUT("latilongi/putLatiLongibyId")
-    Call<CommonResponse> latAndLongUpdateAPI(@Field("userId")String userIdStr, @Field("Latitude")String latitudeStr, @Field("Longitude")String longitudeStr);
+    @POST("latilongi/postLatiLongi")
+    Call<CommonResponse> latAndLongUpdateAPI(@Field("userId")String userIdStr, @Field("Latitude")String latitudeStr, @Field("Longitude")String longitudeStr, @Field("UserType")String userTypeStr,@Field("CreatedDT")String createdDTStr);
 
     /*Location API*/
     @GET("latilongi/getLatiLongi?")

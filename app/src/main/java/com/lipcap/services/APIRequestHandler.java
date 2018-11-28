@@ -11,6 +11,7 @@ import com.lipcap.model.output.LoginResponse;
 import com.lipcap.model.output.ProviderDetailsResponse;
 import com.lipcap.model.output.SelectIssuesTypeResponse;
 import com.lipcap.utils.AppConstants;
+import com.lipcap.utils.DateUtil;
 import com.lipcap.utils.DialogManager;
 import com.lipcap.utils.PreferenceUtil;
 
@@ -129,8 +130,8 @@ public class APIRequestHandler {
     }
 
     /*Update Lat and Long API*/
-    public void latAndLongUpdateAPICall(String latStr, String longStr, final BaseFragment baseFragment) {
-        mServiceInterface.latAndLongUpdateAPI(PreferenceUtil.getUserId(baseFragment.getActivity()), latStr, longStr)
+    public void latAndLongUpdateAPICall(String latStr, String longStr,String userTypeStr, final BaseFragment baseFragment) {
+        mServiceInterface.latAndLongUpdateAPI(PreferenceUtil.getUserId(baseFragment.getActivity()), latStr, longStr,userTypeStr,DateUtil.getCurrentDate())
                 .enqueue(new Callback<CommonResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<CommonResponse> call, @NonNull Response<CommonResponse> response) {

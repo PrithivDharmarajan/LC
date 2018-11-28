@@ -364,7 +364,7 @@ public class ProviderMapFragment extends BaseFragment implements GoogleApiClient
     @Override
     public void onLocationChanged(Location location) {
         if (location != null) {
-            APIRequestHandler.getInstance().latAndLongUpdateAPICall(String.valueOf(location.getLatitude()),String.valueOf(location.getLongitude()),this);
+            APIRequestHandler.getInstance().latAndLongUpdateAPICall(String.valueOf(location.getLatitude()),String.valueOf(location.getLongitude()),2+"",this);
         }
     }
 

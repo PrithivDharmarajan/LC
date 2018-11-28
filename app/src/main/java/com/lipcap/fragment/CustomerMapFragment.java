@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -37,10 +39,14 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.lipcap.R;
 import com.lipcap.main.BaseFragment;
+import com.lipcap.model.output.ProviderDetailsEntity;
+import com.lipcap.model.output.ProviderDetailsResponse;
 import com.lipcap.model.output.SelectIssuesTypeResponse;
 import com.lipcap.services.APIRequestHandler;
 import com.lipcap.utils.AppConstants;
@@ -332,6 +338,7 @@ public class CustomerMapFragment extends BaseFragment implements GoogleApiClient
             if (NetworkUtil.isNetworkAvailable(getActivity())) {
                 setCurrentLocation();
                 startLocationUpdate();
+                checkForNewCustomers();
             } else {
                 /*Alert message will be appeared if there is no internet connection*/
                 DialogManager.getInstance().showAlertPopup(getActivity(), getString(R.string.no_internet), new InterfaceBtnCallback() {
@@ -437,9 +444,9 @@ public class CustomerMapFragment extends BaseFragment implements GoogleApiClient
         mAPICallTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                APIRequestHandler.getInstance().getProviderLocAPICall(mLatitudeStr,mLongitudeStr,CustomerMapFragment.this);
+                APIRequestHandler.getInstance().getProviderLocAPICall(mLatitudeStr, mLongitudeStr, CustomerMapFragment.this);
             }
-        }, 0, 3000);
+        }, 0, 60000);
     }
 
     @Override
@@ -453,17 +460,21 @@ public class CustomerMapFragment extends BaseFragment implements GoogleApiClient
         stopLocationUpdates();
         super.onDestroy();
     }
+
     private void cancelAPICallTimer() {
         if (mAPICallTimer != null) {
             mAPICallTimer.cancel();
             mAPICallTimer.purge();
         }
     }
+
     @Override
     public void onLocationChanged(Location location) {
         if (location != null) {
-            mLatitudeStr=String.valueOf(location.getLatitude());
-            mLongitudeStr=String.valueOf(location.getLongitude());
+            mLatitudeStr = String.valueOf(location.getLatitude());
+            mLongitudeStr = String.valueOf(location.getLongitude());
+            APIRequestHandler.getInstance().latAndLongUpdateAPICall(String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()), 1 + "", this);
+
         }
     }
 
@@ -573,6 +584,32 @@ public class CustomerMapFragment extends BaseFragment implements GoogleApiClient
                 DialogManager.getInstance().showAlertPopup(getActivity(), issuesListResponse.getMessage(), this);
             }
 
+        }
+
+        if (resObj instanceof ProviderDetailsResponse) {
+            ProviderDetailsResponse providerResponse = (ProviderDetailsResponse) resObj;
+            if (providerResponse.getUserDetail().size() > 0) {
+                providerMarkerDetails(providerResponse.getUserDetail());
+            }
+        }
+
+
+    }
+
+    private void providerMarkerDetails(ArrayList<ProviderDetailsEntity> providerDetails) {
+        mGoogleMap.clear();
+
+        for (int i = 0; i < providerDetails.size(); i++) {
+            if (mGoogleMap != null) {
+
+                BitmapDrawable bitmapDrawable = (BitmapDrawable) getResources().getDrawable(R.drawable.van);
+                Bitmap bitmap = bitmapDrawable.getBitmap();
+
+                int sizeInt = getResources().getDimensionPixelSize(R.dimen.size30);
+                Bitmap smallMarker = Bitmap.createScaledBitmap(bitmap, sizeInt, sizeInt, false);
+                MarkerOptions marker = new MarkerOptions().position(new LatLng(providerDetails.get(i).getLatitude(), providerDetails.get(i).getLongitude())).icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
+                mGoogleMap.addMarker(marker);
+            }
         }
 
     }
