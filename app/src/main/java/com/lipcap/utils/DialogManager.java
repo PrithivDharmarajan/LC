@@ -14,6 +14,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,7 +31,7 @@ public class DialogManager {
     /*Init dialog instance*/
     private static final DialogManager sDialogInstance = new DialogManager();
     /*Init variable*/
-    private Dialog mProgressDialog, mNetworkErrorDialog, mAlertDialog, mOptionDialog, mIssueListDialog, mReasonForCancelDialog,mCommentsDialog;
+    private Dialog mProgressDialog, mNetworkErrorDialog, mAlertDialog, mOptionDialog, mIssueListDialog, mReasonForCancelDialog, mCommentsDialog, mSearchDialog, mNotificationDialog, mRequestDialog,mRequestCompletedDialog;
     private Toast mToast;
 
     public static DialogManager getInstance() {
@@ -172,8 +173,8 @@ public class DialogManager {
 
     }
 
-    public Dialog showIssuesListPopup(final Context context, ArrayList<IssueListEntity> agentListArrList,
-                                      final InterfaceEdtBtnCallback dialogAlertInterface) {
+    public void showIssuesListPopup(final Context context, ArrayList<IssueListEntity> agentListArrList,
+                                    final InterfaceEdtBtnCallback dialogAlertInterface) {
         alertDismiss(mIssueListDialog);
         mIssueListDialog = getDialog(context, R.layout.popup_select_issue_list_view);
 
@@ -196,7 +197,6 @@ public class DialogManager {
         issueListRecyclerView = mIssueListDialog.findViewById(R.id.issue_list_recycler_view);
         positiveBtn = mIssueListDialog.findViewById(R.id.alert_positive_btn);
         negativeBtn = mIssueListDialog.findViewById(R.id.alert_negative_btn);
-//        agentParentLay = mAgentDialog.findViewById(R.id.agent_parent_lay);
 
 
         /*Set Adapter*/
@@ -209,7 +209,7 @@ public class DialogManager {
             @Override
             public void onClick(View v) {
                 mIssueListDialog.dismiss();
-                dialogAlertInterface.onPositiveClick("1");
+                dialogAlertInterface.onPositiveClick(String.valueOf(AppConstants.ISSUE_ID));
             }
         });
         negativeBtn.setOnClickListener(new View.OnClickListener() {
@@ -220,15 +220,12 @@ public class DialogManager {
             }
         });
 
-//        mAgentDialog.setCancelable(true);
-//        mAgentDialog.setCanceledOnTouchOutside(true);
         alertShowing(mIssueListDialog);
-        return mIssueListDialog;
     }
 
 
-    public Dialog showReasonForCancelPopup(final Context context,
-                                           final InterfaceEdtBtnCallback dialogAlertInterface) {
+    public void showReasonForCancelPopup(final Context context,
+                                         final InterfaceEdtBtnCallback dialogAlertInterface) {
         alertDismiss(mReasonForCancelDialog);
         mReasonForCancelDialog = getDialog(context, R.layout.popup_reason_for_cancellation);
 
@@ -261,7 +258,7 @@ public class DialogManager {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                if(isChecked){
+                if (isChecked) {
                     unableContactBtn.setChecked(false);
                     cobblerDeniedWorkBtn.setChecked(false);
                 }
@@ -273,7 +270,7 @@ public class DialogManager {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                if(isChecked){
+                if (isChecked) {
                     expectShortWaitTimeBtn.setChecked(false);
                     cobblerDeniedWorkBtn.setChecked(false);
                 }
@@ -284,7 +281,7 @@ public class DialogManager {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                if(isChecked){
+                if (isChecked) {
                     expectShortWaitTimeBtn.setChecked(false);
                     unableContactBtn.setChecked(false);
                 }
@@ -308,15 +305,12 @@ public class DialogManager {
             }
         });
 
-//        mAgentDialog.setCancelable(true);
-//        mAgentDialog.setCanceledOnTouchOutside(true);
         alertShowing(mReasonForCancelDialog);
-        return mReasonForCancelDialog;
     }
 
 
-    public Dialog showCommentsPopup(final Context context,
-                                           final InterfaceEdtBtnCallback dialogAlertInterface) {
+    public void showCommentsPopup(final Context context,
+                                  final InterfaceEdtBtnCallback dialogAlertInterface) {
         alertDismiss(mCommentsDialog);
         mCommentsDialog = getDialog(context, R.layout.popup_comments);
 
@@ -347,7 +341,7 @@ public class DialogManager {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                if(isChecked){
+                if (isChecked) {
                     workedProperlyBtn.setChecked(false);
                 }
 
@@ -358,7 +352,7 @@ public class DialogManager {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                if(isChecked){
+                if (isChecked) {
                     workCompletedOnTimeBtn.setChecked(false);
                 }
 
@@ -382,9 +376,172 @@ public class DialogManager {
         });
 
         alertShowing(mCommentsDialog);
-        return mCommentsDialog;
     }
 
+
+    public void showProviderAmtDialogPopup(final Context context, String issuesTypeStr,
+                                           final InterfaceEdtBtnCallback dialogAlertInterface) {
+        alertDismiss(mRequestDialog);
+        mRequestDialog = getDialog(context, R.layout.popup_request_amount);
+
+        WindowManager.LayoutParams LayoutParams = new WindowManager.LayoutParams();
+        Window window = mRequestDialog.getWindow();
+
+        if (window != null) {
+            LayoutParams.copyFrom(window.getAttributes());
+            LayoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+            LayoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            window.setAttributes(LayoutParams);
+            window.setGravity(Gravity.CENTER);
+        }
+
+        Button positiveBtn, negativeBtn;
+        final TextView mIssuesTypeTxt;
+        final EditText mSetDurationEdt;
+
+        /*Init view*/
+
+        mIssuesTypeTxt = mRequestDialog.findViewById(R.id.issues_type_txt);
+        mSetDurationEdt = mRequestDialog.findViewById(R.id.set_duration_edt);
+
+        positiveBtn = mRequestDialog.findViewById(R.id.alert_positive_btn);
+        negativeBtn = mRequestDialog.findViewById(R.id.alert_negative_btn);
+
+        mIssuesTypeTxt.setText(issuesTypeStr);
+        positiveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!mSetDurationEdt.getText().toString().isEmpty()) {
+                    mRequestDialog.dismiss();
+                    dialogAlertInterface.onPositiveClick(mSetDurationEdt.getText().toString());
+                }else{
+                    DialogManager.getInstance().showToast(context,"Enter Valid Time");
+                }
+            }
+        });
+        negativeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mRequestDialog.dismiss();
+                dialogAlertInterface.onNegativeClick();
+            }
+        });
+
+        alertShowing(mRequestDialog);
+    }
+
+    public void showProviderCompletedDialogPopup(final Context context, String issuesTypeStr,
+                                           final InterfaceEdtBtnCallback dialogAlertInterface) {
+        alertDismiss(mRequestCompletedDialog);
+        mRequestCompletedDialog = getDialog(context, R.layout.popup_request_completed);
+
+        WindowManager.LayoutParams LayoutParams = new WindowManager.LayoutParams();
+        Window window = mRequestCompletedDialog.getWindow();
+
+        if (window != null) {
+            LayoutParams.copyFrom(window.getAttributes());
+            LayoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+            LayoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            window.setAttributes(LayoutParams);
+            window.setGravity(Gravity.CENTER);
+        }
+
+        Button positiveBtn, negativeBtn;
+        final TextView mIssuesTypeTxt;
+        final EditText mSetDurationEdt;
+
+        /*Init view*/
+
+        mIssuesTypeTxt = mRequestCompletedDialog.findViewById(R.id.issues_type_txt);
+        mSetDurationEdt = mRequestCompletedDialog.findViewById(R.id.set_duration_edt);
+
+        positiveBtn = mRequestCompletedDialog.findViewById(R.id.alert_positive_btn);
+        negativeBtn = mRequestCompletedDialog.findViewById(R.id.alert_negative_btn);
+
+        mIssuesTypeTxt.setText(issuesTypeStr);
+        positiveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!mSetDurationEdt.getText().toString().isEmpty()) {
+                    mRequestCompletedDialog.dismiss();
+                    dialogAlertInterface.onPositiveClick(mSetDurationEdt.getText().toString());
+                }else{
+                    DialogManager.getInstance().showToast(context,"Enter Valid Time");
+                }
+            }
+        });
+        negativeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mRequestCompletedDialog.dismiss();
+                dialogAlertInterface.onNegativeClick();
+            }
+        });
+
+        alertShowing(mRequestCompletedDialog);
+    }
+
+
+    public Dialog showSearchPopup(final Context context) {
+        alertDismiss(mSearchDialog);
+        mSearchDialog = getDialog(context, R.layout.popup_provier_search_alert);
+
+        WindowManager.LayoutParams LayoutParams = new WindowManager.LayoutParams();
+        Window window = mSearchDialog.getWindow();
+
+        if (window != null) {
+            LayoutParams.copyFrom(window.getAttributes());
+            LayoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+            LayoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            window.setAttributes(LayoutParams);
+            window.setGravity(Gravity.CENTER);
+        }
+        alertShowing(mSearchDialog);
+        return mSearchDialog;
+    }
+
+    public Dialog showNotificationPopup(Context context,
+                                        final InterfaceTwoBtnCallback dialogAlertInterface) {
+        alertDismiss(mNotificationDialog);
+        mNotificationDialog = getDialog(context, R.layout.popup_notification_received);
+
+        WindowManager.LayoutParams LayoutParams = new WindowManager.LayoutParams();
+        Window window = mNotificationDialog.getWindow();
+
+        if (window != null) {
+            LayoutParams.copyFrom(window.getAttributes());
+            LayoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+            LayoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            window.setAttributes(LayoutParams);
+            window.setGravity(Gravity.CENTER);
+        }
+
+        Button positiveBtn, negativeBtn;
+
+        /*Init view*/
+        positiveBtn = mNotificationDialog.findViewById(R.id.alert_positive_btn);
+        negativeBtn = mNotificationDialog.findViewById(R.id.alert_negative_btn);
+
+
+        positiveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mNotificationDialog.dismiss();
+                dialogAlertInterface.onPositiveClick();
+            }
+        });
+        negativeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mNotificationDialog.dismiss();
+                dialogAlertInterface.onNegativeClick();
+            }
+        });
+
+        alertShowing(mNotificationDialog);
+
+        return mNotificationDialog;
+    }
 
     public void showNetworkErrorPopup(Context context, String errorStr, final InterfaceBtnCallback dialogAlertInterface) {
 

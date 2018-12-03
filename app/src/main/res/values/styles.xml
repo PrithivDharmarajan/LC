@@ -14,8 +14,7 @@
     <!--Splash Screen theme -->
     <style name="AppSplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorAccent">@color/black</item>
-        <!--<item name="android:windowBackground">@drawable/splash_bg</item>-->
-        <item name="android:windowBackground">@color/white</item>
+        <item name="android:windowBackground">@drawable/splash_bg</item>
         <item name="android:windowTranslucentStatus" tools:targetApi="kitkat">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds" tools:targetApi="lollipop">true</item>
         <item name="android:statusBarColor" tools:targetApi="lollipop">@android:color/transparent

@@ -3,6 +3,7 @@ package com.lipcap.services;
 import com.lipcap.model.output.CommonResponse;
 import com.lipcap.model.output.IssuesListResponse;
 import com.lipcap.model.output.LoginResponse;
+import com.lipcap.model.output.PendingDetailsResponse;
 import com.lipcap.model.output.ProviderDetailsResponse;
 import com.lipcap.model.output.SelectIssuesTypeResponse;
 
@@ -44,6 +45,20 @@ public interface APICommonInterface {
     /*Location API*/
     @GET("User/putUserName?")
     Call<CommonResponse> updateProfileAPI(@Query("MobileNo") String mobileNoStr, @Query("Name") String nameStr);
+
+    /*Lat and Long Update API*/
+    @FormUrlEncoded
+    @POST("Appointment/postAppointment")
+    Call<String> bookAppointmentAPI(@Field("UserId")String userIdStr, @Field("UserLatitude")String latitudeStr, @Field("UserLongitude")String longitudeStr, @Field("CreatedDate")String createdDateStr, @Field("IssueId")String issuesIdStr, @Field("AppointmentStatus")String appointmentStatusStr, @Field("DeviceId") String DeviceIdStr,@Field("NotificationStatus") String notificationStatusStr);
+
+    /*Location API*/
+    @GET("serviceproviderservice/getUserStatusLocation?")
+    Call<PendingDetailsResponse> getUserPendingAppointmentAPI(@Query("Id") String userIdStr,@Query("UserType")String userTypeSrt);
+
+    /*Lat and Long Update API*/
+    @FormUrlEncoded
+    @POST("ServiceProviderService/postServiceProvider")
+    Call<String> postAppointmentStatusAPI(@Field("UserId")String userIdStr, @Field("ServiceProviderId")String serviceProviderIdStr, @Field("IssueId")String issueIdStr, @Field("CreatedDate")String createdDateStr, @Field("status")String statusStr, @Field("amount")String amountStr,@Field("Duration") String DurationStr);
 
 
 

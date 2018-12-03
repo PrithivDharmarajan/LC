@@ -79,7 +79,7 @@ public class ProviderRegistration extends BaseActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            mProvRegViewGroup.setPadding(0, getStatusBarHeight( ProviderRegistration.this), 0, 0);
+                            mProvRegViewGroup.setPadding(0, getStatusBarHeight(ProviderRegistration.this), 0, 0);
                         }
                     });
                 }
@@ -95,7 +95,7 @@ public class ProviderRegistration extends BaseActivity {
     }
 
     /*View onClick*/
-    @OnClick({R.id.header_start_img_lay,R.id.submit_btn})
+    @OnClick({R.id.header_start_img_lay, R.id.submit_btn})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.header_start_img_lay:
@@ -120,33 +120,37 @@ public class ProviderRegistration extends BaseActivity {
         } else if (phoneNumStr.isEmpty()) {
             mPhoneNumEdt.requestFocus();
             DialogManager.getInstance().showAlertPopup(this, getString(R.string.plz_enter_phone_num), this);
-        }  else {
+        } else if (phoneNumStr.length() < 10) {
+            mPhoneNumEdt.requestFocus();
+            DialogManager.getInstance().showAlertPopup(this, getString(R.string.plz_enter_valid_phone_num), this);
+        } else {
 
-            UserDetailsEntity userDetailsEntity=new UserDetailsEntity();
+            UserDetailsEntity userDetailsEntity = new UserDetailsEntity();
             userDetailsEntity.setName(nameStr);
             userDetailsEntity.setMobileNo(phoneNumStr);
             userDetailsEntity.setCreatedDT(DateUtil.getCurrentDate());
             userDetailsEntity.setUserType(2);
-            userDetailsEntity.setDeviceId(PreferenceUtil.getStringPreferenceValue(this,AppConstants.PUSH_DEVICE_ID));
+            userDetailsEntity.setDeviceId(PreferenceUtil.getStringPreferenceValue(this, AppConstants.PUSH_DEVICE_ID));
 
-            APIRequestHandler.getInstance().registrationAPICall(nameStr,   phoneNumStr,   PreferenceUtil.getStringPreferenceValue(this,AppConstants.PUSH_DEVICE_ID),   DateUtil.getCurrentDate(),  2+"",this);
+            APIRequestHandler.getInstance().registrationAPICall(nameStr, phoneNumStr, PreferenceUtil.getStringPreferenceValue(this, AppConstants.PUSH_DEVICE_ID), DateUtil.getCurrentDate(), 2 + "", this);
         }
     }
+
     /*API request success and failure*/
     @Override
     public void onRequestSuccess(Object resObj) {
         super.onRequestSuccess(resObj);
         if (resObj instanceof LoginResponse) {
             LoginResponse loginResponse = (LoginResponse) resObj;
-            if(loginResponse.getMsgCode().equals(AppConstants.SUCCESS_CODE)){
+            if (loginResponse.getMsgCode().equals(AppConstants.SUCCESS_CODE)) {
                 if (loginResponse.getUserDetail().size() > 0) {
                     PreferenceUtil.storeBoolPreferenceValue(this, AppConstants.LOGIN_STATUS, true);
                     PreferenceUtil.storeUserDetails(this, loginResponse.getUserDetail().get(0));
                     DialogManager.getInstance().showToast(this, getString(R.string.registered_success));
                     nextScreen(ProviderHome.class);
                 }
-            }else{
-                DialogManager.getInstance().showAlertPopup(this, loginResponse.getMessage(),this);
+            } else {
+                DialogManager.getInstance().showAlertPopup(this, loginResponse.getMessage(), this);
             }
 
         }
@@ -166,6 +170,7 @@ public class ProviderRegistration extends BaseActivity {
                     });
         }
     }
+
     @Override
     public void onBackPressed() {
         backScreen();

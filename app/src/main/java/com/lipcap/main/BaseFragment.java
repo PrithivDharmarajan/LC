@@ -252,7 +252,6 @@ public class BaseFragment extends Fragment implements InterfaceTwoBtnCallback {
         out.close();
     }
 
-
     /*Interface default ok click*/
     @Override
     public void onPositiveClick() {
@@ -261,6 +260,29 @@ public class BaseFragment extends Fragment implements InterfaceTwoBtnCallback {
 
     @Override
     public void onNegativeClick() {
+
+    }
+
+    protected void alertShowing(Dialog dialog) {
+        /*To check if the dialog is null or not. if it'border_with_transparent_bg not a null, the dialog will be shown orelse it will not get appeared*/
+        if (dialog != null) {
+            try {
+                dialog.show();
+            } catch (Exception e) {
+                Log.e(AppConstants.TAG, e.getMessage());
+            }
+        }
+    }
+
+    protected void alertDismiss(Dialog dialog) {
+        /*To check if the dialog is shown, if the dialog is shown it will be cancelled */
+        if (dialog != null && dialog.isShowing()) {
+            try {
+                dialog.dismiss();
+            } catch (Exception e) {
+                Log.e(AppConstants.TAG, e.getMessage());
+            }
+        }
 
     }
 }

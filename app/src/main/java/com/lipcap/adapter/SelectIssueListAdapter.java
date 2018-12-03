@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.lipcap.R;
 import com.lipcap.model.output.IssueListEntity;
+import com.lipcap.utils.AppConstants;
 import com.lipcap.utils.InterfaceEdtBtnCallback;
 
 import java.util.ArrayList;
@@ -46,31 +47,10 @@ public class SelectIssueListAdapter extends RecyclerView.Adapter<SelectIssueList
         if (mLastSelectedPosInt == position) {
             mLastRadioBtn = holder.mIssueRadioBtn;
             holder.mIssueRadioBtn.setChecked(true);
+            AppConstants.ISSUE_ID=mIssueListArrList.get(position).getIssueId();
         }
-//        else {
-//            holder.mIssueRadioBtn.setChecked(mLastSelectedInt == position);
-//        }
-
         holder.mIssueRadioBtn.setChecked(mLastSelectedPosInt == position);
 
-//        holder.mIssueRadioBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//
-//                if ( mLastRadioBtn.getId() != buttonView.getId()) {
-//                    holder.mIssueRadioBtn.setOnCheckedChangeListener(null);
-//                    mLastRadioBtn.setChecked(false);
-//                    mLastRadioBtn = buttonView;
-//                    holder.mIssueRadioBtn.setOnCheckedChangeListener(this);
-//                }
-////                if (isChecked) {
-////                notifyItemChanged(mLastSelectedInt);
-////                mLastSelectedInt = holder.getAdapterPosition();
-////                    notifyDataSetChanged();
-////                }
-//            }
-//        });
-//   mInterfaceEdtBtnCallback.onPositiveClick(String.valueOf(mIssueListArrList.get(holder.getAdapterPosition()).getId()));
 
 
     }

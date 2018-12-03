@@ -8,6 +8,7 @@ import com.lipcap.main.BaseFragment;
 import com.lipcap.model.output.CommonResponse;
 import com.lipcap.model.output.IssuesListResponse;
 import com.lipcap.model.output.LoginResponse;
+import com.lipcap.model.output.PendingDetailsResponse;
 import com.lipcap.model.output.ProviderDetailsResponse;
 import com.lipcap.model.output.SelectIssuesTypeResponse;
 import com.lipcap.utils.AppConstants;
@@ -147,7 +148,7 @@ public class APIRequestHandler {
                 });
     }
 
-    /*Provider location API*/
+    /*update provider location API*/
     public void getProviderLocAPICall(String latStr, String longStr, final BaseFragment baseFragment) {
         mServiceInterface.getProviderLocAPI(latStr, longStr)
                 .enqueue(new Callback<ProviderDetailsResponse>() {
@@ -165,7 +166,7 @@ public class APIRequestHandler {
                 });
     }
 
-    /*Provider location API*/
+    /*Update user profile API*/
     public void updateProfileAPICall(String mobileNoStr, String nameStr, final BaseFragment baseFragment) {
         mServiceInterface.updateProfileAPI(mobileNoStr, nameStr)
                 .enqueue(new Callback<CommonResponse>() {
@@ -179,6 +180,62 @@ public class APIRequestHandler {
                     @Override
                     public void onFailure(@NonNull Call<CommonResponse> call, @NonNull Throwable t) {
                         baseFragment.onRequestFailure(new CommonResponse(), t);
+                    }
+                });
+    }
+
+    /*Book appointment API*/
+    public void bookAppointmentAPICall(String userIdStr, String latitudeStr,  String longitudeStr,  String createdDateStr,  String issueIdStr,    String deviceID, final BaseFragment baseFragment) {
+        mServiceInterface.bookAppointmentAPI(userIdStr, latitudeStr,   longitudeStr,   createdDateStr,   issueIdStr,   "1",  deviceID, "0")
+                .enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            baseFragment.onRequestSuccess(response.body());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
+                        baseFragment.onRequestFailure("", t);
+                    }
+                });
+    }
+
+    /*Get pending appointment details API*/
+    public void getUserPendingAppointmentAPICall(String userIdStr,String userTypeStr, final BaseFragment baseFragment) {
+        mServiceInterface.getUserPendingAppointmentAPI(userIdStr,userTypeStr)
+                .enqueue(new Callback<PendingDetailsResponse>() {
+                    @Override
+                    public void onResponse(@NonNull Call<PendingDetailsResponse> call, @NonNull Response<PendingDetailsResponse> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            baseFragment.onRequestSuccess(response.body());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<PendingDetailsResponse> call, @NonNull Throwable t) {
+                        baseFragment.onRequestFailure(new PendingDetailsResponse(), t);
+                    }
+                });
+    }
+
+    /*Get pending appointment details API*/
+    public void postAppointmentStatusAPICall(String userIdStr, String serviceProviderIdStr, String issueIdStr, String createdDateStr,String statusStr, String amountStr, String durationStr, final BaseFragment baseFragment) {
+        mServiceInterface.postAppointmentStatusAPI( userIdStr,  serviceProviderIdStr,  issueIdStr,  createdDateStr, statusStr,  amountStr,  durationStr)
+                .enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            baseFragment.onRequestSuccess("Status");
+                        }else{
+                            baseFragment.onRequestFailure("Status",  new Throwable(response.raw().message()));
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
+                        baseFragment.onRequestFailure("Status", t);
                     }
                 });
     }

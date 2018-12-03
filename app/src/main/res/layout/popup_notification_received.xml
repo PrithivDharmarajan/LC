@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/LayoutWidMatch_HeiWrap"
+    android:layout_margin="@dimen/size20"
+    android:layout_marginTop="@dimen/text18"
+    android:orientation="vertical"
+    app:cardCornerRadius="@dimen/size3">
+
+    <LinearLayout
+        style="@style/LayoutWidMatch_HeiWrap"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/TextOpenSansSemiBold"
+            android:padding="@dimen/size10"
+            android:text="@string/notification"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text16" />
+
+        <View
+            style="@style/LayoutWidMatch_HeiWrap"
+            android:layout_height="@dimen/size1"
+            android:layout_marginStart="@dimen/size18"
+            android:layout_marginEnd="@dimen/size18"
+            android:background="@color/gray" />
+
+        <TextView
+            android:id="@+id/alert_msg_txt"
+            style="@style/TextOpenSansRegular"
+            android:text="@string/new_appointment"
+            android:padding="@dimen/size18"
+            android:layout_marginTop="@dimen/size10"
+            android:layout_marginBottom="@dimen/size10"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text15" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size40"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <Button
+                android:id="@+id/alert_negative_btn"
+                style="@style/ButtonOpenSansSemiBold"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/gray"
+                android:text="@string/cancel"
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
+
+            <Button
+                android:id="@+id/alert_positive_btn"
+                style="@style/ButtonOpenSansSemiBold"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/blue"
+                android:text="@string/view"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text14" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+</android.support.v7.widget.CardView>

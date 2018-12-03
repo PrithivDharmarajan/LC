@@ -61,6 +61,9 @@ public class Splash extends BaseActivity {
                 if (PreferenceUtil.getBoolPreferenceValue(Splash.this, AppConstants.LOGIN_STATUS)) {
                     nextScreenClass = PreferenceUtil.getBoolPreferenceValue(Splash.this, AppConstants.CURRENT_USER_IS_PROVIDER) ? ProviderHome.class : CustomerHome.class;
                 }
+
+
+                sysOut("Push-Id "+ PreferenceUtil.getStringPreferenceValue(Splash.this, AppConstants.PUSH_DEVICE_ID));
                 nextScreen(nextScreenClass);
             }
         };

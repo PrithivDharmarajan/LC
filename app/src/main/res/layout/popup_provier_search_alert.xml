@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/LayoutWidMatch_HeiWrap"
+    android:layout_margin="@dimen/size15">
+
+    <LinearLayout
+        style="@style/LayoutWidMatch_HeiWrap"
+        android:layout_margin="@dimen/size1"
+        android:background="@color/brown"
+        android:paddingTop="@dimen/size5"
+        android:orientation="vertical">
+        <ProgressBar
+            xmlns:tools="http://schemas.android.com/tools"
+            style="@style/LayoutWrap"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/size10"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/white"
+            tools:targetApi="lollipop" />
+        <TextView
+            style="@style/TextOpenSansSemiBold"
+            android:layout_marginBottom="@dimen/size10"
+            android:padding="@dimen/size20"
+            android:text="@string/searching_nearest_provider"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text15" />
+
+    </LinearLayout>
+</RelativeLayout>
+
+

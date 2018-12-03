@@ -10,6 +10,7 @@
     <string name="dont_have_acc">Don\'t have an account? <u>Sign Up</u></string>
 
     <string name="plz_enter_phone_num">Please Enter Phone Number</string>
+    <string name="plz_enter_valid_phone_num">Please Enter Valid Phone Number</string>
     <string name="login_success">Successfully logged in</string>
 
     <!--User Selection-->
@@ -36,6 +37,9 @@
     <string name="lip_cap_support">Lip Cap Support</string>
     <string name="about_the_app">About the app</string>
     <string name="logout">logout</string>
+    <string name="provider_not_found">Provider not found. Please try again later</string>
+    <string name="searching_nearest_provider">Searching nearest provider&#8230; Please wait few min</string>
+
 
     <!--Customer Map-->
     <string name="select_issue">Select the issue</string>
@@ -64,11 +68,26 @@
     <string name="customer_name"> Customer name</string>
     <string name="call_customer">Call Customer</string>
     <string name="accept_appointment"> Accept the appointment</string>
+    <string name="work_done">Work done</string>
 
     <!--Issue List-->
     <string name="completed">Completed</string>
     <string name="in_progress">In-Progress</string>
     <string name="canceled">Canceled</string>
+
+    <!--Provider side-->
+    <string name="new_appointment">New appointment received!</string>
+    <string name="view">View</string>
+
+    <string name="request">Request</string>
+    <string name="issues_type">Issue Type:</string>
+    <string name="set_duration">Set Duration:</string>
+    <string name="accept">Accept</string>
+
+
+    <string name="success_completed">Successfully completed!</string>
+    <string name="enter_the_amt"> Enter the amount</string>
+    <string name="rubee_sym">\u20B9</string>
 
 
     <!--General-->

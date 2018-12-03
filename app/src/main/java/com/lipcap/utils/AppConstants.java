@@ -29,11 +29,12 @@ public class AppConstants {
     public static final String  SUPPORT_EMAIL= "clri@gmail.com";
     public static final String  ABOUT_WEB= "https://www.clri.org/";
 
+
+
     /*Previous Screen*/
     public static ArrayList<String> PREVIOUS_SCREEN_ARR_LIST = new ArrayList<>();
 
-    /*Temp*/
-    public static String TEMP_HEADER = "TEMP_HEADER";
+    public static int ISSUE_ID = 0;
 
 }
 

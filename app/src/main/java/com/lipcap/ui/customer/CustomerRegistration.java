@@ -119,6 +119,9 @@ public class CustomerRegistration extends BaseActivity {
         } else if (phoneNumStr.isEmpty()) {
             mPhoneNumEdt.requestFocus();
             DialogManager.getInstance().showAlertPopup(this, getString(R.string.plz_enter_phone_num), this);
+        }  else if (phoneNumStr.length()<10) {
+            mPhoneNumEdt.requestFocus();
+            DialogManager.getInstance().showAlertPopup(this, getString(R.string.plz_enter_valid_phone_num), this);
         }  else {
 
             APIRequestHandler.getInstance().registrationAPICall(nameStr,   phoneNumStr,   PreferenceUtil.getStringPreferenceValue(this,AppConstants.PUSH_DEVICE_ID),   DateUtil.getCurrentDate(),  1+"",this);

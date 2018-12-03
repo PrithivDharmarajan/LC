@@ -25,16 +25,7 @@ public class FireBasePushMessagingService extends FirebaseMessagingService {
 
 
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        String pushDataStr = "";
-
-        sendNotification("Test");
-//        pushDataStr = remoteMessage.getData().get("message");
-//
-//        /*Clear old notification*/
-//        ((NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE)).cancel(0);
-//        if (PreferenceUtil.getBoolPreferenceValue(getContext(), AppConstants.LOGIN_STATUS) && pushDataStr != null && !pushDataStr.isEmpty()) {
-//            sendChatNotification(pushDataStr);
-//        }
+//        sendNotification("remoteMessage ---"+remoteMessage.toString()+"\n\n Next Data"+"remoteMessage.getData() ---"+remoteMessage.getData().toString());
     }
 
 
