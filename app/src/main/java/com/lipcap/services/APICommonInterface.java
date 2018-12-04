@@ -49,11 +49,11 @@ public interface APICommonInterface {
     /*Lat and Long Update API*/
     @FormUrlEncoded
     @POST("Appointment/postAppointment")
-    Call<String> bookAppointmentAPI(@Field("UserId")String userIdStr, @Field("UserLatitude")String latitudeStr, @Field("UserLongitude")String longitudeStr, @Field("CreatedDate")String createdDateStr, @Field("IssueId")String issuesIdStr, @Field("AppointmentStatus")String appointmentStatusStr, @Field("DeviceId") String DeviceIdStr,@Field("NotificationStatus") String notificationStatusStr);
+    Call<String> bookAppointmentAPI(@Field("UserId")String userIdStr, @Field("UserLatitude")String latitudeStr,@Field("UserLongitude")String longitudeStr, @Field("UserName")String userNameStr,@Field("UserMobileNo")String UserMobileNoStr,@Field("IssueId")String IssueIdStr,@Field("IssueName")String IssueNameStr, @Field("CreatedDate")String createdDateStr, @Field("AppointmentStatus")String appointmentStatusStr, @Field("DeviceId") String DeviceIdStr,@Field("NotificationStatus") String notificationStatusStr);
 
     /*Location API*/
     @GET("serviceproviderservice/getUserStatusLocation?")
-    Call<PendingDetailsResponse> getUserPendingAppointmentAPI(@Query("Id") String userIdStr,@Query("UserType")String userTypeSrt);
+    Call<PendingDetailsResponse> getUserPendingAppointmentAPI(@Query("Id") String userIdStr);
 
     /*Lat and Long Update API*/
     @FormUrlEncoded

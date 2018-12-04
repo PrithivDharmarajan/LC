@@ -185,8 +185,8 @@ public class APIRequestHandler {
     }
 
     /*Book appointment API*/
-    public void bookAppointmentAPICall(String userIdStr, String latitudeStr,  String longitudeStr,  String createdDateStr,  String issueIdStr,    String deviceID, final BaseFragment baseFragment) {
-        mServiceInterface.bookAppointmentAPI(userIdStr, latitudeStr,   longitudeStr,   createdDateStr,   issueIdStr,   "1",  deviceID, "0")
+    public void bookAppointmentAPICall(String userIdStr, String latitudeStr, String longitudeStr, String userNameStr,  String UserMobileNoStr,  String IssueIdStr,  String IssueNameStr, String createdDateStr,  String deviceID, final BaseFragment baseFragment) {
+        mServiceInterface.bookAppointmentAPI(userIdStr, latitudeStr,   longitudeStr, userNameStr,   UserMobileNoStr,   IssueIdStr,   IssueNameStr, createdDateStr,   "1",  deviceID, "0")
                 .enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
@@ -204,7 +204,7 @@ public class APIRequestHandler {
 
     /*Get pending appointment details API*/
     public void getUserPendingAppointmentAPICall(String userIdStr,String userTypeStr, final BaseFragment baseFragment) {
-        mServiceInterface.getUserPendingAppointmentAPI(userIdStr,userTypeStr)
+        mServiceInterface.getUserPendingAppointmentAPI(userIdStr)
                 .enqueue(new Callback<PendingDetailsResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<PendingDetailsResponse> call, @NonNull Response<PendingDetailsResponse> response) {

@@ -265,7 +265,7 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
 
 
     /*Click Event*/
-    @OnClick({R.id.show_current_location_img, R.id.book_appointment_btn, R.id.cancel_appointment_lay,R.id.call_shoe_repairer_lay})
+    @OnClick({R.id.show_current_location_img, R.id.book_appointment_btn, R.id.cancel_appointment_lay, R.id.call_shoe_repairer_lay})
     public void onClick(View v) {
         if (getActivity() != null) {
             switch (v.getId()) {
@@ -435,14 +435,14 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
                     public void run() {
                         mProviderListInt += 1;
                         if (mProviderArrList.size() > mProviderListInt && mIsProviderSearchingBool) {
-
-                            APIRequestHandler.getInstance().bookAppointmentAPICall(String.valueOf(mUserDetailsRes.getId()), String.valueOf(mCurrentLocation.getLatitude()), String.valueOf(mCurrentLocation.getLongitude()), DateUtil.getCurrentDate(), mIssueIdStr, mProviderArrList.get(mProviderListInt).getDeviceId(), CustomerMapFragment.this);
-
-
+                            APIRequestHandler.getInstance().bookAppointmentAPICall(String.valueOf(mUserDetailsRes.getId()), String.valueOf(mCurrentLocation.getLatitude()), String.valueOf(mCurrentLocation.getLongitude()), mUserDetailsRes.getName(), mUserDetailsRes.getMobileNo(), mIssueIdStr, AppConstants.ISSUE_NAME, DateUtil.getCurrentDate(), mProviderArrList.get(mProviderListInt).getDeviceId(), CustomerMapFragment.this);
                         } else {
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    if (mProviderArrList.size() > 0) {
+                                        APIRequestHandler.getInstance().postAppointmentStatusAPICall(String.valueOf(mProviderArrList.get(mProviderArrList.size()-1).getId()), String.valueOf(mUserDetailsRes.getId()), mIssueIdStr, DateUtil.getCurrentDate(), "3", "0", "0", CustomerMapFragment.this);
+                                    }
                                     DialogManager.getInstance().showToast(getActivity(), getString(R.string.provider_not_found));
                                     cancelProviderSearch();
                                 }
@@ -541,6 +541,7 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
             mProviderAPITimer.purge();
         }
     }
+
     private void makePhoneCall() {
         if (getActivity() != null && !mUserPhoneNumStr.isEmpty()) {
             Intent intent = new Intent(Intent.ACTION_CALL);
@@ -589,6 +590,7 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
 
         return addPermission;
     }
+
     /*Ask permission on Location access*/
     private boolean permissionsAccessLocation(final boolean initFlowBool) {
         boolean addPermission = true;

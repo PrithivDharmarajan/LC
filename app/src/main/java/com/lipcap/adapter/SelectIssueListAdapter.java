@@ -48,6 +48,7 @@ public class SelectIssueListAdapter extends RecyclerView.Adapter<SelectIssueList
             mLastRadioBtn = holder.mIssueRadioBtn;
             holder.mIssueRadioBtn.setChecked(true);
             AppConstants.ISSUE_ID=mIssueListArrList.get(position).getIssueId();
+            AppConstants.ISSUE_NAME=mIssueListArrList.get(position).getIssueName();
         }
         holder.mIssueRadioBtn.setChecked(mLastSelectedPosInt == position);
 

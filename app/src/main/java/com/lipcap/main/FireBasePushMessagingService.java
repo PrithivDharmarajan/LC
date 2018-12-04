@@ -25,18 +25,20 @@ public class FireBasePushMessagingService extends FirebaseMessagingService {
 
 
     public void onMessageReceived(RemoteMessage remoteMessage) {
-//        sendNotification("remoteMessage ---"+remoteMessage.toString()+"\n\n Next Data"+"remoteMessage.getData() ---"+remoteMessage.getData().toString());
+        sendNotification(""+remoteMessage.getData().toString());
     }
 
 
     private void sendNotification( String messageStr) {
 
-        if (PreferenceUtil.getBoolPreferenceValue(this, AppConstants.LOGIN_STATUS)) {
+
+        if (PreferenceUtil.getBoolPreferenceValue(this, AppConstants.LOGIN_STATUS )&&PreferenceUtil.getBoolPreferenceValue(this,AppConstants.CURRENT_USER_IS_PROVIDER)) {
             Intent intent = new Intent(this, PreferenceUtil.getBoolPreferenceValue(this, AppConstants.CURRENT_USER_IS_PROVIDER) ? ProviderHome.class : CustomerHome.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                     PendingIntent.FLAG_ONE_SHOT);
 
+            AppConstants.IS_FROM_PUSH=true;
             String channelId = getString(R.string.default_notification_channel_id);
             Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             NotificationCompat.Builder notificationBuilder =

@@ -35,6 +35,8 @@ public class AppConstants {
     public static ArrayList<String> PREVIOUS_SCREEN_ARR_LIST = new ArrayList<>();
 
     public static int ISSUE_ID = 0;
+    public static String ISSUE_NAME = "";
+    public static boolean IS_FROM_PUSH = false;
 
 }
 
