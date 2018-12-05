@@ -4,13 +4,13 @@ import java.util.ArrayList;
 
 public class LoginResponse extends CommonModelResponse {
 
-    public ArrayList<UserDetailsEntity> getUserDetail() {
-        return UserDetail;
+    private ArrayList<UserDetailsEntity> result=new ArrayList<>();
+
+    public ArrayList<UserDetailsEntity> getResult() {
+        return result;
     }
 
-    public void setUserDetail(ArrayList<UserDetailsEntity> userDetail) {
-        UserDetail = userDetail;
+    public void setResult(ArrayList<UserDetailsEntity> result) {
+        this.result = result;
     }
-
-    private ArrayList<UserDetailsEntity> UserDetail=new ArrayList<>();
 }

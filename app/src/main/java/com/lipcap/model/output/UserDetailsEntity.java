@@ -2,59 +2,106 @@ package com.lipcap.model.output;
 
 public class UserDetailsEntity {
 
-    private int Id = 0;
-    private String Name;
-    private String MobileNo = "";
-    private String CreatedDT = "";
-    private int UserType = 0;
-    private String DeviceId = "";
+    private String userId;
+    private String userName = "";
+    private String userType = "";
+    private String phoneNumber = "";
+    private String latitude = "";
+    private String longitude = "";
+    private String deviceType = "";
+    private String deviceToken = "";
+    private String status = "";
+    private String createDate = "";
 
-    public int getId() {
-        return Id;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setId(int id) {
-        Id = id;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
-    public String getName() {
-        return Name;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setName(String name) {
-        Name = name;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
-    public String getMobileNo() {
-        return MobileNo;
+    public String getUserType() {
+        return userType;
     }
 
-    public void setMobileNo(String mobileNo) {
-        MobileNo = mobileNo;
+    public void setUserType(String userType) {
+        this.userType = userType;
     }
 
-    public String getCreatedDT() {
-        return CreatedDT;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setCreatedDT(String createdDT) {
-        CreatedDT = createdDT;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
-    public int getUserType() {
-        return UserType;
+    public String getLatitude() {
+        return latitude;
     }
 
-    public void setUserType(int userType) {
-        UserType = userType;
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
     }
 
-    public String getDeviceId() {
-        return DeviceId;
+    public String getLongitude() {
+        return longitude;
     }
 
-    public void setDeviceId(String deviceId) {
-        DeviceId = deviceId;
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
     }
+
+    public String getDeviceType() {
+        return deviceType;
+    }
+
+    public void setDeviceType(String deviceType) {
+        this.deviceType = deviceType;
+    }
+
+    public String getDeviceToken() {
+        return deviceToken;
+    }
+
+    public void setDeviceToken(String deviceToken) {
+        this.deviceToken = deviceToken;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(String createDate) {
+        this.createDate = createDate;
+    }
+
+    public String getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(String updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    private String updateDate = "";
+
 
 }

@@ -89,6 +89,19 @@
     <string name="enter_the_amt"> Enter the amount</string>
     <string name="rubee_sym">\u20B9</string>
 
+    <!--Dialog-->
+    <string-array name="duration_arr_list">
+        <item>10 min</item>
+        <item>15 min</item>
+        <item>20 min</item>
+        <item>25 min</item>
+        <item>30 min</item>
+        <item>more than 30 min</item>
+        <item>45 min</item>
+        <item>50 min</item>
+        <item>more than 1 hr</item>
+    </string-array>
+
 
     <!--General-->
     <string name="go_settings_per">You have denied the app permissions. Go to Settings and Enable the Permissions.</string>
@@ -101,6 +114,7 @@
     <string name="logged_in_success">Logged In Successfully</string>
     <string name="registered_success">Registered Successfully</string>
     <string name="logout_msg">Are you sure you want to Logout?</string>
+    <string name="cancel_appointment_msg">Are you sure you want to Cancel the Appointment?</string>
     <string name="exit_msg">Press again to exit</string>
     <string name="err_create_frag">Error in creating fragment</string>
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>

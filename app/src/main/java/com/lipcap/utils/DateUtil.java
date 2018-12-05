@@ -8,7 +8,7 @@ public class DateUtil {
 
     /*Convert string to date*/
     public static String getCurrentDate() {
-        SimpleDateFormat inputDateFormat = new SimpleDateFormat("MM/dd/yyyy",Locale.US);
+        SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.US);
         return inputDateFormat.format(new Date());
     }
 }

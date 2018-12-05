@@ -46,8 +46,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.lipcap.R;
 import com.lipcap.main.BaseFragment;
-import com.lipcap.model.output.PendingDetailsEntity;
+import com.lipcap.model.input.AppointmentAcceptEntity;
+import com.lipcap.model.input.LocationUpdateInputEntity;
+import com.lipcap.model.input.PendingAppointmentInputEntity;
+import com.lipcap.model.input.UserCancelEntity;
+import com.lipcap.model.output.AppointmentDetailsEntity;
 import com.lipcap.model.output.PendingDetailsResponse;
+import com.lipcap.model.output.UserCancelResponse;
+import com.lipcap.model.output.UserDetailsEntity;
 import com.lipcap.services.APIRequestHandler;
 import com.lipcap.utils.AddressUtil;
 import com.lipcap.utils.AppConstants;
@@ -89,7 +95,8 @@ public class ProviderMapFragment extends BaseFragment implements GoogleApiClient
     private Timer mCheckAppointmentTimer;
     private String mUserIdStr = "", mUserPhoneNumStr = "";
     private Dialog mNotificationDialog;
-    private PendingDetailsEntity mPendingUserDetails = new PendingDetailsEntity();
+    private UserDetailsEntity mPendingUserDetails = new UserDetailsEntity();
+    private AppointmentDetailsEntity mAppointmentDetails = new AppointmentDetailsEntity();
 
 
     @Override
@@ -164,25 +171,35 @@ public class ProviderMapFragment extends BaseFragment implements GoogleApiClient
                         @Override
                         public void run() {
                             if (mAcceptAppointmentTxt.getText().toString().equalsIgnoreCase(getString(R.string.accept_appointment))) {
-                                DialogManager.getInstance().showProviderAmtDialogPopup(getActivity(), mPendingUserDetails.getIssueName(), new InterfaceEdtBtnCallback() {
+                                DialogManager.getInstance().showProviderAmtDialogPopup(getActivity(), mAppointmentDetails.getIssueName(), new InterfaceEdtBtnCallback() {
                                     @Override
                                     public void onPositiveClick(String editStr) {
                                         mAcceptAppointmentTxt.setText(getString(R.string.work_done));
-                                        APIRequestHandler.getInstance().postAppointmentStatusAPICall(String.valueOf(mPendingUserDetails.getId()), mUserIdStr, String.valueOf(mPendingUserDetails.getIssueId()), DateUtil.getCurrentDate(), "2", "0", editStr, ProviderMapFragment.this);
 
+                                        AppointmentAcceptEntity appointmentAcceptEntity=new AppointmentAcceptEntity();
+                                        appointmentAcceptEntity.setAppointmentId(mAppointmentDetails.getAppointmentId());
+                                        appointmentAcceptEntity.setDateTime(DateUtil.getCurrentDate());
+                                        appointmentAcceptEntity.setDuration(editStr);
+                                        appointmentAcceptEntity.setUserId(PreferenceUtil.getUserId(getActivity()));
+                                        APIRequestHandler.getInstance().acceptAppointmentAPICall(appointmentAcceptEntity,ProviderMapFragment.this);
                                     }
 
                                     @Override
                                     public void onNegativeClick() {
-                                        APIRequestHandler.getInstance().postAppointmentStatusAPICall(String.valueOf(mPendingUserDetails.getId()), mUserIdStr, String.valueOf(mPendingUserDetails.getIssueId()), DateUtil.getCurrentDate(), "4", "0", "0 min", ProviderMapFragment.this);
 
                                     }
                                 });
                             } else {
-                                DialogManager.getInstance().showProviderCompletedDialogPopup(getActivity(), mPendingUserDetails.getIssueName(), new InterfaceEdtBtnCallback() {
+                                DialogManager.getInstance().showProviderCompletedDialogPopup(getActivity(), mAppointmentDetails.getIssueName(), new InterfaceEdtBtnCallback() {
                                     @Override
-                                    public void onPositiveClick(String editStr) {
-                                        APIRequestHandler.getInstance().postAppointmentStatusAPICall(String.valueOf(mPendingUserDetails.getId()), mUserIdStr, String.valueOf(mPendingUserDetails.getIssueId()), DateUtil.getCurrentDate(), "2", editStr, mPendingUserDetails.getDuration(), ProviderMapFragment.this);
+                                    public void onPositiveClick(String amountStr) {
+                                        AppointmentAcceptEntity appointmentAcceptEntity=new AppointmentAcceptEntity();
+                                        appointmentAcceptEntity.setAppointmentId(mAppointmentDetails.getAppointmentId());
+                                        appointmentAcceptEntity.setDateTime(DateUtil.getCurrentDate());
+                                        appointmentAcceptEntity.setDuration(mAppointmentDetails.getDuration());
+                                        appointmentAcceptEntity.setAmount(amountStr);
+                                        appointmentAcceptEntity.setUserId(PreferenceUtil.getUserId(getActivity()));
+                                        APIRequestHandler.getInstance().completeAppointmentAPICall(appointmentAcceptEntity,ProviderMapFragment.this);
 
                                     }
 
@@ -197,7 +214,24 @@ public class ProviderMapFragment extends BaseFragment implements GoogleApiClient
 
                     break;
                 case R.id.cancel_appointment_lay:
-                    APIRequestHandler.getInstance().postAppointmentStatusAPICall(String.valueOf(mPendingUserDetails.getId()), mUserIdStr, String.valueOf(mPendingUserDetails.getIssueId()), DateUtil.getCurrentDate(), "4", "0", "0 min", ProviderMapFragment.this);
+
+                    DialogManager.getInstance().showOptionPopup(getActivity(), getString(R.string.cancel_appointment), getString(R.string.yes), getString(R.string.no), new InterfaceTwoBtnCallback() {
+                        @Override
+                        public void onNegativeClick() {
+
+                        }
+
+                        @Override
+                        public void onPositiveClick() {
+                            UserCancelEntity userCancelEntity = new UserCancelEntity();
+                            userCancelEntity.setAppointmentId(mAppointmentDetails.getAppointmentId());
+                            userCancelEntity.setUserId(PreferenceUtil.getUserId(getActivity()));
+                            userCancelEntity.setDateTime(DateUtil.getCurrentDate());
+                            userCancelEntity.setCancelReason(AppConstants.CUSTOMER_CANCEL_REASON);
+                            APIRequestHandler.getInstance().providerCancelAppointmentAPICall(userCancelEntity, ProviderMapFragment.this);
+
+                        }
+                    });
                     break;
             }
         }
@@ -397,10 +431,14 @@ public class ProviderMapFragment extends BaseFragment implements GoogleApiClient
     private void getCheckPendingAppointmentAPICall() {
         cancelCheckPendingAppointmentAPICallTimer();
         mCheckAppointmentTimer = new Timer();
+        final PendingAppointmentInputEntity pendingAppointmentInputEntity = new PendingAppointmentInputEntity();
+        pendingAppointmentInputEntity.setUserId(PreferenceUtil.getUserId(getActivity()));
+        pendingAppointmentInputEntity.setDateTime(DateUtil.getCurrentDate());
+
         mCheckAppointmentTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                APIRequestHandler.getInstance().getUserPendingAppointmentAPICall(mUserIdStr, "2",ProviderMapFragment.this);
+                APIRequestHandler.getInstance().getUserPendingAppointmentAPICall(pendingAppointmentInputEntity, ProviderMapFragment.this);
             }
         }, 0, 5000);
     }
@@ -444,7 +482,12 @@ public class ProviderMapFragment extends BaseFragment implements GoogleApiClient
                 mGoogleMap.clear();
                 setCurrentLocMarker();
             }
-            APIRequestHandler.getInstance().latAndLongUpdateAPICall(String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()), 2 + "", this);
+
+            LocationUpdateInputEntity locationUpdateInputEntity = new LocationUpdateInputEntity();
+            locationUpdateInputEntity.setUserId(mUserIdStr);
+            locationUpdateInputEntity.setLatitude(String.valueOf(location.getLatitude()));
+            locationUpdateInputEntity.setLongitude(String.valueOf(location.getLongitude()));
+            APIRequestHandler.getInstance().latAndLongUpdateAPICall(locationUpdateInputEntity, this);
         }
     }
 
@@ -530,61 +573,109 @@ public class ProviderMapFragment extends BaseFragment implements GoogleApiClient
         if (resObj instanceof PendingDetailsResponse) {
             if (getActivity() != null && !mIsPendingAppointmentBool) {
                 PendingDetailsResponse pendingDetailsRes = (PendingDetailsResponse) resObj;
-                ArrayList<PendingDetailsEntity> userDetailArrListRes = pendingDetailsRes.getUserDetail();
-                if (userDetailArrListRes.size() > 0) {
-                    if (!mIsPendingAppointmentBool && (
-                            userDetailArrListRes.get(0).getStatus() != 4 || userDetailArrListRes.get(0).getStatus() != 5)) {
+                if (pendingDetailsRes.getResult().getAnotheruser().size() > 0 && pendingDetailsRes.getResult().getAppointments().size() > 0) {
+                    final UserDetailsEntity userDetails = pendingDetailsRes.getResult().getAnotheruser().get(0);
+                    final AppointmentDetailsEntity appointmentDetails = pendingDetailsRes.getResult().getAppointments().get(0);
+                    mAppointmentDetails = appointmentDetails;
+                    mPendingUserDetails=userDetails;
+                    mUserPhoneNumStr = userDetails.getPhoneNumber();
+                    if (!mIsPendingAppointmentBool && (appointmentDetails.getStatus().equalsIgnoreCase("1"))) {
                         mIsPendingAppointmentBool = true;
-                        PendingDetailsEntity userDetail = new PendingDetailsEntity();
-                        for (int i = 0; i < userDetailArrListRes.size(); i++) {
-                            if (!mUserIdStr.equalsIgnoreCase(String.valueOf(userDetailArrListRes.get(i).getId()))) {
-                                userDetail = userDetailArrListRes.get(i);
-                                break;
-                            }
-                        }
 
-                        final PendingDetailsEntity finalUserDetail = userDetail;
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 mNotificationDialog = DialogManager.getInstance().showNotificationPopup(getActivity(), new InterfaceTwoBtnCallback() {
                                     @Override
                                     public void onNegativeClick() {
-                                        APIRequestHandler.getInstance().postAppointmentStatusAPICall(String.valueOf(finalUserDetail.getId()), mUserIdStr, String.valueOf(finalUserDetail.getIssueId()), DateUtil.getCurrentDate(), "4", "0", "0 min", ProviderMapFragment.this);
-                                    }
+                                        UserCancelEntity userCancelEntity = new UserCancelEntity();
+                                        userCancelEntity.setAppointmentId(mAppointmentDetails.getAppointmentId());
+                                        userCancelEntity.setUserId(PreferenceUtil.getUserId(getActivity()));
+                                        userCancelEntity.setDateTime(DateUtil.getCurrentDate());
+                                        userCancelEntity.setCancelReason("");
+                                        APIRequestHandler.getInstance().providerCancelAppointmentAPICall(userCancelEntity, ProviderMapFragment.this);
+
+
+                                     }
 
                                     @Override
                                     public void onPositiveClick() {
                                         mAppointmentCardView.setVisibility(View.VISIBLE);
-                                        mCustomerNameTxt.setText(finalUserDetail.getName());
-                                        mUserPhoneNumStr = finalUserDetail.getMobileNo();
-                                        mapDirection(finalUserDetail.getLatitude(), finalUserDetail.getLongitude());
-                                        mPendingUserDetails = finalUserDetail;
+                                        mCustomerNameTxt.setText(userDetails.getUserName());
+                                        mapDirection(Double.valueOf(userDetails.getLatitude()), Double.valueOf(userDetails.getLongitude()));
 
                                     }
                                 });
                             }
                         });
 
-                    } else if (userDetailArrListRes.get(0).getStatus() == 4 || userDetailArrListRes.get(0).getStatus() == 5) {
+                    } else if (!mIsPendingAppointmentBool && (appointmentDetails.getStatus().equalsIgnoreCase("2"))) {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                alertDismiss(mNotificationDialog);
-                                mAppointmentCardView.setVisibility(View.GONE);
-                                mIsPendingAppointmentBool = false;
+                                mIsPendingAppointmentBool = true;
+                                mAppointmentCardView.setVisibility(View.VISIBLE);
+                                mCustomerNameTxt.setText(userDetails.getUserName());
+                                mAcceptAppointmentTxt.setText(getString(R.string.work_done));
+                                mapDirection(Double.valueOf(userDetails.getLatitude()), Double.valueOf(userDetails.getLongitude()));
                             }
                         });
 
+                    }else if (mIsPendingAppointmentBool && (appointmentDetails.getStatus().equalsIgnoreCase("0") || appointmentDetails.getStatus().equalsIgnoreCase("3")
+                            || appointmentDetails.getStatus().equalsIgnoreCase("4") || appointmentDetails.getStatus().equalsIgnoreCase("5"))) {
+                        if (getActivity() != null)
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    alertDismiss(mNotificationDialog);
+                                    mAppointmentCardView.setVisibility(View.GONE);
+                                    mIsPendingAppointmentBool = false;
+                                    mIsFirstAPIBool=true;
+                                    screenAPICall();
+                                }
+                            });
+
                     }
                 } else {
-                    mIsPendingAppointmentBool = false;
-                    mAcceptAppointmentTxt.setText(getString(R.string.accept_appointment));
-                    mAppointmentCardView.setVisibility(View.GONE);
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            alertDismiss(mNotificationDialog);
+                            mIsPendingAppointmentBool = false;
+                            mAcceptAppointmentTxt.setText(getString(R.string.accept_appointment));
+                            mAppointmentCardView.setVisibility(View.GONE);
+                            mIsFirstAPIBool=true;
+                            screenAPICall();
+                        }
+                    });
                 }
+            } else if(mAppointmentCardView.getVisibility()==View.VISIBLE){
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        alertDismiss(mNotificationDialog);
+                        mIsPendingAppointmentBool = false;
+                        mAcceptAppointmentTxt.setText(getString(R.string.accept_appointment));
+                        mAppointmentCardView.setVisibility(View.GONE);
+                        mIsFirstAPIBool=true;
+                        screenAPICall();
+                    }
+                });
+
+
             }
         }
-
+        if (resObj instanceof UserCancelResponse) {
+            if (mIsPendingAppointmentBool) {
+                mAppointmentCardView.setVisibility(View.GONE);
+                mIsFirstAPIBool = true;
+                alertDismiss(mNotificationDialog);
+                screenAPICall();
+                mIsPendingAppointmentBool = false;
+            }
+        }
     }
 
     private void mapDirection(double userLat, double userLong) {

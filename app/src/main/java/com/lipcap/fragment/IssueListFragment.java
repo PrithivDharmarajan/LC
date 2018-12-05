@@ -12,12 +12,14 @@ import android.view.ViewGroup;
 import com.lipcap.R;
 import com.lipcap.adapter.IssueListAdapter;
 import com.lipcap.main.BaseFragment;
-import com.lipcap.model.output.IssueListEntity;
+import com.lipcap.model.input.IssuesInputEntity;
+import com.lipcap.model.output.AppointmentDetailsEntity;
 import com.lipcap.model.output.IssuesListResponse;
 import com.lipcap.services.APIRequestHandler;
 import com.lipcap.utils.AppConstants;
 import com.lipcap.utils.DialogManager;
 import com.lipcap.utils.InterfaceBtnCallback;
+import com.lipcap.utils.PreferenceUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -74,11 +76,13 @@ public class IssueListFragment extends BaseFragment {
     }
 
     private void issueListAPICall() {
-        APIRequestHandler.getInstance().issueListAPICall(this);
+        IssuesInputEntity issuesInputEntity =new IssuesInputEntity();
+        issuesInputEntity.setUserId(PreferenceUtil.getUserId(getActivity()));
+        APIRequestHandler.getInstance().issueListAPICall(issuesInputEntity,this);
     }
 
 
-    private void setAdapter(final ArrayList<IssueListEntity> issueArrListRes) {
+    private void setAdapter(final ArrayList<AppointmentDetailsEntity> issueArrListRes) {
         if (getActivity() != null) {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
@@ -98,9 +102,9 @@ public class IssueListFragment extends BaseFragment {
         super.onRequestSuccess(resObj);
         if (resObj instanceof IssuesListResponse) {
             IssuesListResponse issuesListResponse = (IssuesListResponse) resObj;
-            if (issuesListResponse.getMsgCode().equals(AppConstants.SUCCESS_CODE)) {
-                if (issuesListResponse.getUserDetail().size() > 0) {
-                    setAdapter(issuesListResponse.getUserDetail());
+            if (issuesListResponse.getStatusCode().equals(AppConstants.SUCCESS_CODE)) {
+                if (issuesListResponse.getResult().size() > 0) {
+                    setAdapter(issuesListResponse.getResult());
                 }
             } else {
                 DialogManager.getInstance().showAlertPopup(getActivity(), issuesListResponse.getMessage(), this);

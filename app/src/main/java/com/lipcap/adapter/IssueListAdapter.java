@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.lipcap.R;
-import com.lipcap.model.output.IssueListEntity;
+import com.lipcap.model.output.AppointmentDetailsEntity;
 
 import java.util.ArrayList;
 
@@ -20,10 +20,10 @@ import butterknife.ButterKnife;
 
 public class IssueListAdapter extends RecyclerView.Adapter<IssueListAdapter.Holder> {
 
-    private ArrayList<IssueListEntity> mIssueListArrList;
+    private ArrayList<AppointmentDetailsEntity> mIssueListArrList;
     private Context mContext;
 
-    public IssueListAdapter(ArrayList<IssueListEntity> issueListArrList, Context context) {
+    public IssueListAdapter(ArrayList<AppointmentDetailsEntity> issueListArrList, Context context) {
         mIssueListArrList = issueListArrList;
         mContext = context;
     }
@@ -38,8 +38,16 @@ public class IssueListAdapter extends RecyclerView.Adapter<IssueListAdapter.Hold
     public void onBindViewHolder(@NonNull final Holder holder, int position) {
 
         holder.mIssueNameTxt.setText(mIssueListArrList.get(position).getIssueName());
-        holder.mIssueStatusBtn.setText(mContext.getString(mIssueListArrList.get(position).getAppointmentStatus().trim().equalsIgnoreCase("1") ? R.string.completed : R.string.in_progress));
-
+        String statusStr=mIssueListArrList.get(position).getStatus();
+        String statusResultStr="";
+        if(statusStr.equalsIgnoreCase("2")){
+            statusResultStr=mContext.getString(R.string.accept);
+        } else if(statusStr.equalsIgnoreCase("3")||statusStr.equalsIgnoreCase("4")){
+            statusResultStr=mContext.getString(R.string.completed);
+        } else  {
+            statusResultStr=mContext.getString(R.string.canceled);
+        }
+        holder.mIssueStatusBtn.setText( statusResultStr);
 
     }
 

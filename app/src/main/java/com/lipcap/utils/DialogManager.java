@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,7 +32,7 @@ public class DialogManager {
     /*Init dialog instance*/
     private static final DialogManager sDialogInstance = new DialogManager();
     /*Init variable*/
-    private Dialog mProgressDialog, mNetworkErrorDialog, mAlertDialog, mOptionDialog, mIssueListDialog, mReasonForCancelDialog, mCommentsDialog, mSearchDialog, mNotificationDialog, mRequestDialog,mRequestCompletedDialog;
+    private Dialog mProgressDialog, mNetworkErrorDialog, mAlertDialog, mOptionDialog, mIssueListDialog, mReasonForCancelDialog, mCommentsDialog, mSearchDialog, mNotificationDialog, mRequestDialog, mRequestCompletedDialog;
     private Toast mToast;
 
     public static DialogManager getInstance() {
@@ -209,7 +210,7 @@ public class DialogManager {
             @Override
             public void onClick(View v) {
                 mIssueListDialog.dismiss();
-                dialogAlertInterface.onPositiveClick(String.valueOf(AppConstants.ISSUE_ID));
+                dialogAlertInterface.onPositiveClick(AppConstants.ISSUE_ID);
             }
         });
         negativeBtn.setOnClickListener(new View.OnClickListener() {
@@ -242,6 +243,7 @@ public class DialogManager {
 
         Button positiveBtn, negativeBtn;
         final RadioButton expectShortWaitTimeBtn, unableContactBtn, cobblerDeniedWorkBtn;
+        final EditText mTypeEdt;
 
         /*Init view*/
 
@@ -251,14 +253,17 @@ public class DialogManager {
 
         positiveBtn = mReasonForCancelDialog.findViewById(R.id.alert_positive_btn);
         negativeBtn = mReasonForCancelDialog.findViewById(R.id.alert_negative_btn);
+        mTypeEdt = mCommentsDialog.findViewById(R.id.type_edt);
 
 
         expectShortWaitTimeBtn.setChecked(true);
+        AppConstants.CUSTOMER_CANCEL_REASON=context.getString(R.string.expect_short_wait_time);
         expectShortWaitTimeBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                 if (isChecked) {
+                    AppConstants.CUSTOMER_CANCEL_REASON=context.getString(R.string.expect_short_wait_time);
                     unableContactBtn.setChecked(false);
                     cobblerDeniedWorkBtn.setChecked(false);
                 }
@@ -271,6 +276,7 @@ public class DialogManager {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                 if (isChecked) {
+                    AppConstants.CUSTOMER_CANCEL_REASON=context.getString(R.string.unable_contact);
                     expectShortWaitTimeBtn.setChecked(false);
                     cobblerDeniedWorkBtn.setChecked(false);
                 }
@@ -282,6 +288,7 @@ public class DialogManager {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                 if (isChecked) {
+                    AppConstants.CUSTOMER_CANCEL_REASON=context.getString(R.string.cobbler_denied_work);
                     expectShortWaitTimeBtn.setChecked(false);
                     unableContactBtn.setChecked(false);
                 }
@@ -293,8 +300,16 @@ public class DialogManager {
         positiveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(mTypeEdt.getText().toString().trim().isEmpty()){
+                    DialogManager.getInstance().showAlertPopup(context, "Please Enter Valid Comments", new InterfaceBtnCallback() {
+                        @Override
+                        public void onPositiveClick() {
+                            mTypeEdt.requestFocus();
+                        }
+                    });
+                }else{
                 mReasonForCancelDialog.dismiss();
-                dialogAlertInterface.onPositiveClick("1");
+                dialogAlertInterface.onPositiveClick("1");}
             }
         });
         negativeBtn.setOnClickListener(new View.OnClickListener() {
@@ -309,8 +324,8 @@ public class DialogManager {
     }
 
 
-    public void showCommentsPopup(final Context context,
-                                  final InterfaceEdtBtnCallback dialogAlertInterface) {
+    public Dialog showCommentsPopup(final Context context,
+                                    final InterfaceEdtBtnCallback dialogAlertInterface) {
         alertDismiss(mCommentsDialog);
         mCommentsDialog = getDialog(context, R.layout.popup_comments);
 
@@ -327,6 +342,8 @@ public class DialogManager {
 
         Button positiveBtn, negativeBtn;
         final RadioButton workCompletedOnTimeBtn, workedProperlyBtn;
+        final RatingBar friendlinessRatingBar;
+        final EditText mTypeEdt;
 
         /*Init view*/
 
@@ -335,13 +352,18 @@ public class DialogManager {
 
         positiveBtn = mCommentsDialog.findViewById(R.id.alert_positive_btn);
         negativeBtn = mCommentsDialog.findViewById(R.id.alert_negative_btn);
+        mTypeEdt = mCommentsDialog.findViewById(R.id.type_edt);
+        friendlinessRatingBar = mCommentsDialog.findViewById(R.id.friendliness_rating_bar);
+
 
         workCompletedOnTimeBtn.setChecked(true);
+        AppConstants.CUSTOMER_REVIEW=context.getString(R.string.work_completed_on_time);
         workCompletedOnTimeBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                 if (isChecked) {
+                    AppConstants.CUSTOMER_REVIEW=context.getString(R.string.work_completed_on_time);
                     workedProperlyBtn.setChecked(false);
                 }
 
@@ -353,6 +375,7 @@ public class DialogManager {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                 if (isChecked) {
+                    AppConstants.CUSTOMER_REVIEW=context.getString(R.string.worked_properly);
                     workCompletedOnTimeBtn.setChecked(false);
                 }
 
@@ -363,9 +386,19 @@ public class DialogManager {
         positiveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(mTypeEdt.getText().toString().trim().isEmpty()){
+                    DialogManager.getInstance().showAlertPopup(context, "Please Enter Valid Comments", new InterfaceBtnCallback() {
+                        @Override
+                        public void onPositiveClick() {
+                            mTypeEdt.requestFocus();
+                        }
+                    });
+                }else{
                 mCommentsDialog.dismiss();
+                AppConstants.CUSTOMER_RATING =String.valueOf(friendlinessRatingBar.getRating());
+                    AppConstants.CUSTOMER_COMMENTS=mTypeEdt.getText().toString().trim();
                 dialogAlertInterface.onPositiveClick("1");
-            }
+            }}
         });
         negativeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -376,6 +409,8 @@ public class DialogManager {
         });
 
         alertShowing(mCommentsDialog);
+        return mCommentsDialog;
+
     }
 
 
@@ -414,8 +449,8 @@ public class DialogManager {
                 if (!mSetDurationEdt.getText().toString().isEmpty()) {
                     mRequestDialog.dismiss();
                     dialogAlertInterface.onPositiveClick(mSetDurationEdt.getText().toString());
-                }else{
-                    DialogManager.getInstance().showToast(context,"Enter Valid Time");
+                } else {
+                    DialogManager.getInstance().showToast(context, "Enter Valid Time");
                 }
             }
         });
@@ -431,7 +466,7 @@ public class DialogManager {
     }
 
     public void showProviderCompletedDialogPopup(final Context context, String issuesTypeStr,
-                                           final InterfaceEdtBtnCallback dialogAlertInterface) {
+                                                 final InterfaceEdtBtnCallback dialogAlertInterface) {
         alertDismiss(mRequestCompletedDialog);
         mRequestCompletedDialog = getDialog(context, R.layout.popup_request_completed);
 
@@ -448,12 +483,12 @@ public class DialogManager {
 
         Button positiveBtn, negativeBtn;
         final TextView mIssuesTypeTxt;
-        final EditText mSetDurationEdt;
+        final EditText mAmountEdt;
 
         /*Init view*/
 
         mIssuesTypeTxt = mRequestCompletedDialog.findViewById(R.id.issues_type_txt);
-        mSetDurationEdt = mRequestCompletedDialog.findViewById(R.id.set_duration_edt);
+        mAmountEdt = mRequestCompletedDialog.findViewById(R.id.amount_edt);
 
         positiveBtn = mRequestCompletedDialog.findViewById(R.id.alert_positive_btn);
         negativeBtn = mRequestCompletedDialog.findViewById(R.id.alert_negative_btn);
@@ -462,11 +497,11 @@ public class DialogManager {
         positiveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!mSetDurationEdt.getText().toString().isEmpty()) {
+                if (!mAmountEdt.getText().toString().isEmpty()) {
                     mRequestCompletedDialog.dismiss();
-                    dialogAlertInterface.onPositiveClick(mSetDurationEdt.getText().toString());
-                }else{
-                    DialogManager.getInstance().showToast(context,"Enter Valid Time");
+                    dialogAlertInterface.onPositiveClick(mAmountEdt.getText().toString().trim());
+                } else {
+                    DialogManager.getInstance().showToast(context, "Enter Valid Time");
                 }
             }
         });
@@ -500,7 +535,7 @@ public class DialogManager {
         return mSearchDialog;
     }
 
-    public Dialog showNotificationPopup(Context context,
+    public Dialog showNotificationPopup(final Context context,
                                         final InterfaceTwoBtnCallback dialogAlertInterface) {
         alertDismiss(mNotificationDialog);
         mNotificationDialog = getDialog(context, R.layout.popup_notification_received);
@@ -533,8 +568,19 @@ public class DialogManager {
         negativeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mNotificationDialog.dismiss();
-                dialogAlertInterface.onNegativeClick();
+                 DialogManager.getInstance().showOptionPopup(context, context.getString(R.string.cancel_appointment), context.getString(R.string.yes), context.getString(R.string.no), new InterfaceTwoBtnCallback() {
+                    @Override
+                    public void onNegativeClick() {
+
+                    }
+
+                    @Override
+                    public void onPositiveClick() {
+                        mNotificationDialog.dismiss();
+                        dialogAlertInterface.onNegativeClick();
+
+                    }
+                });
             }
         });
 

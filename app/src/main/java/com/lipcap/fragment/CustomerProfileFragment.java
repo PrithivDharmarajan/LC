@@ -10,7 +10,8 @@ import android.widget.EditText;
 
 import com.lipcap.R;
 import com.lipcap.main.BaseFragment;
-import com.lipcap.model.output.CommonResponse;
+import com.lipcap.model.input.IssuesInputEntity;
+import com.lipcap.model.output.LoginResponse;
 import com.lipcap.model.output.UserDetailsEntity;
 import com.lipcap.services.APIRequestHandler;
 import com.lipcap.utils.AppConstants;
@@ -76,8 +77,8 @@ public class CustomerProfileFragment extends BaseFragment {
     private void setData() {
         UserDetailsEntity userDetailsEntity = PreferenceUtil.getUserDetailsRes(getActivity());
 
-        mNameEdt.setText(userDetailsEntity.getName());
-        mPhoneNumEdt.setText(userDetailsEntity.getMobileNo());
+        mNameEdt.setText(userDetailsEntity.getUserName());
+        mPhoneNumEdt.setText(userDetailsEntity.getPhoneNumber());
 
         mNameEdt.setSelection(mNameEdt.getText().toString().trim().length());
         mPhoneNumEdt.setSelected(false);
@@ -104,7 +105,10 @@ public class CustomerProfileFragment extends BaseFragment {
             mNameEdt.requestFocus();
             DialogManager.getInstance().showAlertPopup(getActivity(), getString(R.string.plz_enter_name), this);
         } else   {
-            APIRequestHandler.getInstance().updateProfileAPICall(mPhoneNumEdt.getText().toString().trim(), nameStr, this);
+            IssuesInputEntity profileEntity=new IssuesInputEntity();
+            profileEntity.setUserId(PreferenceUtil.getUserId(getActivity()));
+            profileEntity.setUserName(nameStr);
+            APIRequestHandler.getInstance().updateProfileAPICall(profileEntity, this);
         }
     }
 
@@ -113,14 +117,21 @@ public class CustomerProfileFragment extends BaseFragment {
     @Override
     public void onRequestSuccess(Object resObj) {
         super.onRequestSuccess(resObj);
-        if (resObj instanceof CommonResponse) {
+        if (resObj instanceof LoginResponse) {
             if (getActivity() != null) {
-                DialogManager.getInstance().showToast(getActivity(),getString(R.string.profile_updated));
-                    getActivity().onBackPressed();
-
+                LoginResponse loginResponse = (LoginResponse) resObj;
+                PreferenceUtil.storeUserDetails(getActivity(), loginResponse.getResult().get(0));
+                if (loginResponse.getStatusCode().equals(AppConstants.SUCCESS_CODE)) {
+                    if (loginResponse.getResult().size() > 0) {
+                        PreferenceUtil.storeUserDetails(getActivity(), loginResponse.getResult().get(0));
+                        DialogManager.getInstance().showToast(getActivity(),getString(R.string.profile_updated));
+                        getActivity().onBackPressed();
+                      }
+                } else {
+                    DialogManager.getInstance().showAlertPopup(getActivity(), loginResponse.getMessage(), this);
+                }
             }
         }
-
     }
 
     @Override

@@ -94,19 +94,18 @@ public class PreferenceUtil {
 
     /*Store user details to preference*/
     public static void storeUserDetails(Context context, UserDetailsEntity userDetailsEntity) {
-        String userIdStr = "", userDetailStr = "";
-        int userTypeInt = 0;
+        String userIdStr = "", userDetailStr = "",userTypeStr;
 
         Gson gson = new Gson();
-        userIdStr = String.valueOf(userDetailsEntity.getId());
-        userTypeInt = userDetailsEntity.getUserType();
+        userIdStr = String.valueOf(userDetailsEntity.getUserId());
+        userTypeStr = userDetailsEntity.getUserType();
         userDetailStr = gson.toJson(userDetailsEntity);
 
         PreferenceUtil.storeValueToPreference(context, PreferenceUtil.STRING_PREFERENCE,
                 AppConstants.USER_DETAILS, userDetailStr);
         PreferenceUtil.storeValueToPreference(context, PreferenceUtil.STRING_PREFERENCE,
                 AppConstants.USER_ID, userIdStr);
-        PreferenceUtil.storeBoolPreferenceValue(context,AppConstants.CURRENT_USER_IS_PROVIDER,userTypeInt==2);
+        PreferenceUtil.storeBoolPreferenceValue(context,AppConstants.CURRENT_USER_IS_PROVIDER,userTypeStr.equalsIgnoreCase("2"));
 
     }
 

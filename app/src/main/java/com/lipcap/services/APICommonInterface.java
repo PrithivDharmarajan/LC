@@ -1,65 +1,87 @@
 package com.lipcap.services;
 
+import com.lipcap.model.input.AppointmentAcceptEntity;
+import com.lipcap.model.input.BookAppointmentInputEntity;
+import com.lipcap.model.input.IssuesInputEntity;
+import com.lipcap.model.input.LocationUpdateInputEntity;
+import com.lipcap.model.input.LoginInputEntity;
+import com.lipcap.model.input.PendingAppointmentInputEntity;
+import com.lipcap.model.input.RegInputEntity;
+import com.lipcap.model.input.UserCancelEntity;
+import com.lipcap.model.input.UserRatingInputEntity;
+import com.lipcap.model.output.AppointmentAcceptResponse;
 import com.lipcap.model.output.CommonResponse;
 import com.lipcap.model.output.IssuesListResponse;
 import com.lipcap.model.output.LoginResponse;
 import com.lipcap.model.output.PendingDetailsResponse;
 import com.lipcap.model.output.ProviderDetailsResponse;
 import com.lipcap.model.output.SelectIssuesTypeResponse;
+import com.lipcap.model.output.UserCancelResponse;
 
 import retrofit2.Call;
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
-import retrofit2.http.GET;
+import retrofit2.http.Body;
 import retrofit2.http.POST;
-import retrofit2.http.Query;
 
 public interface APICommonInterface {
 
     /*Login API*/
-    @GET("User/getUser?")
-    Call<LoginResponse> loginAPI(@Query("MobileNo") String mobileNoStr, @Query("DeviceId") String deviceIdStr);
+    @POST("user/login")
+    Call<LoginResponse> loginAPI(@Body LoginInputEntity loginInputEntity);
 
     /*Registration API*/
-    @FormUrlEncoded
-    @POST("User/postUser")
-    Call<LoginResponse> registrationAPI(@Field("Name")String nameStr,@Field("MobileNo")String mobileNoStr,@Field("DeviceId")String deviceIdStr,@Field("CreatedDT")String createdDTStr,@Field("UserType")String userTypeStr);
+    @POST("user/register")
+    Call<LoginResponse> registrationAPI(@Body RegInputEntity regInputEntity);
 
     /*Select Issue Type API*/
-    @GET("Issue/GetIssueType")
-    Call<SelectIssuesTypeResponse> selectIssueTypeAPI();
+    @POST("user/issues")
+    Call<SelectIssuesTypeResponse> selectIssueTypeAPI(@Body IssuesInputEntity IssuesInputEntity);
 
     /*Issue Type API*/
-    @GET("Appointment/getIssueByUserId?")
-    Call<IssuesListResponse> issueListAPI(@Query("UserId") String userIdStr);
+    @POST("user/getbookings")
+    Call<IssuesListResponse> issueListAPI(@Body IssuesInputEntity IssuesInputEntity);
 
     /*Lat and Long Update API*/
-    @FormUrlEncoded
-    @POST("latilongi/postLatiLongi")
-    Call<CommonResponse> latAndLongUpdateAPI(@Field("userId")String userIdStr, @Field("Latitude")String latitudeStr, @Field("Longitude")String longitudeStr, @Field("UserType")String userTypeStr,@Field("CreatedDT")String createdDTStr);
+    @POST("user/updatelocation")
+    Call<LocationUpdateInputEntity> latAndLongUpdateAPI(@Body LocationUpdateInputEntity locationUpdateInputEntity);
 
     /*Location API*/
-    @GET("latilongi/getLatiLongi?")
-    Call<ProviderDetailsResponse> getProviderLocAPI(@Query("Latitude") String latitudeStr, @Query("Longitude") String longitudeStr);
+    @POST("user/getproviders")
+    Call<ProviderDetailsResponse> getProviderLocAPI(@Body LocationUpdateInputEntity locationUpdateInputEntity);
 
     /*Location API*/
-    @GET("User/putUserName?")
-    Call<CommonResponse> updateProfileAPI(@Query("MobileNo") String mobileNoStr, @Query("Name") String nameStr);
+    @POST("user/updateprofile")
+    Call<LoginResponse> updateProfileAPI(@Body IssuesInputEntity profileInputEntity);
 
     /*Lat and Long Update API*/
-    @FormUrlEncoded
-    @POST("Appointment/postAppointment")
-    Call<String> bookAppointmentAPI(@Field("UserId")String userIdStr, @Field("UserLatitude")String latitudeStr,@Field("UserLongitude")String longitudeStr, @Field("UserName")String userNameStr,@Field("UserMobileNo")String UserMobileNoStr,@Field("IssueId")String IssueIdStr,@Field("IssueName")String IssueNameStr, @Field("CreatedDate")String createdDateStr, @Field("AppointmentStatus")String appointmentStatusStr, @Field("DeviceId") String DeviceIdStr,@Field("NotificationStatus") String notificationStatusStr);
+    @POST("user/book")
+    Call<BookAppointmentInputEntity> bookAppointmentAPI(@Body BookAppointmentInputEntity bookAppointmentInputEntity);
 
-    /*Location API*/
-    @GET("serviceproviderservice/getUserStatusLocation?")
-    Call<PendingDetailsResponse> getUserPendingAppointmentAPI(@Query("Id") String userIdStr);
 
     /*Lat and Long Update API*/
-    @FormUrlEncoded
-    @POST("ServiceProviderService/postServiceProvider")
-    Call<String> postAppointmentStatusAPI(@Field("UserId")String userIdStr, @Field("ServiceProviderId")String serviceProviderIdStr, @Field("IssueId")String issueIdStr, @Field("CreatedDate")String createdDateStr, @Field("status")String statusStr, @Field("amount")String amountStr,@Field("Duration") String DurationStr);
+    @POST("user/provideraccept")
+    Call<AppointmentAcceptResponse> acceptAppointmentAPI(@Body AppointmentAcceptEntity appointmentAcceptEntity);
 
+    /*Lat and Long Update API*/
+    @POST("user/providercomplete")
+    Call<AppointmentAcceptResponse> completeAppointmentAPI(@Body AppointmentAcceptEntity appointmentAcceptEntity);
+
+
+    /*Lat and Long Update API*/
+    @POST("user/useraction")
+    Call<UserCancelResponse> userCancelAppointmentAPI(@Body UserCancelEntity userCancelEntity);
+
+    /*Lat and Long Update API*/
+    @POST("user/providercancel")
+    Call<UserCancelResponse> providerCancelAppointmentAPI(@Body UserCancelEntity userCancelEntity);
+
+    /*Location API*/
+    @POST("user/background")
+    Call<PendingDetailsResponse> getUserPendingAppointmentAPI(@Body PendingAppointmentInputEntity pendingAppointmentInputEntity);
+
+
+    /*Lat and Long Update API*/
+    @POST("user/rating")
+    Call<CommonResponse> userRatingAppointmentAPI(@Body UserRatingInputEntity userCancelEntity);
 
 
 }

@@ -104,7 +104,7 @@
                 android:imeActionId="100"
                 android:imeActionLabel="@string/cancel"
                 android:imeOptions="actionDone|flagNoExtractUi"
-                android:inputType="textCapWords"
+                android:inputType="numberSigned"
                 android:maxLines="1"
                 android:padding="@dimen/size3"
                 tools:ignore="Autofill" />

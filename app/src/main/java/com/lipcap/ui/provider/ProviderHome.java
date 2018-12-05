@@ -1,6 +1,8 @@
 package com.lipcap.ui.provider;
 
 import android.Manifest;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -36,6 +38,7 @@ import com.lipcap.utils.PreferenceUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -399,5 +402,19 @@ public class ProviderHome extends BaseActivity implements View.OnClickListener {
     public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
         if (mFragment != null)
             mFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(AppConstants.IS_FROM_PUSH){
+            cancelNotification();
+            AppConstants.IS_FROM_PUSH=false;
+        }
+    }
+
+    public void cancelNotification() {
+        /*0 is notification Id*/
+        ((NotificationManager) Objects.requireNonNull(getSystemService(Context.NOTIFICATION_SERVICE))).cancel(0);
     }
 }

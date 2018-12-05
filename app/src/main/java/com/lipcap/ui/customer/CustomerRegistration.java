@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.lipcap.R;
 import com.lipcap.main.BaseActivity;
+import com.lipcap.model.input.RegInputEntity;
 import com.lipcap.model.output.LoginResponse;
 import com.lipcap.services.APIRequestHandler;
 import com.lipcap.utils.AppConstants;
@@ -123,8 +124,15 @@ public class CustomerRegistration extends BaseActivity {
             mPhoneNumEdt.requestFocus();
             DialogManager.getInstance().showAlertPopup(this, getString(R.string.plz_enter_valid_phone_num), this);
         }  else {
+            RegInputEntity regInputEntity=new RegInputEntity();
+            regInputEntity.setUserName(nameStr);
+            regInputEntity.setPhoneNumber(phoneNumStr);
+            regInputEntity.setDeviceToken(PreferenceUtil.getStringPreferenceValue(this,AppConstants.PUSH_DEVICE_ID));
+            regInputEntity.setUserType("1");
+            regInputEntity.setDeviceType(AppConstants.ANDROID);
+            regInputEntity.setCreateDate(DateUtil.getCurrentDate());
 
-            APIRequestHandler.getInstance().registrationAPICall(nameStr,   phoneNumStr,   PreferenceUtil.getStringPreferenceValue(this,AppConstants.PUSH_DEVICE_ID),   DateUtil.getCurrentDate(),  1+"",this);
+            APIRequestHandler.getInstance().registrationAPICall( regInputEntity,this);
         }
     }
 
@@ -133,18 +141,16 @@ public class CustomerRegistration extends BaseActivity {
     public void onRequestSuccess(Object resObj) {
         super.onRequestSuccess(resObj);
         if (resObj instanceof LoginResponse) {
-            LoginResponse loginResponse = (LoginResponse) resObj;
-            if(loginResponse.getMsgCode().equals(AppConstants.SUCCESS_CODE)){
-
-                if (loginResponse.getUserDetail().size() > 0) {
+            LoginResponse registrationResponse = (LoginResponse) resObj;
+            if(registrationResponse.getStatusCode().equals(AppConstants.SUCCESS_CODE)){
+                if (registrationResponse.getResult().size() > 0) {
                     PreferenceUtil.storeBoolPreferenceValue(this, AppConstants.LOGIN_STATUS, true);
-                    PreferenceUtil.storeUserDetails(this, loginResponse.getUserDetail().get(0));
+                    PreferenceUtil.storeUserDetails(this, registrationResponse.getResult().get(0));
                     DialogManager.getInstance().showToast(this, getString(R.string.registered_success));
                     nextScreen(CustomerHome.class);
                 }
-
             }else{
-                DialogManager.getInstance().showAlertPopup(this, loginResponse.getMessage(),this);
+                DialogManager.getInstance().showAlertPopup(this, registrationResponse.getMessage(),this);
             }
 
         }

@@ -12,11 +12,13 @@ import android.widget.TextView;
 
 import com.lipcap.R;
 import com.lipcap.main.BaseActivity;
+import com.lipcap.model.input.LoginInputEntity;
 import com.lipcap.model.output.LoginResponse;
 import com.lipcap.services.APIRequestHandler;
 import com.lipcap.ui.customer.CustomerHome;
 import com.lipcap.ui.provider.ProviderHome;
 import com.lipcap.utils.AppConstants;
+import com.lipcap.utils.DateUtil;
 import com.lipcap.utils.DialogManager;
 import com.lipcap.utils.InterfaceBtnCallback;
 import com.lipcap.utils.PreferenceUtil;
@@ -116,7 +118,12 @@ public class Login extends BaseActivity {
             mPhoneNumEdt.requestFocus();
             DialogManager.getInstance().showAlertPopup(this, getString(R.string.plz_enter_phone_num), this);
         } else {
-            APIRequestHandler.getInstance().loginAPICall(phoneNumStr, this);
+            LoginInputEntity loginInputEntity=new LoginInputEntity();
+            loginInputEntity.setPhoneNumber(phoneNumStr);
+            loginInputEntity.setDeviceType(AppConstants.ANDROID);
+            loginInputEntity.setUpdateDate(DateUtil.getCurrentDate());
+            loginInputEntity.setDeviceToken(PreferenceUtil.getStringPreferenceValue(this,AppConstants.PUSH_DEVICE_ID));
+            APIRequestHandler.getInstance().loginAPICall(loginInputEntity, this);
         }
     }
 
@@ -127,10 +134,10 @@ public class Login extends BaseActivity {
         super.onRequestSuccess(resObj);
         if (resObj instanceof LoginResponse) {
             LoginResponse loginResponse = (LoginResponse) resObj;
-            if (loginResponse.getMsgCode().equals(AppConstants.SUCCESS_CODE)) {
-                if (loginResponse.getUserDetail().size() > 0) {
+            if (loginResponse.getStatusCode().equals(AppConstants.SUCCESS_CODE)) {
+                if (loginResponse.getResult().size() > 0) {
                     PreferenceUtil.storeBoolPreferenceValue(this, AppConstants.LOGIN_STATUS, true);
-                    PreferenceUtil.storeUserDetails(this, loginResponse.getUserDetail().get(0));
+                    PreferenceUtil.storeUserDetails(this, loginResponse.getResult().get(0));
                     DialogManager.getInstance().showToast(this, getString(R.string.logged_in_success));
                     nextScreen(PreferenceUtil.getBoolPreferenceValue(Login.this, AppConstants.CURRENT_USER_IS_PROVIDER) ? ProviderHome.class : CustomerHome.class);
                 }

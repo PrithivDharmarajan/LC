@@ -5,16 +5,25 @@ import android.support.annotation.NonNull;
 
 import com.lipcap.main.BaseActivity;
 import com.lipcap.main.BaseFragment;
+import com.lipcap.model.input.AppointmentAcceptEntity;
+import com.lipcap.model.input.BookAppointmentInputEntity;
+import com.lipcap.model.input.IssuesInputEntity;
+import com.lipcap.model.input.LocationUpdateInputEntity;
+import com.lipcap.model.input.LoginInputEntity;
+import com.lipcap.model.input.PendingAppointmentInputEntity;
+import com.lipcap.model.input.RegInputEntity;
+import com.lipcap.model.input.UserCancelEntity;
+import com.lipcap.model.input.UserRatingInputEntity;
+import com.lipcap.model.output.AppointmentAcceptResponse;
 import com.lipcap.model.output.CommonResponse;
 import com.lipcap.model.output.IssuesListResponse;
 import com.lipcap.model.output.LoginResponse;
 import com.lipcap.model.output.PendingDetailsResponse;
 import com.lipcap.model.output.ProviderDetailsResponse;
 import com.lipcap.model.output.SelectIssuesTypeResponse;
+import com.lipcap.model.output.UserCancelResponse;
 import com.lipcap.utils.AppConstants;
-import com.lipcap.utils.DateUtil;
 import com.lipcap.utils.DialogManager;
-import com.lipcap.utils.PreferenceUtil;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,9 +49,9 @@ public class APIRequestHandler {
     }
 
     /*Login API*/
-    public void loginAPICall(String mobileNumStr, final BaseActivity baseActivity) {
+    public void loginAPICall(LoginInputEntity  loginInputEntity, final BaseActivity baseActivity) {
         DialogManager.getInstance().showProgress(baseActivity);
-        mServiceInterface.loginAPI(mobileNumStr, PreferenceUtil.getStringPreferenceValue(baseActivity, AppConstants.PUSH_DEVICE_ID)).enqueue(new Callback<LoginResponse>() {
+        mServiceInterface.loginAPI(loginInputEntity).enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(@NonNull Call<LoginResponse> call, @NonNull Response<LoginResponse> response) {
                 DialogManager.getInstance().hideProgress();
@@ -63,9 +72,9 @@ public class APIRequestHandler {
 
 
     /*Registration API*/
-    public void registrationAPICall(String nameStr, String mobileNoStr, String deviceIdStr, String createdDTStr, String userTypeStr, final BaseActivity baseActivity) {
+    public void registrationAPICall(RegInputEntity regInputEntity, final BaseActivity baseActivity) {
         DialogManager.getInstance().showProgress(baseActivity);
-        mServiceInterface.registrationAPI(nameStr, mobileNoStr, deviceIdStr, createdDTStr, userTypeStr).enqueue(new Callback<LoginResponse>() {
+        mServiceInterface.registrationAPI(regInputEntity).enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(@NonNull Call<LoginResponse> call, @NonNull Response<LoginResponse> response) {
                 DialogManager.getInstance().hideProgress();
@@ -86,9 +95,9 @@ public class APIRequestHandler {
 
 
     /*Select Issues API*/
-    public void selectIssueTypeAPICall(final BaseFragment baseFragment) {
+    public void selectIssueTypeAPICall(IssuesInputEntity issuesInputEntity, final BaseFragment baseFragment) {
         DialogManager.getInstance().showProgress(baseFragment.getActivity());
-        mServiceInterface.selectIssueTypeAPI().enqueue(new Callback<SelectIssuesTypeResponse>() {
+        mServiceInterface.selectIssueTypeAPI(issuesInputEntity).enqueue(new Callback<SelectIssuesTypeResponse>() {
             @Override
             public void onResponse(@NonNull Call<SelectIssuesTypeResponse> call, @NonNull Response<SelectIssuesTypeResponse> response) {
                 DialogManager.getInstance().hideProgress();
@@ -108,9 +117,9 @@ public class APIRequestHandler {
     }
 
     /*Issues API*/
-    public void issueListAPICall(final BaseFragment baseFragment) {
+    public void issueListAPICall(IssuesInputEntity issuesInputEntity,final BaseFragment baseFragment) {
         DialogManager.getInstance().showProgress(baseFragment.getActivity());
-        mServiceInterface.issueListAPI(PreferenceUtil.getUserId(baseFragment.getActivity()))
+        mServiceInterface.issueListAPI(issuesInputEntity)
                 .enqueue(new Callback<IssuesListResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<IssuesListResponse> call, @NonNull Response<IssuesListResponse> response) {
@@ -131,26 +140,25 @@ public class APIRequestHandler {
     }
 
     /*Update Lat and Long API*/
-    public void latAndLongUpdateAPICall(String latStr, String longStr,String userTypeStr, final BaseFragment baseFragment) {
-        mServiceInterface.latAndLongUpdateAPI(PreferenceUtil.getUserId(baseFragment.getActivity()), latStr, longStr,userTypeStr,DateUtil.getCurrentDate())
-                .enqueue(new Callback<CommonResponse>() {
+    public void latAndLongUpdateAPICall(LocationUpdateInputEntity locationUpdateInputEntity, final BaseFragment baseFragment) {
+        mServiceInterface.latAndLongUpdateAPI(locationUpdateInputEntity)
+                .enqueue(new Callback<LocationUpdateInputEntity>() {
                     @Override
-                    public void onResponse(@NonNull Call<CommonResponse> call, @NonNull Response<CommonResponse> response) {
-                        if (response.isSuccessful() && response.body() != null) {
+                    public void onResponse(@NonNull Call<LocationUpdateInputEntity> call, @NonNull Response<LocationUpdateInputEntity> response) {
+                         if (response.isSuccessful() && response.body() != null) {
                             baseFragment.onRequestSuccess(response.body());
                         }
                     }
 
                     @Override
-                    public void onFailure(@NonNull Call<CommonResponse> call, @NonNull Throwable t) {
-                        baseFragment.onRequestFailure(new CommonResponse(), t);
+                    public void onFailure(@NonNull Call<LocationUpdateInputEntity> call, @NonNull Throwable t) {
                     }
                 });
     }
 
     /*update provider location API*/
-    public void getProviderLocAPICall(String latStr, String longStr, final BaseFragment baseFragment) {
-        mServiceInterface.getProviderLocAPI(latStr, longStr)
+    public void getProviderLocAPICall(LocationUpdateInputEntity locationUpdateInputEntity, final BaseFragment baseFragment) {
+        mServiceInterface.getProviderLocAPI(locationUpdateInputEntity)
                 .enqueue(new Callback<ProviderDetailsResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<ProviderDetailsResponse> call, @NonNull Response<ProviderDetailsResponse> response) {
@@ -161,50 +169,53 @@ public class APIRequestHandler {
 
                     @Override
                     public void onFailure(@NonNull Call<ProviderDetailsResponse> call, @NonNull Throwable t) {
-                        baseFragment.onRequestFailure(new CommonResponse(), t);
                     }
                 });
     }
 
     /*Update user profile API*/
-    public void updateProfileAPICall(String mobileNoStr, String nameStr, final BaseFragment baseFragment) {
-        mServiceInterface.updateProfileAPI(mobileNoStr, nameStr)
-                .enqueue(new Callback<CommonResponse>() {
+    public void updateProfileAPICall(IssuesInputEntity profileInputEntity, final BaseFragment baseFragment) {
+        DialogManager.getInstance().showProgress(baseFragment.getActivity());
+        mServiceInterface.updateProfileAPI(profileInputEntity)
+                .enqueue(new Callback<LoginResponse>() {
                     @Override
-                    public void onResponse(@NonNull Call<CommonResponse> call, @NonNull Response<CommonResponse> response) {
+                    public void onResponse(@NonNull Call<LoginResponse> call, @NonNull Response<LoginResponse> response) {
+                        DialogManager.getInstance().hideProgress();
+
                         if (response.isSuccessful() && response.body() != null) {
                             baseFragment.onRequestSuccess(response.body());
                         }
                     }
 
                     @Override
-                    public void onFailure(@NonNull Call<CommonResponse> call, @NonNull Throwable t) {
+                    public void onFailure(@NonNull Call<LoginResponse> call, @NonNull Throwable t) {
+                        DialogManager.getInstance().hideProgress();
                         baseFragment.onRequestFailure(new CommonResponse(), t);
                     }
                 });
     }
 
     /*Book appointment API*/
-    public void bookAppointmentAPICall(String userIdStr, String latitudeStr, String longitudeStr, String userNameStr,  String UserMobileNoStr,  String IssueIdStr,  String IssueNameStr, String createdDateStr,  String deviceID, final BaseFragment baseFragment) {
-        mServiceInterface.bookAppointmentAPI(userIdStr, latitudeStr,   longitudeStr, userNameStr,   UserMobileNoStr,   IssueIdStr,   IssueNameStr, createdDateStr,   "1",  deviceID, "0")
-                .enqueue(new Callback<String>() {
+    public void bookAppointmentAPICall(BookAppointmentInputEntity bookAppointmentInputEntity, final BaseFragment baseFragment) {
+        mServiceInterface.bookAppointmentAPI(  bookAppointmentInputEntity)
+                .enqueue(new Callback<BookAppointmentInputEntity>() {
                     @Override
-                    public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
+                    public void onResponse(@NonNull Call<BookAppointmentInputEntity> call, @NonNull Response<BookAppointmentInputEntity> response) {
                         if (response.isSuccessful() && response.body() != null) {
                             baseFragment.onRequestSuccess(response.body());
                         }
                     }
 
                     @Override
-                    public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
-                        baseFragment.onRequestFailure("", t);
+                    public void onFailure(@NonNull Call<BookAppointmentInputEntity> call, @NonNull Throwable t) {
+                        baseFragment.onRequestFailure(new BookAppointmentInputEntity(), t);
                     }
                 });
     }
 
     /*Get pending appointment details API*/
-    public void getUserPendingAppointmentAPICall(String userIdStr,String userTypeStr, final BaseFragment baseFragment) {
-        mServiceInterface.getUserPendingAppointmentAPI(userIdStr)
+    public void getUserPendingAppointmentAPICall(PendingAppointmentInputEntity pendingAppointmentInputEntity, final BaseFragment baseFragment) {
+        mServiceInterface.getUserPendingAppointmentAPI(pendingAppointmentInputEntity)
                 .enqueue(new Callback<PendingDetailsResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<PendingDetailsResponse> call, @NonNull Response<PendingDetailsResponse> response) {
@@ -215,30 +226,125 @@ public class APIRequestHandler {
 
                     @Override
                     public void onFailure(@NonNull Call<PendingDetailsResponse> call, @NonNull Throwable t) {
-                        baseFragment.onRequestFailure(new PendingDetailsResponse(), t);
                     }
                 });
     }
 
-    /*Get pending appointment details API*/
-    public void postAppointmentStatusAPICall(String userIdStr, String serviceProviderIdStr, String issueIdStr, String createdDateStr,String statusStr, String amountStr, String durationStr, final BaseFragment baseFragment) {
-        mServiceInterface.postAppointmentStatusAPI( userIdStr,  serviceProviderIdStr,  issueIdStr,  createdDateStr, statusStr,  amountStr,  durationStr)
-                .enqueue(new Callback<String>() {
+    /*accept Appointment API*/
+    public void acceptAppointmentAPICall(AppointmentAcceptEntity appointmentAcceptEntity, final BaseFragment baseFragment) {
+        DialogManager.getInstance().showProgress(baseFragment.getActivity());
+        mServiceInterface.acceptAppointmentAPI(appointmentAcceptEntity)
+                .enqueue(new Callback<AppointmentAcceptResponse>() {
                     @Override
-                    public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
+                    public void onResponse(@NonNull Call<AppointmentAcceptResponse> call, @NonNull Response<AppointmentAcceptResponse> response) {
+                        DialogManager.getInstance().hideProgress();
                         if (response.isSuccessful() && response.body() != null) {
-                            baseFragment.onRequestSuccess("Status");
-                        }else{
-                            baseFragment.onRequestFailure("Status",  new Throwable(response.raw().message()));
+                            baseFragment.onRequestSuccess(response.body());
+                        } else {
+                            baseFragment.onRequestFailure(new AppointmentAcceptResponse(), new Throwable(response.raw().message()));
                         }
                     }
 
                     @Override
-                    public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
-                        baseFragment.onRequestFailure("Status", t);
+                    public void onFailure(@NonNull Call<AppointmentAcceptResponse> call, @NonNull Throwable t) {
+                        DialogManager.getInstance().hideProgress();
+                        baseFragment.onRequestFailure(new AppointmentAcceptResponse(), t);
                     }
                 });
     }
+
+    /*accept Appointment API*/
+    public void completeAppointmentAPICall(AppointmentAcceptEntity appointmentAcceptEntity, final BaseFragment baseFragment) {
+        DialogManager.getInstance().showProgress(baseFragment.getActivity());
+        mServiceInterface.completeAppointmentAPI(appointmentAcceptEntity)
+                .enqueue(new Callback<AppointmentAcceptResponse>() {
+                    @Override
+                    public void onResponse(@NonNull Call<AppointmentAcceptResponse> call, @NonNull Response<AppointmentAcceptResponse> response) {
+                        DialogManager.getInstance().hideProgress();
+                        if (response.isSuccessful() && response.body() != null) {
+                            baseFragment.onRequestSuccess(response.body());
+                        } else {
+                            baseFragment.onRequestFailure(new AppointmentAcceptResponse(), new Throwable(response.raw().message()));
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<AppointmentAcceptResponse> call, @NonNull Throwable t) {
+                        DialogManager.getInstance().hideProgress();
+                        baseFragment.onRequestFailure(new AppointmentAcceptResponse(), t);
+                    }
+                });
+    }
+
+
+    /*User Cancel API*/
+    public void userCancelAppointmentAPICall(UserCancelEntity userCancelEntity,final BaseFragment baseFragment) {
+        DialogManager.getInstance().showProgress(baseFragment.getActivity());
+        mServiceInterface.userCancelAppointmentAPI(userCancelEntity)
+                .enqueue(new Callback<UserCancelResponse>() {
+                    @Override
+                    public void onResponse(@NonNull Call<UserCancelResponse> call, @NonNull Response<UserCancelResponse> response) {
+                        DialogManager.getInstance().hideProgress();
+                        if (response.isSuccessful() && response.body() != null) {
+                            baseFragment.onRequestSuccess(response.body());
+                        } else {
+                            baseFragment.onRequestFailure(new UserCancelResponse(), new Throwable(response.raw().message()));
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<UserCancelResponse> call, @NonNull Throwable t) {
+                        DialogManager.getInstance().hideProgress();
+                        baseFragment.onRequestFailure(new UserCancelResponse(), t);
+                    }
+                });
+    }
+
+    /*Provider Cancel API*/
+    public void providerCancelAppointmentAPICall(UserCancelEntity userCancelEntity,final BaseFragment baseFragment) {
+        DialogManager.getInstance().showProgress(baseFragment.getActivity());
+        mServiceInterface.providerCancelAppointmentAPI(userCancelEntity)
+                .enqueue(new Callback<UserCancelResponse>() {
+                    @Override
+                    public void onResponse(@NonNull Call<UserCancelResponse> call, @NonNull Response<UserCancelResponse> response) {
+                        DialogManager.getInstance().hideProgress();
+                        if (response.isSuccessful() && response.body() != null) {
+                            baseFragment.onRequestSuccess(response.body());
+                        } else {
+                            baseFragment.onRequestFailure(new UserCancelResponse(), new Throwable(response.raw().message()));
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<UserCancelResponse> call, @NonNull Throwable t) {
+                        DialogManager.getInstance().hideProgress();
+                        baseFragment.onRequestFailure(new UserCancelResponse(), t);
+                    }
+                });
+    }
+    /*Issues API*/
+    public void userRateAppointmentAPICall(UserRatingInputEntity userRatingInputEntity, final BaseFragment baseFragment) {
+        DialogManager.getInstance().showProgress(baseFragment.getActivity());
+        mServiceInterface.userRatingAppointmentAPI(userRatingInputEntity)
+                .enqueue(new Callback<CommonResponse>() {
+                    @Override
+                    public void onResponse(@NonNull Call<CommonResponse> call, @NonNull Response<CommonResponse> response) {
+                        DialogManager.getInstance().hideProgress();
+                        if (response.isSuccessful() && response.body() != null) {
+                            baseFragment.onRequestSuccess(response.body());
+                        } else {
+                            baseFragment.onRequestFailure(new CommonResponse(), new Throwable(response.raw().message()));
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<CommonResponse> call, @NonNull Throwable t) {
+                        DialogManager.getInstance().hideProgress();
+                        baseFragment.onRequestFailure(new CommonResponse(), t);
+                    }
+                });
+    }
+
 }
 
 

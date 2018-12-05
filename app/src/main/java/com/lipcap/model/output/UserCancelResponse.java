@@ -1,22 +1,12 @@
 package com.lipcap.model.output;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 
-public class IssuesListResponse  {
+public class UserCancelResponse implements Serializable {
 
     private String status="";
     private String statusCode="";
     private String message="";
-    private ArrayList<AppointmentDetailsEntity> result = new ArrayList<>();
-
-    public ArrayList<AppointmentDetailsEntity> getResult() {
-        return result;
-    }
-
-    public void setResult(ArrayList<AppointmentDetailsEntity> result) {
-        this.result = result;
-    }
-
 
     public String getStatus() {
         return status;
@@ -41,11 +31,6 @@ public class IssuesListResponse  {
     public void setMessage(String message) {
         this.message = message;
     }
-
-
-
-
-
 
 
 }

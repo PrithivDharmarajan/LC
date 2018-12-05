@@ -20,25 +20,50 @@ import com.lipcap.ui.provider.ProviderHome;
 import com.lipcap.utils.AppConstants;
 import com.lipcap.utils.PreferenceUtil;
 
+import org.json.JSONObject;
+
+import java.util.Map;
+
 
 public class FireBasePushMessagingService extends FirebaseMessagingService {
 
 
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        sendNotification(""+remoteMessage.getData().toString());
+
+        String pushDataStr = "";
+
+        Map data = remoteMessage.getData();
+
+        pushDataStr = (String) data.get("message");
+
+        if (!LipCapApplication.isActivityVisible() &&
+                PreferenceUtil.getBoolPreferenceValue(this, AppConstants.LOGIN_STATUS) &&
+                pushDataStr != null && !pushDataStr.isEmpty()) {
+            try {
+                JSONObject json = new JSONObject(pushDataStr);
+                String msgStr = json.getString("msg");
+                String userIdStr = json.getString("to");
+                if (PreferenceUtil.getUserId(this).equalsIgnoreCase(userIdStr)) {
+                    sendNotification(msgStr);
+                }
+            } catch (Exception e) {
+                AppConstants.IS_FROM_PUSH = false;
+                e.printStackTrace();
+            }
+        }
     }
 
 
-    private void sendNotification( String messageStr) {
+    private void sendNotification(String messageStr) {
 
 
-        if (PreferenceUtil.getBoolPreferenceValue(this, AppConstants.LOGIN_STATUS )&&PreferenceUtil.getBoolPreferenceValue(this,AppConstants.CURRENT_USER_IS_PROVIDER)) {
+        if (PreferenceUtil.getBoolPreferenceValue(this, AppConstants.LOGIN_STATUS) && PreferenceUtil.getBoolPreferenceValue(this, AppConstants.CURRENT_USER_IS_PROVIDER)) {
             Intent intent = new Intent(this, PreferenceUtil.getBoolPreferenceValue(this, AppConstants.CURRENT_USER_IS_PROVIDER) ? ProviderHome.class : CustomerHome.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                     PendingIntent.FLAG_ONE_SHOT);
 
-            AppConstants.IS_FROM_PUSH=true;
+            AppConstants.IS_FROM_PUSH = true;
             String channelId = getString(R.string.default_notification_channel_id);
             Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             NotificationCompat.Builder notificationBuilder =
@@ -77,6 +102,6 @@ public class FireBasePushMessagingService extends FirebaseMessagingService {
     @Override
     public void onNewToken(String pushIdStr) {
         super.onNewToken(pushIdStr);
-        PreferenceUtil.storeStringPreferenceValue(this,AppConstants.PUSH_DEVICE_ID,pushIdStr);
+        PreferenceUtil.storeStringPreferenceValue(this, AppConstants.PUSH_DEVICE_ID, pushIdStr);
     }
 }

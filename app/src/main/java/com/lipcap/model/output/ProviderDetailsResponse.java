@@ -5,22 +5,41 @@ import java.util.ArrayList;
 
 public class ProviderDetailsResponse implements Serializable {
 
-    private String MsgCode="";
-    private ArrayList<ProviderDetailsEntity> UserDetail=new ArrayList<>();
+    private String status="";
+    private String statusCode="";
+    private String message="";
 
-    public String getMsgCode() {
-        return MsgCode;
+    public String getStatus() {
+        return status;
     }
 
-    public void setMsgCode(String msgCode) {
-        MsgCode = msgCode;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public ArrayList<ProviderDetailsEntity> getUserDetail() {
-        return UserDetail;
+    public String getStatusCode() {
+        return statusCode;
     }
 
-    public void setUserDetail(ArrayList<ProviderDetailsEntity> userDetail) {
-        UserDetail = userDetail;
+    public void setStatusCode(String statusCode) {
+        this.statusCode = statusCode;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    private ArrayList<UserDetailsEntity> result=new ArrayList<>();
+
+    public ArrayList<UserDetailsEntity> getResult() {
+        return result;
+    }
+
+    public void setResult(ArrayList<UserDetailsEntity> result) {
+        this.result = result;
     }
 }

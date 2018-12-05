@@ -4,24 +4,32 @@ import java.io.Serializable;
 
 public class CommonResponse implements Serializable {
 
-    private String MsgCode="";
-    private String Message="";
+    private String status="";
+    private String statusCode="";
+    private String message="";
 
-    public String getMsgCode() {
-        return MsgCode;
+    public String getStatus() {
+        return status;
     }
 
-    public void setMsgCode(String msgCode) {
-        MsgCode = msgCode;
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getStatusCode() {
+        return statusCode;
+    }
+
+    public void setStatusCode(String statusCode) {
+        this.statusCode = statusCode;
     }
 
     public String getMessage() {
-        return Message;
+        return message;
     }
 
     public void setMessage(String message) {
-        Message = message;
+        this.message = message;
     }
-
 
 }

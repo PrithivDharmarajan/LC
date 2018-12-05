@@ -2,17 +2,46 @@ package com.lipcap.model.output;
 
 import java.util.ArrayList;
 
-public class SelectIssuesTypeResponse extends CommonModelResponse {
+public class SelectIssuesTypeResponse  {
 
-    private ArrayList<IssueListEntity> IssueType = new ArrayList<>();
+    private String status="";
+    private String statusCode="";
+    private String message="";
 
-    public ArrayList<IssueListEntity> getIssueType() {
-        return IssueType;
+    public String getStatus() {
+        return status;
     }
 
-    public void setIssueType(ArrayList<IssueListEntity> issueType) {
-        IssueType = issueType;
+    public void setStatus(String status) {
+        this.status = status;
     }
+
+    public String getStatusCode() {
+        return statusCode;
+    }
+
+    public void setStatusCode(String statusCode) {
+        this.statusCode = statusCode;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public ArrayList<IssueListEntity> getResult() {
+        return result;
+    }
+
+    public void setResult(ArrayList<IssueListEntity> result) {
+        this.result = result;
+    }
+
+    private ArrayList<IssueListEntity> result = new ArrayList<>();
+
 
 
 }

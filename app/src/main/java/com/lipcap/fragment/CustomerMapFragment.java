@@ -48,11 +48,18 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.lipcap.R;
 import com.lipcap.main.BaseFragment;
-import com.lipcap.model.output.PendingDetailsEntity;
+import com.lipcap.model.input.BookAppointmentInputEntity;
+import com.lipcap.model.input.IssuesInputEntity;
+import com.lipcap.model.input.LocationUpdateInputEntity;
+import com.lipcap.model.input.PendingAppointmentInputEntity;
+import com.lipcap.model.input.UserCancelEntity;
+import com.lipcap.model.input.UserRatingInputEntity;
+import com.lipcap.model.output.AppointmentAcceptResponse;
+import com.lipcap.model.output.AppointmentDetailsEntity;
 import com.lipcap.model.output.PendingDetailsResponse;
-import com.lipcap.model.output.ProviderDetailsEntity;
 import com.lipcap.model.output.ProviderDetailsResponse;
 import com.lipcap.model.output.SelectIssuesTypeResponse;
+import com.lipcap.model.output.UserCancelResponse;
 import com.lipcap.model.output.UserDetailsEntity;
 import com.lipcap.services.APIRequestHandler;
 import com.lipcap.utils.AddressUtil;
@@ -93,13 +100,14 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
     private boolean isDialogShowing = false, mIsFirstAPIBool = true, mIsProviderSearchingBool = false, mIsPendingAppointmentBool = false;
     private Timer mAPICallTimer, mProviderAPITimer, mCheckAppointmentTimer;
     private Location mCurrentLocation;
-    private ArrayList<ProviderDetailsEntity> mProviderArrList = new ArrayList<>();
-    private int mProviderListInt = -1;
-    private Dialog mProviderSearchDialog;
+    private ArrayList<UserDetailsEntity> mProviderArrList = new ArrayList<>();
+    private int mProviderListInt = -1, mOldPEndingStatusInt = -1;
+    private Dialog mProviderSearchDialog, mCommentsDialog;
     private String mIssueIdStr = "0";
     private UserDetailsEntity mUserDetailsRes = new UserDetailsEntity();
     private String mUserPhoneNumStr = "";
-    private PendingDetailsEntity mPendingUserDetails = new PendingDetailsEntity();
+
+    private AppointmentDetailsEntity mAppointmentDetails = new AppointmentDetailsEntity();
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -139,12 +147,16 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
     @Override
     public void onResume() {
         super.onResume();
-        if (getActivity() != null && !mIsFirstAPIBool && mIsPendingAppointmentBool) {
-            if (mIsProviderSearchingBool) {
-                searchProviderAPICall();
-            } else {
-                getProviderListAPICall();
+        if (getActivity() != null && !mIsFirstAPIBool) {
+            getCheckPendingAppointmentAPICall();
+            if (!mIsPendingAppointmentBool) {
+                if (mIsProviderSearchingBool) {
+                    searchProviderAPICall();
+                } else {
+                    getProviderListAPICall();
+                }
             }
+
         }
     }
 
@@ -276,21 +288,24 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
                     issueListAPICall();
                     break;
                 case R.id.cancel_appointment_lay:
-//                    DialogManager.getInstance().showReasonForCancelPopup(getActivity(), new InterfaceEdtBtnCallback() {
-//                        @Override
-//                        public void onPositiveClick(String editStr) {
-//                            isDialogShowing = false;
-//                        }
-//
-//                        @Override
-//                        public void onNegativeClick() {
-//                            isDialogShowing = false;
-//                            commentDialog();
-//                        }
-//                    });
 
-                    APIRequestHandler.getInstance().postAppointmentStatusAPICall(String.valueOf(mPendingUserDetails.getId()), String.valueOf(mUserDetailsRes.getId()), String.valueOf(mPendingUserDetails.getIssueId()), DateUtil.getCurrentDate(), "5", String.valueOf(mPendingUserDetails.getAmount()), mPendingUserDetails.getDuration(), CustomerMapFragment.this);
+                    DialogManager.getInstance().showOptionPopup(getActivity(), getString(R.string.cancel_appointment), getString(R.string.yes), getString(R.string.no), new InterfaceTwoBtnCallback() {
+                        @Override
+                        public void onNegativeClick() {
 
+                        }
+
+                        @Override
+                        public void onPositiveClick() {
+                            UserCancelEntity userCancelEntity = new UserCancelEntity();
+                            userCancelEntity.setAppointmentId(mAppointmentDetails.getAppointmentId());
+                            userCancelEntity.setUserId(PreferenceUtil.getUserId(getActivity()));
+                            userCancelEntity.setDateTime(DateUtil.getCurrentDate());
+                            userCancelEntity.setCancelReason(AppConstants.CUSTOMER_CANCEL_REASON);
+                            APIRequestHandler.getInstance().userCancelAppointmentAPICall(userCancelEntity, CustomerMapFragment.this);
+
+                        }
+                    });
                     break;
                 case R.id.call_shoe_repairer_lay:
                     if (askPermissionsPhone())
@@ -391,7 +406,9 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
     }
 
     private void issueListAPICall() {
-        APIRequestHandler.getInstance().selectIssueTypeAPICall(this);
+        IssuesInputEntity issuesInputEntity = new IssuesInputEntity();
+        issuesInputEntity.setUserId(mUserDetailsRes.getUserId());
+        APIRequestHandler.getInstance().selectIssueTypeAPICall(issuesInputEntity, this);
     }
 
 
@@ -434,15 +451,18 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
                     @Override
                     public void run() {
                         mProviderListInt += 1;
-                        if (mProviderArrList.size() > mProviderListInt && mIsProviderSearchingBool) {
-                            APIRequestHandler.getInstance().bookAppointmentAPICall(String.valueOf(mUserDetailsRes.getId()), String.valueOf(mCurrentLocation.getLatitude()), String.valueOf(mCurrentLocation.getLongitude()), mUserDetailsRes.getName(), mUserDetailsRes.getMobileNo(), mIssueIdStr, AppConstants.ISSUE_NAME, DateUtil.getCurrentDate(), mProviderArrList.get(mProviderListInt).getDeviceId(), CustomerMapFragment.this);
+                        if (mProviderArrList.size() > mProviderListInt && mIsProviderSearchingBool && mProviderListInt < 10) {
+                            BookAppointmentInputEntity bookAppointmentInputEntity = new BookAppointmentInputEntity();
+                            bookAppointmentInputEntity.setIssueId(mIssueIdStr);
+                            bookAppointmentInputEntity.setProviderId(mProviderArrList.get(mProviderListInt).getUserId());
+                            bookAppointmentInputEntity.setUserId(PreferenceUtil.getUserId(getActivity()));
+                            bookAppointmentInputEntity.setDateTime(DateUtil.getCurrentDate());
+                            APIRequestHandler.getInstance().bookAppointmentAPICall(bookAppointmentInputEntity, CustomerMapFragment.this);
                         } else {
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if (mProviderArrList.size() > 0) {
-                                        APIRequestHandler.getInstance().postAppointmentStatusAPICall(String.valueOf(mProviderArrList.get(mProviderArrList.size()-1).getId()), String.valueOf(mUserDetailsRes.getId()), mIssueIdStr, DateUtil.getCurrentDate(), "3", "0", "0", CustomerMapFragment.this);
-                                    }
+
                                     DialogManager.getInstance().showToast(getActivity(), getString(R.string.provider_not_found));
                                     cancelProviderSearch();
                                 }
@@ -482,7 +502,11 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
                 mGoogleMap.clear();
                 setCurrentLocMarker();
             }
-            APIRequestHandler.getInstance().latAndLongUpdateAPICall(String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()), 1 + "", this);
+            LocationUpdateInputEntity locationUpdateInputEntity = new LocationUpdateInputEntity();
+            locationUpdateInputEntity.setUserId(mUserDetailsRes.getUserId());
+            locationUpdateInputEntity.setLatitude(String.valueOf(location.getLatitude()));
+            locationUpdateInputEntity.setLongitude(String.valueOf(location.getLongitude()));
+            APIRequestHandler.getInstance().latAndLongUpdateAPICall(locationUpdateInputEntity, this);
         }
     }
 
@@ -504,7 +528,11 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
                 if (mIsProviderSearchingBool || mIsPendingAppointmentBool) {
                     cancelAPICallTimer();
                 } else {
-                    APIRequestHandler.getInstance().getProviderLocAPICall(String.valueOf(mCurrentLocation.getLatitude()), String.valueOf(mCurrentLocation.getLongitude()), CustomerMapFragment.this);
+                    LocationUpdateInputEntity locationUpdateInputEntity = new LocationUpdateInputEntity();
+                    locationUpdateInputEntity.setLongitude(String.valueOf(mCurrentLocation.getLongitude()));
+                    locationUpdateInputEntity.setLatitude(String.valueOf(mCurrentLocation.getLatitude()));
+                    locationUpdateInputEntity.setUserId(mUserDetailsRes.getUserId());
+                    APIRequestHandler.getInstance().getProviderLocAPICall(locationUpdateInputEntity, CustomerMapFragment.this);
                 }
             }
         }, 0, 50000);
@@ -513,10 +541,13 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
     private void getCheckPendingAppointmentAPICall() {
         cancelCheckPendingAppointmentAPICallTimer();
         mCheckAppointmentTimer = new Timer();
+        final PendingAppointmentInputEntity pendingAppointmentInputEntity = new PendingAppointmentInputEntity();
+        pendingAppointmentInputEntity.setUserId(PreferenceUtil.getUserId(getActivity()));
+        pendingAppointmentInputEntity.setDateTime(DateUtil.getCurrentDate());
         mCheckAppointmentTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                APIRequestHandler.getInstance().getUserPendingAppointmentAPICall(String.valueOf(mUserDetailsRes.getId()), "1", CustomerMapFragment.this);
+                APIRequestHandler.getInstance().getUserPendingAppointmentAPICall(pendingAppointmentInputEntity, CustomerMapFragment.this);
             }
         }, 0, 5000);
     }
@@ -641,10 +672,10 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
         super.onRequestSuccess(resObj);
         if (resObj instanceof SelectIssuesTypeResponse) {
             SelectIssuesTypeResponse issuesListResponse = (SelectIssuesTypeResponse) resObj;
-            if (issuesListResponse.getMsgCode().equals(AppConstants.SUCCESS_CODE)) {
+            if (issuesListResponse.getStatusCode().equals(AppConstants.SUCCESS_CODE)) {
 
-                if (issuesListResponse.getIssueType().size() > 0) {
-                    DialogManager.getInstance().showIssuesListPopup(getActivity(), issuesListResponse.getIssueType(), new InterfaceEdtBtnCallback() {
+                if (issuesListResponse.getResult().size() > 0) {
+                    DialogManager.getInstance().showIssuesListPopup(getActivity(), issuesListResponse.getResult(), new InterfaceEdtBtnCallback() {
                         @Override
                         public void onPositiveClick(String issueIdStr) {
 //                            mAppointmentCardView.setVisibility(View.VISIBLE);
@@ -673,73 +704,109 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
         if (resObj instanceof PendingDetailsResponse) {
             if (getActivity() != null && !mIsPendingAppointmentBool) {
                 PendingDetailsResponse pendingDetailsRes = (PendingDetailsResponse) resObj;
-                ArrayList<PendingDetailsEntity> userDetailArrListRes = pendingDetailsRes.getUserDetail();
-                if (userDetailArrListRes.size() > 0) {
-                    PendingDetailsEntity userDetail = new PendingDetailsEntity();
-                    for (int i = 0; i < userDetailArrListRes.size(); i++) {
-                        if (!String.valueOf(mUserDetailsRes.getId()).equalsIgnoreCase(String.valueOf(userDetailArrListRes.get(i).getId()))) {
-                            userDetail = userDetailArrListRes.get(i);
-                            break;
-                        }
-                    }
+                if (pendingDetailsRes.getResult().getAnotheruser().size() > 0 && pendingDetailsRes.getResult().getAppointments().size() > 0) {
+                    final UserDetailsEntity userDetails = pendingDetailsRes.getResult().getAnotheruser().get(0);
+                    final AppointmentDetailsEntity appointmentDetails = pendingDetailsRes.getResult().getAppointments().get(0);
+                    mAppointmentDetails = appointmentDetails;
 
-                    mPendingUserDetails = userDetail;
-                    mUserPhoneNumStr = userDetail.getMobileNo();
-                    if (!mIsPendingAppointmentBool && (
-                            userDetailArrListRes.get(0).getStatus() != 4 || userDetailArrListRes.get(0).getStatus() != 5)) {
-                        mIsPendingAppointmentBool = true;
+                    mUserPhoneNumStr = userDetails.getPhoneNumber();
+                    if (mAppointmentDetails.getStatus().equalsIgnoreCase("2")) {
+                        mOldPEndingStatusInt = 2;
+                        mBookAppointmentBtn.setVisibility(View.GONE);
 
-                        final PendingDetailsEntity finalUserDetail = userDetail;
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mAppointmentCardView.setVisibility(View.VISIBLE);
-                                mProviderNameTxt.setText(finalUserDetail.getName());
-                                mapDirection(finalUserDetail.getLatitude(), finalUserDetail.getLongitude());
+                        if (getActivity() != null)
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (!mIsPendingAppointmentBool) {
+                                        mAppointmentCardView.setVisibility(View.VISIBLE);
+                                        mProviderNameTxt.setText(userDetails.getUserName());
+                                    }
+                                    mIsPendingAppointmentBool = true;
+                                    if (!userDetails.getLatitude().isEmpty() && !userDetails.getLongitude().isEmpty()) {
+                                        mapDirection(Double.valueOf(userDetails.getLatitude()), Double.valueOf(userDetails.getLongitude()));
+                                    }
 
+                                }
+                            });
 
-                            }
-                        });
+                    } else if (mOldPEndingStatusInt != 3 && (mAppointmentDetails.getStatus().equalsIgnoreCase("3"))) {
+                        mOldPEndingStatusInt = 3;
+                        mIsPendingAppointmentBool = true;  mBookAppointmentBtn.setVisibility(View.GONE);
 
-                    } else if (userDetailArrListRes.get(0).getStatus() == 2) {
-                        DialogManager.getInstance().showCommentsPopup(getActivity(), new InterfaceEdtBtnCallback() {
+                        mCommentsDialog = DialogManager.getInstance().showCommentsPopup(getActivity(), new InterfaceEdtBtnCallback() {
                             @Override
                             public void onPositiveClick(String editStr) {
 
-                                APIRequestHandler.getInstance().postAppointmentStatusAPICall(String.valueOf(mPendingUserDetails.getId()), String.valueOf(mUserDetailsRes.getId()), String.valueOf(mPendingUserDetails.getIssueId()), DateUtil.getCurrentDate(), "3", String.valueOf(mPendingUserDetails.getAmount()), mPendingUserDetails.getDuration(), CustomerMapFragment.this);
+                                UserRatingInputEntity userRatingInputEntity = new UserRatingInputEntity();
+                                userRatingInputEntity.setUserId(PreferenceUtil.getUserId(getActivity()));
+                                userRatingInputEntity.setAppointmentId(appointmentDetails.getAppointmentId());
+                                userRatingInputEntity.setComments(AppConstants.CUSTOMER_REVIEW);
+                                userRatingInputEntity.setDescription(AppConstants.CUSTOMER_COMMENTS);
+                                userRatingInputEntity.setRate(AppConstants.CUSTOMER_RATING);
+                                userRatingInputEntity.setDateTime(DateUtil.getCurrentDate());
+                                userRatingInputEntity.setProviderId(userDetails.getUserId());
+                                APIRequestHandler.getInstance().userRateAppointmentAPICall(userRatingInputEntity, CustomerMapFragment.this);
                             }
 
                             @Override
                             public void onNegativeClick() {
-                                APIRequestHandler.getInstance().postAppointmentStatusAPICall(String.valueOf(mPendingUserDetails.getId()), String.valueOf(mUserDetailsRes.getId()), String.valueOf(mPendingUserDetails.getIssueId()), DateUtil.getCurrentDate(), "3", String.valueOf(mPendingUserDetails.getAmount()), mPendingUserDetails.getDuration(), CustomerMapFragment.this);
 
                             }
                         });
 
-                    } else if (userDetailArrListRes.get(0).getStatus() == 4 || userDetailArrListRes.get(0).getStatus() == 5) {
+                    } else if (mIsPendingAppointmentBool||mBookAppointmentBtn.getVisibility()==View.GONE) {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 mAppointmentCardView.setVisibility(View.GONE);
                                 mBookAppointmentBtn.setVisibility(View.VISIBLE);
                                 mIsFirstAPIBool = true;
+                                alertDismiss(mCommentsDialog);
                                 screenAPICall();
                                 mIsPendingAppointmentBool = false;
                             }
                         });
 
                     }
-                } else {
-                    mIsPendingAppointmentBool = false;
-                    mAppointmentCardView.setVisibility(View.GONE);
+                } else if (mIsPendingAppointmentBool||mBookAppointmentBtn.getVisibility()==View.GONE) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            mIsPendingAppointmentBool = false;
+                            mAppointmentCardView.setVisibility(View.GONE);
+                            mBookAppointmentBtn.setVisibility(View.VISIBLE);
+                        }
+                    });
                 }
+            }else if(getActivity()!=null){
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        mIsPendingAppointmentBool = false;
+                        mAppointmentCardView.setVisibility(View.GONE);
+                        mBookAppointmentBtn.setVisibility(View.VISIBLE);
+                    }
+                });
             }
         }
 
         if (resObj instanceof ProviderDetailsResponse) {
             ProviderDetailsResponse providerResponse = (ProviderDetailsResponse) resObj;
-            if (providerResponse.getUserDetail().size() > 0) {
-                providerMarkerDetails(providerResponse.getUserDetail());
+            if (providerResponse.getResult().size() > 0) {
+                providerMarkerDetails(providerResponse.getResult());
+            }
+        }
+        if (resObj instanceof UserCancelResponse || resObj instanceof AppointmentAcceptResponse) {
+            if (mIsPendingAppointmentBool) {
+                mAppointmentCardView.setVisibility(View.GONE);
+                mBookAppointmentBtn.setVisibility(View.VISIBLE);
+                mIsFirstAPIBool = true;
+                alertDismiss(mCommentsDialog);
+                screenAPICall();
+                mIsPendingAppointmentBool = false;
             }
         }
 
@@ -763,7 +830,7 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
 
     @Override
     public void onRequestFailure(final Object resObj, Throwable t) {
-        if (resObj instanceof String) {
+        if (resObj instanceof BookAppointmentInputEntity) {
             if (getActivity() != null)
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
@@ -787,7 +854,7 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
         }
     }
 
-    private void providerMarkerDetails(ArrayList<ProviderDetailsEntity> providerDetails) {
+    private void providerMarkerDetails(ArrayList<UserDetailsEntity> providerDetails) {
 
         if (providerDetails.size() > 0) {
             mProviderArrList = new ArrayList<>();
@@ -804,7 +871,7 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
 
                         int sizeInt = getResources().getDimensionPixelSize(R.dimen.size30);
                         Bitmap smallMarker = Bitmap.createScaledBitmap(bitmap, sizeInt, sizeInt, false);
-                        MarkerOptions marker = new MarkerOptions().position(new LatLng(providerDetails.get(i).getLatitude(), providerDetails.get(i).getLongitude())).icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
+                        MarkerOptions marker = new MarkerOptions().position(new LatLng(Double.valueOf(providerDetails.get(i).getLatitude()), Double.valueOf(providerDetails.get(i).getLongitude()))).icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
                         mGoogleMap.addMarker(marker);
                     }
                 }
