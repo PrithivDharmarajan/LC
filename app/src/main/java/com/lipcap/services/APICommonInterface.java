@@ -67,7 +67,7 @@ public interface APICommonInterface {
 
 
     /*Lat and Long Update API*/
-    @POST("user/useraction")
+    @POST("user/usercancel")
     Call<UserCancelResponse> userCancelAppointmentAPI(@Body UserCancelEntity userCancelEntity);
 
     /*Lat and Long Update API*/
