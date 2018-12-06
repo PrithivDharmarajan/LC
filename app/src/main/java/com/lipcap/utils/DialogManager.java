@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,11 +16,13 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.lipcap.R;
 import com.lipcap.adapter.SelectIssueListAdapter;
 import com.lipcap.model.output.IssueListEntity;
@@ -32,7 +35,7 @@ public class DialogManager {
     /*Init dialog instance*/
     private static final DialogManager sDialogInstance = new DialogManager();
     /*Init variable*/
-    private Dialog mProgressDialog, mNetworkErrorDialog, mAlertDialog, mOptionDialog, mIssueListDialog, mReasonForCancelDialog, mCommentsDialog, mSearchDialog, mNotificationDialog, mRequestDialog, mRequestCompletedDialog,mPictureAlertDialog;
+    private Dialog mProgressDialog, mNetworkErrorDialog, mAlertDialog, mOptionDialog, mIssueListDialog, mReasonForCancelDialog, mCommentsDialog, mSearchDialog, mNotificationDialog, mRequestDialog, mRequestCompletedDialog,mPictureAlertDialog,mAdvPictureAlertDialog;
     private Toast mToast;
 
     public static DialogManager getInstance() {
@@ -417,7 +420,7 @@ public class DialogManager {
     public void showProviderAmtDialogPopup(final Context context, String issuesTypeStr,
                                            final InterfaceEdtBtnCallback dialogAlertInterface) {
         alertDismiss(mRequestDialog);
-        mRequestDialog = getDialog(context, R.layout.popup_request_amount);
+        mRequestDialog = getDialog(context, R.layout.popup_request_duration);
 
         WindowManager.LayoutParams LayoutParams = new WindowManager.LayoutParams();
         Window window = mRequestDialog.getWindow();
@@ -501,7 +504,7 @@ public class DialogManager {
                     mRequestCompletedDialog.dismiss();
                     dialogAlertInterface.onPositiveClick(mAmountEdt.getText().toString().trim());
                 } else {
-                    DialogManager.getInstance().showToast(context, "Enter Valid Time");
+                    DialogManager.getInstance().showToast(context, "Enter Valid Amount");
                 }
             }
         });
@@ -634,6 +637,59 @@ public class DialogManager {
 
         alertShowing(mPictureAlertDialog);
         return mPictureAlertDialog;
+    }
+
+
+    public void showImagePreviewDialogPopup(final Context context, Uri imageURI,
+                                                 final InterfaceEdtBtnCallback dialogAlertInterface) {
+        alertDismiss(mAdvPictureAlertDialog);
+        mAdvPictureAlertDialog = getDialog(context, R.layout.popup_adv_upload);
+
+        WindowManager.LayoutParams LayoutParams = new WindowManager.LayoutParams();
+        Window window = mAdvPictureAlertDialog.getWindow();
+
+        if (window != null) {
+            LayoutParams.copyFrom(window.getAttributes());
+            LayoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+            LayoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            window.setAttributes(LayoutParams);
+            window.setGravity(Gravity.CENTER);
+        }
+
+        Button positiveBtn, negativeBtn;
+        ImageView uploadImage;
+        final EditText mAmountEdt;
+
+        /*Init view*/
+
+        uploadImage = mAdvPictureAlertDialog.findViewById(R.id.upload_img);
+        mAmountEdt = mAdvPictureAlertDialog.findViewById(R.id.amount_edt);
+
+        positiveBtn = mAdvPictureAlertDialog.findViewById(R.id.alert_positive_btn);
+        negativeBtn = mAdvPictureAlertDialog.findViewById(R.id.alert_negative_btn);
+        Glide.with(context)
+                .load(imageURI)
+                .into(uploadImage);
+        positiveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!mAmountEdt.getText().toString().isEmpty()) {
+                    mAdvPictureAlertDialog.dismiss();
+                    dialogAlertInterface.onPositiveClick(mAmountEdt.getText().toString().trim());
+                } else {
+                    DialogManager.getInstance().showToast(context, "Enter Valid Amount");
+                }
+            }
+        });
+        negativeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAdvPictureAlertDialog.dismiss();
+                dialogAlertInterface.onNegativeClick();
+            }
+        });
+
+        alertShowing(mAdvPictureAlertDialog);
     }
 
 

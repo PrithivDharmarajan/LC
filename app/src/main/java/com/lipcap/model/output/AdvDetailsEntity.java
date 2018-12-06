@@ -6,6 +6,16 @@ public class AdvDetailsEntity {
     private String url="";
     private String amount="";
     private String status="";
+    private String advId="";
+
+    public String getAdvId() {
+        return advId;
+    }
+
+    public void setAdvId(String advId) {
+        this.advId = advId;
+    }
+
 
     public String getUserId() {
         return userId;

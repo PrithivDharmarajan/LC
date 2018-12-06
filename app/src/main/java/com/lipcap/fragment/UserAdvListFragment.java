@@ -74,8 +74,6 @@ public class UserAdvListFragment extends BaseFragment {
         AppConstants.TAG = this.getClass().getSimpleName();
          advListAPICall();
 
-
-
     }
 
     private void advListAPICall() {

@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
@@ -403,9 +404,9 @@ public class ProviderHome extends BaseActivity implements View.OnClickListener {
     }
 
 
-    /*activity result callback */
+
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (mFragment != null)
             mFragment.onActivityResult(requestCode, resultCode, data);
     }

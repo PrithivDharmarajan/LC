@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 
 import com.lipcap.main.BaseActivity;
 import com.lipcap.main.BaseFragment;
+import com.lipcap.model.input.AddAdvInputEntity;
 import com.lipcap.model.input.AdvInputEntity;
 import com.lipcap.model.input.AppointmentAcceptEntity;
 import com.lipcap.model.input.BookAppointmentInputEntity;
@@ -378,7 +379,7 @@ public class APIRequestHandler {
     }
 
     /*Profile Image Upload Api Call*/
-    public void profileImageUploadApiCall(String imageString, final BaseFragment baseFragment) {
+    public void profileImageUploadApiCall(final AddAdvInputEntity addAdvInputEntity, String imageString, final BaseFragment baseFragment) {
         DialogManager.getInstance().showProgress(baseFragment.getActivity());
         File file = new File(imageString);
         MultipartBody.Part imageFile = null;
@@ -390,11 +391,17 @@ public class APIRequestHandler {
         mServiceInterface.advImageUploadAPI ( imageFile).enqueue(new Callback<UploadedResponse>() {
             @Override
             public void onResponse(@NonNull Call<UploadedResponse> call, @NonNull Response<UploadedResponse> response) {
-                DialogManager.getInstance().hideProgress();
-                if (response.isSuccessful() && response.body() != null) {
-                    baseFragment.onRequestSuccess(response.body());
+                 if (response.isSuccessful() && response.body() != null) {
+                     UploadedResponse advResponse =  response.body();
+                     if(advResponse.getStatusCode().equalsIgnoreCase(AppConstants.SUCCESS_CODE)){
+                         addAdvInputEntity.setUrl(advResponse.getResult().getUrl());
+                         addAdAPICall(addAdvInputEntity,baseFragment);
+                     }else{
+                         DialogManager.getInstance().hideProgress();
+                     }
                 } else {
-                    baseFragment.onRequestFailure(new UploadedResponse(),new Throwable(response.raw().message()));
+                     DialogManager.getInstance().hideProgress();
+                     baseFragment.onRequestFailure(new UploadedResponse(),new Throwable(response.raw().message()));
                 }
             }
 
@@ -404,6 +411,29 @@ public class APIRequestHandler {
                 baseFragment.onRequestFailure(new UploadedResponse(), t);
             }
         });
+    }
+
+
+    /*Issues API*/
+    private void addAdAPICall(AddAdvInputEntity addAdvInputEntity, final BaseFragment baseFragment) {
+        mServiceInterface.addAdvAPI(addAdvInputEntity)
+                .enqueue(new Callback<CommonResponse>() {
+                    @Override
+                    public void onResponse(@NonNull Call<CommonResponse> call, @NonNull Response<CommonResponse> response) {
+                        DialogManager.getInstance().hideProgress();
+                        if (response.isSuccessful() && response.body() != null) {
+                            baseFragment.onRequestSuccess(response.body());
+                        } else {
+                            baseFragment.onRequestFailure(new CommonResponse(), new Throwable(response.raw().message()));
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<CommonResponse> call, @NonNull Throwable t) {
+                        DialogManager.getInstance().hideProgress();
+                        baseFragment.onRequestFailure(new CommonResponse(), t);
+                    }
+                });
     }
 
 }

@@ -100,7 +100,7 @@ public interface APICommonInterface {
 
     /*get Adv Details*/
     @POST("user/addadv")
-    Call<CommonResponse> addAdvDetailsAPI(@Body AddAdvInputEntity addAdvInputEntity);
+    Call<CommonResponse> addAdvAPI(@Body AddAdvInputEntity addAdvInputEntity);
 
 
 }
