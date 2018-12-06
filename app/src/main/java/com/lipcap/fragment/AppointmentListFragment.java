@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class IssueListFragment extends BaseFragment {
+public class AppointmentListFragment extends BaseFragment {
 
 
     @BindView(R.id.issue_list_recycler_view)

@@ -46,6 +46,7 @@ public class AppConstants {
     public static String CUSTOMER_RATING= "CUSTOMER_RATING";
 
     public static String CUSTOMER_CANCEL_REASON= "CUSTOMER_CANCEL_REASON";
+    public static String PROVIDER_ID = "0";
 
 }
 

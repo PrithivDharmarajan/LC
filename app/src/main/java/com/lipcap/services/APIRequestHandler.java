@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 
 import com.lipcap.main.BaseActivity;
 import com.lipcap.main.BaseFragment;
+import com.lipcap.model.input.AdvInputEntity;
 import com.lipcap.model.input.AppointmentAcceptEntity;
 import com.lipcap.model.input.BookAppointmentInputEntity;
 import com.lipcap.model.input.IssuesInputEntity;
@@ -14,6 +15,7 @@ import com.lipcap.model.input.PendingAppointmentInputEntity;
 import com.lipcap.model.input.RegInputEntity;
 import com.lipcap.model.input.UserCancelEntity;
 import com.lipcap.model.input.UserRatingInputEntity;
+import com.lipcap.model.output.AdvResponse;
 import com.lipcap.model.output.AppointmentAcceptResponse;
 import com.lipcap.model.output.CommonResponse;
 import com.lipcap.model.output.IssuesListResponse;
@@ -21,10 +23,16 @@ import com.lipcap.model.output.LoginResponse;
 import com.lipcap.model.output.PendingDetailsResponse;
 import com.lipcap.model.output.ProviderDetailsResponse;
 import com.lipcap.model.output.SelectIssuesTypeResponse;
+import com.lipcap.model.output.UploadedResponse;
 import com.lipcap.model.output.UserCancelResponse;
 import com.lipcap.utils.AppConstants;
 import com.lipcap.utils.DialogManager;
 
+import java.io.File;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -343,6 +351,59 @@ public class APIRequestHandler {
                         baseFragment.onRequestFailure(new CommonResponse(), t);
                     }
                 });
+    }
+
+
+    /*Issues API*/
+    public void getUserAdvListAPICall(AdvInputEntity userRatingInputEntity, final BaseFragment baseFragment) {
+        DialogManager.getInstance().showProgress(baseFragment.getActivity());
+        mServiceInterface.getUserAdvDetailsAPI(userRatingInputEntity)
+                .enqueue(new Callback<AdvResponse>() {
+                    @Override
+                    public void onResponse(@NonNull Call<AdvResponse> call, @NonNull Response<AdvResponse> response) {
+                        DialogManager.getInstance().hideProgress();
+                        if (response.isSuccessful() && response.body() != null) {
+                            baseFragment.onRequestSuccess(response.body());
+                        } else {
+                            baseFragment.onRequestFailure(new CommonResponse(), new Throwable(response.raw().message()));
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<AdvResponse> call, @NonNull Throwable t) {
+                        DialogManager.getInstance().hideProgress();
+                        baseFragment.onRequestFailure(new CommonResponse(), t);
+                    }
+                });
+    }
+
+    /*Profile Image Upload Api Call*/
+    public void profileImageUploadApiCall(String imageString, final BaseFragment baseFragment) {
+        DialogManager.getInstance().showProgress(baseFragment.getActivity());
+        File file = new File(imageString);
+        MultipartBody.Part imageFile = null;
+
+        RequestBody imageBody = RequestBody.create(MediaType.parse("image/*"), file);
+
+        imageFile = MultipartBody.Part.createFormData("image", file.getName(), imageBody);
+
+        mServiceInterface.advImageUploadAPI ( imageFile).enqueue(new Callback<UploadedResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<UploadedResponse> call, @NonNull Response<UploadedResponse> response) {
+                DialogManager.getInstance().hideProgress();
+                if (response.isSuccessful() && response.body() != null) {
+                    baseFragment.onRequestSuccess(response.body());
+                } else {
+                    baseFragment.onRequestFailure(new UploadedResponse(),new Throwable(response.raw().message()));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<UploadedResponse> call, @NonNull Throwable t) {
+                DialogManager.getInstance().hideProgress();
+                baseFragment.onRequestFailure(new UploadedResponse(), t);
+            }
+        });
     }
 
 }

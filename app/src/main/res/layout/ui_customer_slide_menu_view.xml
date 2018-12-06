@@ -47,7 +47,7 @@
                 android:background="@color/orange" />
 
             <LinearLayout
-                android:id="@+id/issue_list_lay"
+                android:id="@+id/appointment_list_lay"
                 style="@style/LayoutWidMatch_HeiWrap"
                 android:layout_height="@dimen/size45"
                 android:background="?android:attr/selectableItemBackground"
@@ -62,14 +62,14 @@
                     android:adjustViewBounds="true"
                     android:contentDescription="@string/app_name"
                     android:padding="@dimen/size5"
-                    android:src="@drawable/issue_list" />
+                    android:src="@drawable/appointment_list" />
 
                 <TextView
                     style="@style/TextOpenSansRegular"
                     android:layout_gravity="center"
                     android:layout_marginStart="@dimen/size15"
                     android:gravity="start"
-                    android:text="@string/issue_list"
+                    android:text="@string/appointment_list"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text13" />
             </LinearLayout>

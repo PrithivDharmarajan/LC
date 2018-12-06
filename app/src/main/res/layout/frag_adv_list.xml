@@ -3,6 +3,6 @@
     style="@style/LayoutMatch">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/issue_list_recycler_view"
+        android:id="@+id/adv_list_recycler_view"
         style="@style/LayoutWidMatch_HeiWrap" />
 </LinearLayout>

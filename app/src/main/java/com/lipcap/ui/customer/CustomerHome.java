@@ -24,9 +24,9 @@ import android.widget.TextView;
 
 import com.lipcap.R;
 import com.lipcap.fragment.AboutFragment;
+import com.lipcap.fragment.AppointmentListFragment;
 import com.lipcap.fragment.CustomerMapFragment;
 import com.lipcap.fragment.CustomerProfileFragment;
-import com.lipcap.fragment.IssueListFragment;
 import com.lipcap.fragment.NotificationFragment;
 import com.lipcap.main.BaseActivity;
 import com.lipcap.main.BaseFragment;
@@ -183,7 +183,7 @@ public class CustomerHome extends BaseActivity implements View.OnClickListener {
         String headerStr = getString(R.string.app_name);
         if (baseFragment instanceof CustomerProfileFragment) {
             headerStr = getString(R.string.profile);
-        } else if (baseFragment instanceof IssueListFragment) {
+        } else if (baseFragment instanceof AppointmentListFragment) {
             headerStr = getString(R.string.issue_list);
         } else if (baseFragment instanceof NotificationFragment) {
             headerStr = getString(R.string.notification);
@@ -236,7 +236,7 @@ public class CustomerHome extends BaseActivity implements View.OnClickListener {
 
 
     /*Slide menu onClick*/
-    @OnClick({R.id.profile_lay, R.id.issue_list_lay, R.id.notification_lay, R.id.rate_app_lay, R.id.contact_lay
+    @OnClick({R.id.profile_lay, R.id.appointment_list_lay, R.id.notification_lay, R.id.rate_app_lay, R.id.contact_lay
             , R.id.support_lay, R.id.about_the_app_lay, R.id.logout_lay})
     public void onClick(View v) {
         switch (v.getId()) {
@@ -245,10 +245,10 @@ public class CustomerHome extends BaseActivity implements View.OnClickListener {
                 if (!(mFragment instanceof CustomerProfileFragment))
                     addFragment(new CustomerProfileFragment());
                 break;
-            case R.id.issue_list_lay:
+            case R.id.appointment_list_lay:
                 mDrawerLayout.closeDrawer(GravityCompat.START);
-                if (!(mFragment instanceof IssueListFragment))
-                    addFragment(new IssueListFragment());
+                if (!(mFragment instanceof AppointmentListFragment))
+                    addFragment(new AppointmentListFragment());
                 break;
             case R.id.notification_lay:
                 mDrawerLayout.closeDrawer(GravityCompat.START);

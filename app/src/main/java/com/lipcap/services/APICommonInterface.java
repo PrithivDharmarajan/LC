@@ -1,5 +1,7 @@
 package com.lipcap.services;
 
+import com.lipcap.model.input.AddAdvInputEntity;
+import com.lipcap.model.input.AdvInputEntity;
 import com.lipcap.model.input.AppointmentAcceptEntity;
 import com.lipcap.model.input.BookAppointmentInputEntity;
 import com.lipcap.model.input.IssuesInputEntity;
@@ -9,6 +11,7 @@ import com.lipcap.model.input.PendingAppointmentInputEntity;
 import com.lipcap.model.input.RegInputEntity;
 import com.lipcap.model.input.UserCancelEntity;
 import com.lipcap.model.input.UserRatingInputEntity;
+import com.lipcap.model.output.AdvResponse;
 import com.lipcap.model.output.AppointmentAcceptResponse;
 import com.lipcap.model.output.CommonResponse;
 import com.lipcap.model.output.IssuesListResponse;
@@ -16,11 +19,15 @@ import com.lipcap.model.output.LoginResponse;
 import com.lipcap.model.output.PendingDetailsResponse;
 import com.lipcap.model.output.ProviderDetailsResponse;
 import com.lipcap.model.output.SelectIssuesTypeResponse;
+import com.lipcap.model.output.UploadedResponse;
 import com.lipcap.model.output.UserCancelResponse;
 
+import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 
 public interface APICommonInterface {
 
@@ -82,6 +89,18 @@ public interface APICommonInterface {
     /*Lat and Long Update API*/
     @POST("user/rating")
     Call<CommonResponse> userRatingAppointmentAPI(@Body UserRatingInputEntity userCancelEntity);
+
+    /*get Adv Details*/
+    @POST("user/adv")
+    Call<AdvResponse> getUserAdvDetailsAPI(@Body AdvInputEntity advInputEntity);
+
+    @Multipart
+    @POST("user/upload")
+    Call<UploadedResponse> advImageUploadAPI(@Part MultipartBody.Part image);
+
+    /*get Adv Details*/
+    @POST("user/addadv")
+    Call<CommonResponse> addAdvDetailsAPI(@Body AddAdvInputEntity addAdvInputEntity);
 
 
 }

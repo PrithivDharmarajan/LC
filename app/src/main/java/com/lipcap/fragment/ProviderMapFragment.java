@@ -623,7 +623,6 @@ public class ProviderMapFragment extends BaseFragment implements GoogleApiClient
                                 mapDirection(Double.valueOf(userDetails.getLatitude()), Double.valueOf(userDetails.getLongitude()));
                             }
                         });
-
                     } else if (mIsPendingAppointmentBool && (appointmentDetails.getStatus().equalsIgnoreCase("0") || appointmentDetails.getStatus().equalsIgnoreCase("3")
                             || appointmentDetails.getStatus().equalsIgnoreCase("4") || appointmentDetails.getStatus().equalsIgnoreCase("5"))) {
                         if (getActivity() != null)

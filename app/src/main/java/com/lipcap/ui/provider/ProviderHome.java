@@ -24,7 +24,8 @@ import android.widget.TextView;
 
 import com.lipcap.R;
 import com.lipcap.fragment.AboutFragment;
-import com.lipcap.fragment.IssueListFragment;
+import com.lipcap.fragment.AdvListFragment;
+import com.lipcap.fragment.AppointmentListFragment;
 import com.lipcap.fragment.NotificationFragment;
 import com.lipcap.fragment.ProviderMapFragment;
 import com.lipcap.fragment.ProviderProfileFragment;
@@ -46,20 +47,17 @@ import butterknife.OnClick;
 
 public class ProviderHome extends BaseActivity implements View.OnClickListener {
 
+    @BindView(R.id.header_end_img_lay)
+    public RelativeLayout mHeaderEndImgLay;
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
-
     /*Header*/
     @BindView(R.id.header_txt)
     TextView mHeaderTxt;
-
-
     @BindView(R.id.header_start_img_lay)
     RelativeLayout mHeaderLeftFirstImgLay;
-
     @BindView(R.id.header_start_img)
     ImageView mHeaderLeftFirstImg;
-
     /*Current Fragment*/
     private BaseFragment mFragment;
 
@@ -157,7 +155,7 @@ public class ProviderHome extends BaseActivity implements View.OnClickListener {
         String headerStr = getString(R.string.app_name);
         if (baseFragment instanceof ProviderProfileFragment) {
             headerStr = getString(R.string.profile);
-        } else if (baseFragment instanceof IssueListFragment) {
+        } else if (baseFragment instanceof AppointmentListFragment) {
             headerStr = getString(R.string.issue_list);
         } else if (baseFragment instanceof NotificationFragment) {
             headerStr = getString(R.string.notification);
@@ -165,6 +163,16 @@ public class ProviderHome extends BaseActivity implements View.OnClickListener {
             headerStr = getString(R.string.about_the_app);
         }
         mHeaderTxt.setText(headerStr);
+        setHeaderRightLay(baseFragment);
+    }
+
+    private void setHeaderRightLay(BaseFragment baseFragment) {
+        if (baseFragment instanceof AdvListFragment) {
+            mHeaderEndImgLay.setVisibility(View.VISIBLE);
+
+        } else {
+            mHeaderEndImgLay.setVisibility(View.INVISIBLE);
+        }
     }
 
     /*Fragment popBackStack Listener*/
@@ -233,7 +241,7 @@ public class ProviderHome extends BaseActivity implements View.OnClickListener {
 
 
     /*Slide menu onClick*/
-    @OnClick({R.id.profile_lay, R.id.issue_list_lay, R.id.notification_lay, R.id.rate_app_lay, R.id.contact_lay
+    @OnClick({R.id.profile_lay, R.id.appointment_list_lay, R.id.advertisement_list_lay, R.id.notification_lay, R.id.rate_app_lay, R.id.contact_lay
             , R.id.support_lay, R.id.about_the_app_lay, R.id.logout_lay})
     public void onClick(View v) {
         switch (v.getId()) {
@@ -242,10 +250,15 @@ public class ProviderHome extends BaseActivity implements View.OnClickListener {
                 if (!(mFragment instanceof ProviderProfileFragment))
                     addFragment(new ProviderProfileFragment());
                 break;
-            case R.id.issue_list_lay:
+            case R.id.appointment_list_lay:
                 mDrawerLayout.closeDrawer(GravityCompat.START);
-                if (!(mFragment instanceof IssueListFragment))
-                    addFragment(new IssueListFragment());
+                if (!(mFragment instanceof AppointmentListFragment))
+                    addFragment(new AppointmentListFragment());
+                break;
+            case R.id.advertisement_list_lay:
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+                if (!(mFragment instanceof AdvListFragment))
+                    addFragment(new AdvListFragment());
                 break;
             case R.id.notification_lay:
                 mDrawerLayout.closeDrawer(GravityCompat.START);
@@ -280,7 +293,7 @@ public class ProviderHome extends BaseActivity implements View.OnClickListener {
             case R.id.about_the_app_lay:
                 mDrawerLayout.closeDrawer(GravityCompat.START);
                 if (!(mFragment instanceof AboutFragment))
-                addFragment(new AboutFragment());
+                    addFragment(new AboutFragment());
                 break;
             case R.id.logout_lay:
                 mDrawerLayout.closeDrawer(GravityCompat.START);
@@ -407,9 +420,9 @@ public class ProviderHome extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onResume() {
         super.onResume();
-        if(AppConstants.IS_FROM_PUSH){
+        if (AppConstants.IS_FROM_PUSH) {
             cancelNotification();
-            AppConstants.IS_FROM_PUSH=false;
+            AppConstants.IS_FROM_PUSH = false;
         }
     }
 

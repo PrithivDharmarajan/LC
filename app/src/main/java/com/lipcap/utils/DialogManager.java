@@ -32,7 +32,7 @@ public class DialogManager {
     /*Init dialog instance*/
     private static final DialogManager sDialogInstance = new DialogManager();
     /*Init variable*/
-    private Dialog mProgressDialog, mNetworkErrorDialog, mAlertDialog, mOptionDialog, mIssueListDialog, mReasonForCancelDialog, mCommentsDialog, mSearchDialog, mNotificationDialog, mRequestDialog, mRequestCompletedDialog;
+    private Dialog mProgressDialog, mNetworkErrorDialog, mAlertDialog, mOptionDialog, mIssueListDialog, mReasonForCancelDialog, mCommentsDialog, mSearchDialog, mNotificationDialog, mRequestDialog, mRequestCompletedDialog,mPictureAlertDialog;
     private Toast mToast;
 
     public static DialogManager getInstance() {
@@ -588,6 +588,54 @@ public class DialogManager {
 
         return mNotificationDialog;
     }
+
+    public Dialog showPictureUploadPopup(Context context, final InterfaceTwoBtnCallback interfaceTwoBtnCallback) {
+
+        alertDismiss(mPictureAlertDialog);
+        mPictureAlertDialog = getDialog(context, R.layout.popup_photo_selection);
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        Window window = mPictureAlertDialog.getWindow();
+
+        if (window != null) {
+            lp.copyFrom(window.getAttributes());
+            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+            lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+            window.setAttributes(lp);
+            window.setGravity(Gravity.CENTER);
+        }
+        Button cameraBtn, galleryBtn, cancelBtn;
+
+        cameraBtn = mPictureAlertDialog.findViewById(R.id.camera_btn);
+        galleryBtn = mPictureAlertDialog.findViewById(R.id.gallery_btn);
+        cancelBtn = mPictureAlertDialog.findViewById(R.id.cancel_btn);
+
+
+        cameraBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPictureAlertDialog.dismiss();
+                interfaceTwoBtnCallback.onPositiveClick();
+            }
+        });
+        galleryBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPictureAlertDialog.dismiss();
+                interfaceTwoBtnCallback.onNegativeClick();
+            }
+        });
+
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPictureAlertDialog.dismiss();
+            }
+        });
+
+        alertShowing(mPictureAlertDialog);
+        return mPictureAlertDialog;
+    }
+
 
     public void showNetworkErrorPopup(Context context, String errorStr, final InterfaceBtnCallback dialogAlertInterface) {
 

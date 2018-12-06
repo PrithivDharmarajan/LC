@@ -30,6 +30,8 @@
     <!--Customer Home -->
     <string name="profile">Profile</string>
     <string name="issue_list">Issue List</string>
+    <string name="appointment_list">Appointment List</string>
+    <string name="advertisement_list">Advertisement List</string>
     <string name="notification">Notification</string>
     <string name="rate_app">Rate the App</string>
     <string name="contact">Contact</string>
@@ -88,6 +90,10 @@
     <string name="success_completed">Successfully completed!</string>
     <string name="enter_the_amt"> Enter the amount</string>
     <string name="rubee_sym">\u20B9</string>
+
+    <string name="choose_type">Choose Type</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
 
     <!--Dialog-->
     <string-array name="duration_arr_list">
