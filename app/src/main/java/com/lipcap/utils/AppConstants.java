@@ -11,7 +11,7 @@ public class AppConstants {
     public static final String CustomerHome = "CustomerHome";
 
     /*BASE URL*/
-    public static final String BASE_URL = "https://www.purposegateway.com/clri/api/";
+    public static final String BASE_URL = "http://clri.co.in/api/";
     static final String SHARE_PREFERENCE = "SHARE_PREFERENCE";
     public static final String ANDROID = "Android";
 

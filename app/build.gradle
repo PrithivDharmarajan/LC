@@ -23,8 +23,8 @@ android {
         applicationId "com.lipcap"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 1
-        versionName "Dev 29-11-18"
+        versionCode 2
+        versionName "1.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

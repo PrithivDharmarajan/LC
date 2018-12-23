@@ -32,31 +32,31 @@ import retrofit2.http.Part;
 public interface APICommonInterface {
 
     /*Login API*/
-    @POST("user/login")
+    @POST("user/login.php")
     Call<LoginResponse> loginAPI(@Body LoginInputEntity loginInputEntity);
 
     /*Registration API*/
-    @POST("user/register")
+    @POST("user/register.php")
     Call<LoginResponse> registrationAPI(@Body RegInputEntity regInputEntity);
 
     /*Select Issue Type API*/
-    @POST("user/issues")
+    @POST("user/issues.php")
     Call<SelectIssuesTypeResponse> selectIssueTypeAPI(@Body IssuesInputEntity IssuesInputEntity);
 
     /*Issue Type API*/
-    @POST("user/getbookings")
+    @POST("user/getbookings.php")
     Call<IssuesListResponse> issueListAPI(@Body IssuesInputEntity IssuesInputEntity);
 
     /*Lat and Long Update API*/
-    @POST("user/updatelocation")
+    @POST("user/updatelocation.php")
     Call<LocationUpdateInputEntity> latAndLongUpdateAPI(@Body LocationUpdateInputEntity locationUpdateInputEntity);
 
     /*Location API*/
-    @POST("user/getproviders")
+    @POST("user/getproviders.php")
     Call<ProviderDetailsResponse> getProviderLocAPI(@Body LocationUpdateInputEntity locationUpdateInputEntity);
 
     /*Location API*/
-    @POST("user/updateprofile")
+    @POST("user/updateprofile.php")
     Call<LoginResponse> updateProfileAPI(@Body IssuesInputEntity profileInputEntity);
 
     /*Lat and Long Update API*/
@@ -65,41 +65,41 @@ public interface APICommonInterface {
 
 
     /*Lat and Long Update API*/
-    @POST("user/provideraccept")
+    @POST("user/provideraccept.php")
     Call<AppointmentAcceptResponse> acceptAppointmentAPI(@Body AppointmentAcceptEntity appointmentAcceptEntity);
 
     /*Lat and Long Update API*/
-    @POST("user/providercomplete")
+    @POST("user/providercomplete.php")
     Call<AppointmentAcceptResponse> completeAppointmentAPI(@Body AppointmentAcceptEntity appointmentAcceptEntity);
 
 
     /*Lat and Long Update API*/
-    @POST("user/usercancel")
+    @POST("user/usercancel.php")
     Call<UserCancelResponse> userCancelAppointmentAPI(@Body UserCancelEntity userCancelEntity);
 
     /*Lat and Long Update API*/
-    @POST("user/providercancel")
+    @POST("user/providercancel.php")
     Call<UserCancelResponse> providerCancelAppointmentAPI(@Body UserCancelEntity userCancelEntity);
 
     /*Location API*/
-    @POST("user/background")
+    @POST("user/background.php")
     Call<PendingDetailsResponse> getUserPendingAppointmentAPI(@Body PendingAppointmentInputEntity pendingAppointmentInputEntity);
 
 
     /*Lat and Long Update API*/
-    @POST("user/rating")
+    @POST("user/rating.php")
     Call<CommonResponse> userRatingAppointmentAPI(@Body UserRatingInputEntity userCancelEntity);
 
     /*get Adv Details*/
-    @POST("user/adv")
+    @POST("user/adv.php")
     Call<AdvResponse> getUserAdvDetailsAPI(@Body AdvInputEntity advInputEntity);
 
     @Multipart
-    @POST("user/upload")
+    @POST("user/upload.php")
     Call<UploadedResponse> advImageUploadAPI(@Part MultipartBody.Part image);
 
     /*get Adv Details*/
-    @POST("user/addadv")
+    @POST("user/addadv.php")
     Call<CommonResponse> addAdvAPI(@Body AddAdvInputEntity addAdvInputEntity);
 
 

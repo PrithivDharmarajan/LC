@@ -545,7 +545,6 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
 
     private void cancelCheckPendingAppointmentAPICallTimer() {
 
-        sysOut("cancelCheckPendingAppointmentAPICallTimer");
         if (mCheckAppointmentTimer != null) {
             mCheckAppointmentTimer.cancel();
             mCheckAppointmentTimer.purge();

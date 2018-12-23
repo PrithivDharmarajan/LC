@@ -36,8 +36,7 @@ public class FireBasePushMessagingService extends FirebaseMessagingService {
 
         pushDataStr = (String) data.get("message");
 
-        if (!LipCapApplication.isActivityVisible() &&
-                PreferenceUtil.getBoolPreferenceValue(this, AppConstants.LOGIN_STATUS) &&
+        if ( PreferenceUtil.getBoolPreferenceValue(this, AppConstants.LOGIN_STATUS) &&
                 pushDataStr != null && !pushDataStr.isEmpty()) {
             try {
                 JSONObject json = new JSONObject(pushDataStr);

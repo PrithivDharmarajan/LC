@@ -163,6 +163,7 @@ public class ProviderHome extends BaseActivity implements View.OnClickListener {
         } else if (baseFragment instanceof AboutFragment) {
             headerStr = getString(R.string.about_the_app);
         }
+        setDrawerAction(baseFragment instanceof ProviderMapFragment);
         mHeaderTxt.setText(headerStr);
         setHeaderRightLay(baseFragment);
     }
@@ -221,7 +222,7 @@ public class ProviderHome extends BaseActivity implements View.OnClickListener {
             });
         } else {
             /*set header left back icon*/
-            mHeaderLeftFirstImg.setImageResource(R.drawable.back_black);
+            mHeaderLeftFirstImg.setImageResource(R.drawable.back_white);
             if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
                 mDrawerLayout.closeDrawer(GravityCompat.START);
             }

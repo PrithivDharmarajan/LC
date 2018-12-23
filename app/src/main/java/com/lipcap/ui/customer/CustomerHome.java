@@ -133,10 +133,9 @@ public class CustomerHome extends BaseActivity implements View.OnClickListener {
                 if (fmt != null) {
                     mFragment = fmt;
                     FragmentManager fragmentManager = getSupportFragmentManager();
-//                        if ((mFragment instanceof CustomerMapFragment && AppConstants.MAP_CURRENT_BACK_FRAGMENT instanceof CustomerMapFragment)
-//                               || (mFragment instanceof NotificationFragment && AppConstants.NOTIFICATION_CURRENT_BACK_FRAGMENT instanceof NotificationFragment)) {
-//                            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-//                        }
+                    if (mFragment instanceof CustomerMapFragment) {
+                        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    }
                     fragmentManager.beginTransaction()
                             .addToBackStack(fmt.getClass().getSimpleName())
                             .setCustomAnimations(R.anim.slide_in_right,
@@ -190,6 +189,7 @@ public class CustomerHome extends BaseActivity implements View.OnClickListener {
         } else if (baseFragment instanceof AboutFragment) {
             headerStr = getString(R.string.about_the_app);
         }
+        setDrawerAction(baseFragment instanceof CustomerMapFragment);
         mHeaderTxt.setText(headerStr);
     }
 
@@ -215,7 +215,7 @@ public class CustomerHome extends BaseActivity implements View.OnClickListener {
             });
         } else {
             /*set header left back icon*/
-            mHeaderLeftFirstImg.setImageResource(R.drawable.back_black);
+            mHeaderLeftFirstImg.setImageResource(R.drawable.back_white);
             if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
                 mDrawerLayout.closeDrawer(GravityCompat.START);
             }
@@ -410,9 +410,9 @@ public class CustomerHome extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onResume() {
         super.onResume();
-        if(AppConstants.IS_FROM_PUSH){
+        if (AppConstants.IS_FROM_PUSH) {
             cancelNotification();
-            AppConstants.IS_FROM_PUSH=false;
+            AppConstants.IS_FROM_PUSH = false;
         }
     }
 
