@@ -8,10 +8,12 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -45,6 +47,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.lipcap.R;
 import com.lipcap.main.BaseFragment;
@@ -68,15 +71,25 @@ import com.lipcap.utils.AddressUtil;
 import com.lipcap.utils.AppConstants;
 import com.lipcap.utils.DateUtil;
 import com.lipcap.utils.DialogManager;
+import com.lipcap.utils.DirectionsJSONParser;
 import com.lipcap.utils.InterfaceBtnCallback;
 import com.lipcap.utils.InterfaceEdtBtnCallback;
 import com.lipcap.utils.InterfaceTwoBtnCallback;
 import com.lipcap.utils.NetworkUtil;
 import com.lipcap.utils.PreferenceUtil;
 
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -100,7 +113,7 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
     private GoogleMap mGoogleMap;
     private GoogleApiClient mGoogleApiClient;
     private boolean isDialogShowing = false, mIsFirstAPIBool = true, mIsProviderSearchingBool = false, mIsPendingAppointmentBool = false;
-    private Timer mAPICallTimer, mProviderAPITimer, mCheckAppointmentTimer;
+    private Timer mProviderListAPICallTimer, mBookAppointmentAPITimer, mCheckPendingAppointmentTimer;
     private Location mCurrentLocation;
     private ArrayList<UserDetailsEntity> mProviderArrList = new ArrayList<>();
     private int mProviderListInt = -1, mOldPEndingStatusInt = -1;
@@ -108,8 +121,11 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
     private String mIssueIdStr = "0";
     private UserDetailsEntity mUserDetailsRes = new UserDetailsEntity();
     private String mUserPhoneNumStr = "";
+    private double mProviderLastLat, mProviderLastLng, mCurrentUserLastLat, mCurrentUserLastLng;
 
     private AppointmentDetailsEntity mAppointmentDetails = new AppointmentDetailsEntity();
+
+    private Bitmap mCurrentLocMarkerBitmap, mVanMarkerBitmap;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -150,11 +166,11 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
     public void onResume() {
         super.onResume();
         if (getActivity() != null && !mIsFirstAPIBool) {
-            getCheckPendingAppointmentAPICall();
+            checkPendingAppointmentAPICall();
             if (!mIsPendingAppointmentBool) {
                 if (mIsProviderSearchingBool) {
                     mProviderSearchDialog = DialogManager.getInstance().showSearchPopup(getActivity());
-                    searchProviderAPICall();
+                    bookAppointmentAPICall();
                 } else {
                     getProviderListAPICall();
                 }
@@ -172,6 +188,25 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
         mOldPEndingStatusInt = -1;
         mIsPendingAppointmentBool = false;
         mUserDetailsRes = PreferenceUtil.getUserDetailsRes(getActivity());
+
+
+        /*Current loc Marker Init*/
+        BitmapDrawable currentLocBitmapDrawable = (BitmapDrawable) getResources().getDrawable(R.drawable.current_loc);
+        Bitmap currentLocBitmap = currentLocBitmapDrawable.getBitmap();
+
+        int heightSizeInt = getResources().getDimensionPixelSize(R.dimen.size30);
+        int widthSizeInt = getResources().getDimensionPixelSize(R.dimen.size15);
+        mCurrentLocMarkerBitmap = Bitmap.createScaledBitmap(currentLocBitmap, widthSizeInt, heightSizeInt, false);
+
+
+        /*Van Marker Init*/
+        BitmapDrawable vanBitmapDrawable = (BitmapDrawable) getResources().getDrawable(R.drawable.van);
+        Bitmap vanBitmap = vanBitmapDrawable.getBitmap();
+
+        int sizeInt = getResources().getDimensionPixelSize(R.dimen.size30);
+        mVanMarkerBitmap = Bitmap.createScaledBitmap(vanBitmap, sizeInt, sizeInt, false);
+
+
         if (permissionsAccessLocation(true)) {
             initGoogleAPIClient();
             SupportMapFragment fragment = (SupportMapFragment) this.getChildFragmentManager()
@@ -205,6 +240,30 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
                 permissionsAccessLocation(false);
             }
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, AddressUtil.createLocationRequest(), CustomerMapFragment.this);
+        }
+    }
+
+    /* to stop the customer_location updates */
+    private void stopLocationUpdates() {
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(
+                    mGoogleApiClient, CustomerMapFragment.this);
+        }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        if (location != null) {
+            mCurrentLocation = location;
+            if (mGoogleMap != null && !mIsPendingAppointmentBool) {
+                mGoogleMap.clear();
+                setCurrentLocMarker();
+            }
+            LocationUpdateInputEntity locationUpdateInputEntity = new LocationUpdateInputEntity();
+            locationUpdateInputEntity.setUserId(mUserDetailsRes.getUserId());
+            locationUpdateInputEntity.setLatitude(String.valueOf(location.getLatitude()));
+            locationUpdateInputEntity.setLongitude(String.valueOf(location.getLongitude()));
+            APIRequestHandler.getInstance().latAndLongUpdateAPICall(locationUpdateInputEntity, this);
         }
     }
 
@@ -340,12 +399,14 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
                         @Override
                         public void onSuccess(Location location) {
                             if (location != null) {
+                                mCurrentUserLastLat = location.getLatitude();
+                                mCurrentUserLastLng = location.getLongitude();
                                 mCurrentLocation = location;
                                 if (mIsFirstAPIBool) {
                                     mIsFirstAPIBool = false;
                                     setCurrentLocMarker();
                                     getProviderListAPICall();
-                                    getCheckPendingAppointmentAPICall();
+                                    checkPendingAppointmentAPICall();
                                     startLocationUpdate();
                                 }
                                 if (ActivityCompat.checkSelfPermission(getActivity(),
@@ -379,14 +440,14 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
 
     /*Set current loc custom marker*/
     private void setCurrentLocMarker() {
-        if (mGoogleMap != null && mCurrentLocation != null) {
-            BitmapDrawable bitmapDrawable = (BitmapDrawable) getResources().getDrawable(R.drawable.curren_loc);
-            Bitmap bitmap = bitmapDrawable.getBitmap();
-            int heightSizeInt = getResources().getDimensionPixelSize(R.dimen.size30);
-            int widthSizeInt = getResources().getDimensionPixelSize(R.dimen.size15);
-            Bitmap smallMarker = Bitmap.createScaledBitmap(bitmap, widthSizeInt, heightSizeInt, false);
-            MarkerOptions marker = new MarkerOptions().position(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude())).icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
-            mGoogleMap.addMarker(marker);
+        if (getActivity() != null && mGoogleMap != null && mCurrentLocation != null && getActivity() != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    MarkerOptions marker = new MarkerOptions().position(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude())).icon(BitmapDescriptorFactory.fromBitmap(mCurrentLocMarkerBitmap));
+                    mGoogleMap.addMarker(marker);
+                }
+            });
 
         }
     }
@@ -428,18 +489,18 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
         }
     }
 
-    private void searchProviderAPICall() {
+    private void bookAppointmentAPICall() {
         /*Check for internet connection*/
         if (getActivity() != null) {
             if (NetworkUtil.isNetworkAvailable(getActivity())) {
-                cancelProviderAPICallTimer();
-                mProviderAPITimer = new Timer();
-                mProviderAPITimer.scheduleAtFixedRate(new TimerTask() {
+                cancelBookAppointmentAPICallTimer();
+                mBookAppointmentAPITimer = new Timer();
+                mBookAppointmentAPITimer.scheduleAtFixedRate(new TimerTask() {
                     @Override
                     public void run() {
                         if (mIsPendingAppointmentBool) {
                             alertDismiss(mProviderSearchDialog);
-                            cancelProviderAPICallTimer();
+                            cancelBookAppointmentAPICallTimer();
                         } else {
                             mProviderListInt += 1;
                             if (mProviderArrList.size() > mProviderListInt && mProviderListInt < 10) {
@@ -453,71 +514,35 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
                                 getActivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-
                                         DialogManager.getInstance().showToast(getActivity(), getString(R.string.provider_not_found));
                                         cancelProviderSearch();
                                     }
                                 });
-
                             }
                         }
-
-
                     }
                 }, 0, 10000);
-
 
             } else {
                 DialogManager.getInstance().showNetworkErrorPopup(getActivity(), getString(R.string.no_internet), new InterfaceBtnCallback() {
                     @Override
                     public void onPositiveClick() {
-
-                        cancelProviderAPICallTimer();
+                        cancelBookAppointmentAPICallTimer();
                     }
                 });
             }
         }
     }
 
-    /* to stop the customer_location updates */
-    private void stopLocationUpdates() {
-        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(
-                    mGoogleApiClient, CustomerMapFragment.this);
-        }
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        if (location != null) {
-            mCurrentLocation = location;
-            if (mGoogleMap != null && !mIsPendingAppointmentBool) {
-                mGoogleMap.clear();
-                setCurrentLocMarker();
-            }
-            LocationUpdateInputEntity locationUpdateInputEntity = new LocationUpdateInputEntity();
-            locationUpdateInputEntity.setUserId(mUserDetailsRes.getUserId());
-            locationUpdateInputEntity.setLatitude(String.valueOf(location.getLatitude()));
-            locationUpdateInputEntity.setLongitude(String.valueOf(location.getLongitude()));
-            APIRequestHandler.getInstance().latAndLongUpdateAPICall(locationUpdateInputEntity, this);
-        }
-    }
-
-    private void cancelProviderSearch() {
-        mProviderListInt = -1;
-        mIsProviderSearchingBool = false;
-        alertDismiss(mProviderSearchDialog);
-        cancelProviderAPICallTimer();
-    }
 
     private void getProviderListAPICall() {
-        cancelAPICallTimer();
-        mAPICallTimer = new Timer();
-        mAPICallTimer.scheduleAtFixedRate(new TimerTask() {
+        cancelProviderListAPICallTimer();
+        mProviderListAPICallTimer = new Timer();
+        mProviderListAPICallTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 if (mIsProviderSearchingBool || mIsPendingAppointmentBool) {
-                    cancelAPICallTimer();
+                    cancelProviderListAPICallTimer();
                 } else {
                     LocationUpdateInputEntity locationUpdateInputEntity = new LocationUpdateInputEntity();
                     locationUpdateInputEntity.setLongitude(String.valueOf(mCurrentLocation.getLongitude()));
@@ -526,16 +551,16 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
                     APIRequestHandler.getInstance().getProviderLocAPICall(locationUpdateInputEntity, CustomerMapFragment.this);
                 }
             }
-        }, 0, 50000);
+        }, 0, 80000);
     }
 
-    private void getCheckPendingAppointmentAPICall() {
+    private void checkPendingAppointmentAPICall() {
         cancelCheckPendingAppointmentAPICallTimer();
-        mCheckAppointmentTimer = new Timer();
+        mCheckPendingAppointmentTimer = new Timer();
         final PendingAppointmentInputEntity pendingAppointmentInputEntity = new PendingAppointmentInputEntity();
         pendingAppointmentInputEntity.setUserId(PreferenceUtil.getUserId(getActivity()));
         pendingAppointmentInputEntity.setDateTime(DateUtil.getCurrentDate());
-        mCheckAppointmentTimer.scheduleAtFixedRate(new TimerTask() {
+        mCheckPendingAppointmentTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 APIRequestHandler.getInstance().getUserPendingAppointmentAPICall(pendingAppointmentInputEntity, CustomerMapFragment.this);
@@ -543,27 +568,35 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
         }, 0, 5000);
     }
 
+
+    private void cancelBookAppointmentAPICallTimer() {
+        if (mBookAppointmentAPITimer != null) {
+            mBookAppointmentAPITimer.cancel();
+            mBookAppointmentAPITimer.purge();
+        }
+    }
+
+    private void cancelProviderSearch() {
+        mProviderListInt = -1;
+        mIsProviderSearchingBool = false;
+        alertDismiss(mProviderSearchDialog);
+        cancelBookAppointmentAPICallTimer();
+    }
+
     private void cancelCheckPendingAppointmentAPICallTimer() {
-
-        if (mCheckAppointmentTimer != null) {
-            mCheckAppointmentTimer.cancel();
-            mCheckAppointmentTimer.purge();
+        if (mCheckPendingAppointmentTimer != null) {
+            mCheckPendingAppointmentTimer.cancel();
+            mCheckPendingAppointmentTimer.purge();
         }
     }
 
-    private void cancelAPICallTimer() {
-        if (mAPICallTimer != null) {
-            mAPICallTimer.cancel();
-            mAPICallTimer.purge();
+    private void cancelProviderListAPICallTimer() {
+        if (mProviderListAPICallTimer != null) {
+            mProviderListAPICallTimer.cancel();
+            mProviderListAPICallTimer.purge();
         }
     }
 
-    private void cancelProviderAPICallTimer() {
-        if (mProviderAPITimer != null) {
-            mProviderAPITimer.cancel();
-            mProviderAPITimer.purge();
-        }
-    }
 
     private void makePhoneCall() {
         if (getActivity() != null && !mUserPhoneNumStr.isEmpty()) {
@@ -571,14 +604,8 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
 
             intent.setData(Uri.parse("tel:" + mUserPhoneNumStr));
             if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                return;
+                if (!askPermissionsPhone())
+                    return;
             }
             startActivity(intent);
         }
@@ -662,6 +689,12 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
     @Override
     public void onRequestSuccess(Object resObj) {
         super.onRequestSuccess(resObj);
+        if (resObj instanceof ProviderDetailsResponse) {
+            ProviderDetailsResponse providerResponse = (ProviderDetailsResponse) resObj;
+            if (providerResponse.getResult().size() > 0) {
+                providerMarkerDetails(providerResponse.getResult());
+            }
+        }
         if (resObj instanceof SelectIssuesTypeResponse) {
             SelectIssuesTypeResponse issuesListResponse = (SelectIssuesTypeResponse) resObj;
             if (issuesListResponse.getStatusCode().equals(AppConstants.SUCCESS_CODE)) {
@@ -670,7 +703,6 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
                     DialogManager.getInstance().showIssuesListPopup(getActivity(), issuesListResponse.getResult(), new InterfaceEdtBtnCallback() {
                         @Override
                         public void onPositiveClick(String issueIdStr) {
-//                            mAppointmentCardView.setVisibility(View.VISIBLE);
                             mBookAppointmentBtn.setVisibility(View.GONE);
                             if (mGoogleMap != null) {
                                 mGoogleMap.clear();
@@ -678,7 +710,7 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
                             }
                             mProviderSearchDialog = DialogManager.getInstance().showSearchPopup(getActivity());
                             mIssueIdStr = issueIdStr;
-                            searchProviderAPICall();
+                            bookAppointmentAPICall();
                             mIsProviderSearchingBool = true;
                         }
 
@@ -697,19 +729,23 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
             PendingDetailsResponse pendingDetailsRes = (PendingDetailsResponse) resObj;
             if (getActivity() != null) {
 
-                sysOut("PendingDetailsResponse");
+                sysOut("pendingDetailsRes---");
                 if (pendingDetailsRes.getResult().getAnotheruser().size() > 0 && pendingDetailsRes.getResult().getAppointments().size() > 0 && !pendingDetailsRes.getResult().getAppointments().get(0).getStatus().equalsIgnoreCase("1")) {
+
+                    sysOut("User---" + mAppointmentDetails.getStatus());
+
                     mIsPendingAppointmentBool = true;
-                    cancelAPICallTimer();
-                    cancelProviderAPICallTimer();
+                    cancelProviderListAPICallTimer();
+                    cancelBookAppointmentAPICallTimer();
                     alertDismiss(mProviderSearchDialog);
                     final UserDetailsEntity userDetails = pendingDetailsRes.getResult().getAnotheruser().get(0);
                     final AppointmentDetailsEntity appointmentDetails = pendingDetailsRes.getResult().getAppointments().get(0);
                     mAppointmentDetails = appointmentDetails;
-                    sysOut("User---" + mAppointmentDetails.getStatus());
 
                     mUserPhoneNumStr = userDetails.getPhoneNumber();
                     if (mAppointmentDetails.getStatus().equalsIgnoreCase("2")) {
+
+                        sysOut("if---2");
                         mOldPEndingStatusInt = 2;
 
                         if (mBookAppointmentBtn.getVisibility() == View.VISIBLE) {
@@ -732,6 +768,8 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
                             });
 
                     } else if (mOldPEndingStatusInt != 3 && (mAppointmentDetails.getStatus().equalsIgnoreCase("3"))) {
+
+                        sysOut("if---3");
                         mOldPEndingStatusInt = 3;
                         mIsPendingAppointmentBool = true;
 
@@ -770,6 +808,8 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+
+                                sysOut("if---4");
                                 mAppointmentCardView.setVisibility(View.GONE);
                                 mBookAppointmentBtn.setVisibility(View.VISIBLE);
                                 alertDismiss(mCommentsDialog);
@@ -780,11 +820,17 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
                         });
 
                     }
-                } else if (pendingDetailsRes.getResult().getAnotheruser().size() == 0 && mBookAppointmentBtn.getVisibility() == View.GONE) {
+                } else if (pendingDetailsRes.getResult().getAnotheruser().size() == 0 && (
+                        mIsPendingAppointmentBool || mAppointmentCardView.getVisibility() == View.VISIBLE ||
+                                mBookAppointmentBtn.getVisibility() == View.GONE)) {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
 
+                            sysOut("if---5");
+                            sysOut("mIsPendingAppointmentBool---"+ mIsPendingAppointmentBool);
+                            sysOut("mAppointmentCardView---"+ (mAppointmentCardView.getVisibility() == View.VISIBLE));
+                            sysOut("mBookAppointmentBtn---"+ (mBookAppointmentBtn.getVisibility() == View.GONE));
                             mIsPendingAppointmentBool = false;
                             mAppointmentCardView.setVisibility(View.GONE);
                             mBookAppointmentBtn.setVisibility(View.VISIBLE);
@@ -796,44 +842,122 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
             }
         }
 
-        if (resObj instanceof ProviderDetailsResponse) {
-            ProviderDetailsResponse providerResponse = (ProviderDetailsResponse) resObj;
-            if (providerResponse.getResult().size() > 0) {
-                providerMarkerDetails(providerResponse.getResult());
-            }
+
+        if (mIsPendingAppointmentBool && (resObj instanceof UserCancelResponse || resObj instanceof AppointmentAcceptResponse)) {
+            mAppointmentCardView.setVisibility(View.GONE);
+            mBookAppointmentBtn.setVisibility(View.VISIBLE);
+            mIsFirstAPIBool = true;
+            alertDismiss(mCommentsDialog);
+            screenAPICall();
+
+            sysOut("if---UserCancelResponse");
+            mIsPendingAppointmentBool = false;
         }
-        if (resObj instanceof UserCancelResponse || resObj instanceof AppointmentAcceptResponse) {
-            if (mIsPendingAppointmentBool) {
-                mAppointmentCardView.setVisibility(View.GONE);
-                mBookAppointmentBtn.setVisibility(View.VISIBLE);
-                mIsFirstAPIBool = true;
-                alertDismiss(mCommentsDialog);
-                screenAPICall();
-                mIsPendingAppointmentBool = false;
-            }
-        }
+
         if (resObj instanceof CommonResponse) {
-            if (((CustomerHome) getActivity()) != null) {
+            sysOut("if---CommonResponse");
+            if (getActivity() != null) {
                 ((CustomerHome) getActivity()).addFragment(new UserAdvListFragment());
             }
         }
-
-
     }
 
 
-    private void mapDirection(double userLat, double userLong) {
-        if (mGoogleMap != null) {
-            BitmapDrawable bitmapDrawable = (BitmapDrawable) getResources().getDrawable(R.drawable.van);
-            Bitmap bitmap = bitmapDrawable.getBitmap();
-            int heightSizeInt = getResources().getDimensionPixelSize(R.dimen.size30);
-            int widthSizeInt = getResources().getDimensionPixelSize(R.dimen.size30);
-            Bitmap smallMarker = Bitmap.createScaledBitmap(bitmap, widthSizeInt, heightSizeInt, false);
-            MarkerOptions marker = new MarkerOptions().position(new LatLng(userLat, userLong)).icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
-            mGoogleMap.addMarker(marker);
-            setCurrentLocMarker();
-        }
+    private void mapDirection(final double userLat, final double userLng) {
+        if (getActivity() != null && mGoogleMap != null && (mProviderLastLat != userLat || mProviderLastLng != userLng)) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mGoogleMap.clear();
+                    mProviderLastLat = userLat;
+                    mProviderLastLng = userLng;
+                    MarkerOptions marker = new MarkerOptions().position(new LatLng(userLat, userLng)).icon(BitmapDescriptorFactory.fromBitmap(mVanMarkerBitmap));
+                    mGoogleMap.addMarker(marker);
+                    setCurrentLocMarker();
 
+
+                }
+            });
+        }
+    }
+
+
+    private void directionPoint() {
+        LatLng origin = new LatLng(mProviderLastLat, mProviderLastLng);
+        LatLng dest = new LatLng(mCurrentUserLastLat, mCurrentUserLastLng);
+        // Getting URL to the Google Directions API
+        String url = getDirectionsUrl(origin, dest);
+
+        DownloadTask downloadTask = new DownloadTask();
+
+        // Start downloading json data from Google Directions API
+        downloadTask.execute(url);
+    }
+
+    private String getDirectionsUrl(LatLng origin, LatLng dest) {
+
+        // Origin of route
+        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
+
+        // Destination of route
+        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
+
+        // Sensor enabled
+        String sensor = "sensor=false";
+
+        // Building the parameters to the web service
+        String parameters = str_origin + "&" + str_dest + "&" + sensor;
+
+        // Output format
+        String output = "json";
+
+        // Building the url to the web service
+        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
+
+        return url;
+    }
+
+    /**
+     * A method to download json data from url
+     */
+    private String downloadUrl(String strUrl) throws IOException {
+        String data = "";
+        InputStream iStream = null;
+        HttpURLConnection urlConnection = null;
+        try {
+            URL url = new URL(strUrl);
+
+            // Creating an http connection to communicate with url
+            urlConnection = (HttpURLConnection) url.openConnection();
+
+            // Connecting to url
+            urlConnection.connect();
+
+            // Reading data from url
+            iStream = urlConnection.getInputStream();
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
+
+            StringBuilder sb = new StringBuilder();
+
+            String line = "";
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+
+            data = sb.toString();
+
+            br.close();
+
+        } catch (Exception e) {
+            Log.d(AppConstants.TAG, e.toString());
+        } finally {
+            if (iStream != null)
+                iStream.close();
+            if (urlConnection != null)
+                urlConnection.disconnect();
+        }
+        return data;
     }
 
     @Override
@@ -862,32 +986,33 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
         }
     }
 
-    private void providerMarkerDetails(ArrayList<UserDetailsEntity> providerDetails) {
+    private void providerMarkerDetails(final ArrayList<UserDetailsEntity> providerDetails) {
 
         if (providerDetails.size() > 0) {
             mProviderArrList = new ArrayList<>();
             mProviderArrList = providerDetails;
             mGoogleMap.clear();
             setCurrentLocMarker();
-            for (int i = 0; i < providerDetails.size(); i++) {
+            for (int detailsPosInt = 0; detailsPosInt < providerDetails.size(); detailsPosInt++) {
                 if (mGoogleMap != null) {
                     if (mIsProviderSearchingBool) {
                         mOldPEndingStatusInt = -1;
                         break;
-                    } else {
-                        BitmapDrawable bitmapDrawable = (BitmapDrawable) getResources().getDrawable(R.drawable.van);
-                        Bitmap bitmap = bitmapDrawable.getBitmap();
+                    } else if (getActivity() != null) {
+                        final int posInt = detailsPosInt;
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                MarkerOptions marker = new MarkerOptions().position(new LatLng(Double.valueOf(providerDetails.get(posInt).getLatitude()), Double.valueOf(providerDetails.get(posInt).getLongitude()))).icon(BitmapDescriptorFactory.fromBitmap(mVanMarkerBitmap));
+                                mGoogleMap.addMarker(marker);
+                            }
+                        });
 
-                        int sizeInt = getResources().getDimensionPixelSize(R.dimen.size30);
-                        Bitmap smallMarker = Bitmap.createScaledBitmap(bitmap, sizeInt, sizeInt, false);
-                        MarkerOptions marker = new MarkerOptions().position(new LatLng(Double.valueOf(providerDetails.get(i).getLatitude()), Double.valueOf(providerDetails.get(i).getLongitude()))).icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
-                        mGoogleMap.addMarker(marker);
                     }
                 }
             }
         }
     }
-
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
@@ -913,8 +1038,8 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
 
     @Override
     public void onPause() {
-        cancelAPICallTimer();
-        cancelProviderAPICallTimer();
+        cancelProviderListAPICallTimer();
+        cancelBookAppointmentAPICallTimer();
         cancelCheckPendingAppointmentAPICallTimer();
         super.onPause();
     }
@@ -922,10 +1047,123 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
     @Override
     public void onDestroy() {
         stopLocationUpdates();
-        cancelAPICallTimer();
-        cancelProviderAPICallTimer();
+        cancelProviderListAPICallTimer();
+        cancelBookAppointmentAPICallTimer();
         super.onDestroy();
     }
+
+    // Fetches data from url passed
+    private class DownloadTask extends AsyncTask<String, Void, String> {
+
+        // Downloading data in non-ui thread
+        @Override
+        protected String doInBackground(String... url) {
+
+            // For storing data from web service
+            String data = "";
+
+            try {
+                // Fetching the data from web service
+                data = downloadUrl(url[0]);
+            } catch (Exception e) {
+                Log.d("Background Task", e.toString());
+            }
+            return data;
+        }
+
+        // Executes in UI thread, after the execution of
+        // doInBackground()
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            ParserTask parserTask = new ParserTask();
+
+            // Invokes the thread for parsing the JSON data
+            parserTask.execute(result);
+        }
+    }
+
+    /**
+     * A class to parse the Google Places in JSON format
+     */
+    private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
+
+        // Parsing the data in non-ui thread
+        @Override
+        protected List<List<HashMap<String, String>>> doInBackground(String... jsonData) {
+
+            JSONObject jObject;
+            List<List<HashMap<String, String>>> routes = null;
+
+            try {
+                jObject = new JSONObject(jsonData[0]);
+                DirectionsJSONParser parser = new DirectionsJSONParser();
+
+                // Starts parsing data
+                routes = parser.parse(jObject);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return routes;
+        }
+
+        // Executes in UI thread, after the parsing process
+        @Override
+        protected void onPostExecute(List<List<HashMap<String, String>>> result) {
+            ArrayList<LatLng> points = null;
+            PolylineOptions lineOptions = null;
+            MarkerOptions markerOptions = new MarkerOptions();
+            String distance = "";
+            String duration = "";
+
+            if (result.size() < 1) {
+                return;
+            }
+
+            // Traversing through all the routes
+            for (int i = 0; i < result.size(); i++) {
+                points = new ArrayList<LatLng>();
+                lineOptions = new PolylineOptions();
+
+                // Fetching i-th route
+                List<HashMap<String, String>> path = result.get(i);
+
+                // Fetching all the points in i-th route
+                for (int j = 0; j < path.size(); j++) {
+                    HashMap<String, String> point = path.get(j);
+
+                    if (j == 0) {    // Get distance from the list
+                        distance = (String) point.get("distance");
+                        continue;
+                    } else if (j == 1) { // Get duration from the list
+                        duration = (String) point.get("duration");
+                        continue;
+                    }
+
+                    double lat = Double.parseDouble(Objects.requireNonNull(point.get("lat")));
+                    double lng = Double.parseDouble(Objects.requireNonNull(point.get("lng")));
+                    LatLng position = new LatLng(lat, lng);
+
+                    points.add(position);
+                }
+
+                // Adding all the points in the route to LineOptions
+                lineOptions.addAll(points);
+                lineOptions.width(5);
+                lineOptions.color(Color.BLUE);
+            }
+
+//            tvDistanceDuration.setText("Distance:"+distance + ", Duration:"+duration);
+
+            // Drawing polyline in the Google Map for the i-th route
+            if (mGoogleMap != null)
+                mGoogleMap.addPolyline(lineOptions);
+        }
+    }
+
+
+
 
 }
 

@@ -13,6 +13,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -97,6 +98,7 @@ public class ProviderMapFragment extends BaseFragment implements GoogleApiClient
     private Dialog mNotificationDialog;
     private UserDetailsEntity mPendingUserDetails = new UserDetailsEntity();
     private AppointmentDetailsEntity mAppointmentDetails = new AppointmentDetailsEntity();
+    private Bitmap mCurrentLocMarkerBitmap, mVanMarkerBitmap;
 
 
     @Override
@@ -140,6 +142,24 @@ public class ProviderMapFragment extends BaseFragment implements GoogleApiClient
         AppConstants.TAG = this.getClass().getSimpleName();
         mIsFirstAPIBool = true;
         mUserIdStr = PreferenceUtil.getUserId(getActivity());
+
+        /*Current loc Marker Init*/
+        BitmapDrawable currentLocBitmapDrawable = (BitmapDrawable) getResources().getDrawable(R.drawable.current_loc);
+        Bitmap currentLocBitmap = currentLocBitmapDrawable.getBitmap();
+
+        int heightSizeInt = getResources().getDimensionPixelSize(R.dimen.size30);
+        int widthSizeInt = getResources().getDimensionPixelSize(R.dimen.size15);
+        mCurrentLocMarkerBitmap = Bitmap.createScaledBitmap(currentLocBitmap, widthSizeInt, heightSizeInt, false);
+
+
+        /*Van Marker Init*/
+        BitmapDrawable vanBitmapDrawable = (BitmapDrawable) getResources().getDrawable(R.drawable.van);
+        Bitmap vanBitmap = vanBitmapDrawable.getBitmap();
+
+        int sizeInt = getResources().getDimensionPixelSize(R.dimen.size30);
+        mVanMarkerBitmap = Bitmap.createScaledBitmap(vanBitmap, sizeInt, sizeInt, false);
+
+
         if (permissionsAccessLocation(true)) {
             initGoogleAPIClient();
             SupportMapFragment fragment = (SupportMapFragment) this.getChildFragmentManager()
@@ -259,7 +279,15 @@ public class ProviderMapFragment extends BaseFragment implements GoogleApiClient
                                 if (mIsFirstAPIBool) {
                                     mIsFirstAPIBool = false;
                                     setCurrentLocMarker();
-                                    startLocationUpdate();
+                                    final Handler handler=new Handler();
+                                    Runnable runnable = new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            handler.removeCallbacks(this);
+                                            startLocationUpdate();
+                                        }
+                                    };
+                                    handler.postDelayed(runnable, 10000);
                                     getCheckPendingAppointmentAPICall();
                                 }
                                 if (ActivityCompat.checkSelfPermission(getActivity(),
@@ -294,16 +322,10 @@ public class ProviderMapFragment extends BaseFragment implements GoogleApiClient
     /*Set current loc custom marker*/
     private void setCurrentLocMarker() {
         if (getActivity() != null && mGoogleMap != null && mCurrentLocation != null) {
-
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    BitmapDrawable bitmapDrawable = (BitmapDrawable) getResources().getDrawable(R.drawable.van);
-                    Bitmap bitmap = bitmapDrawable.getBitmap();
-                    int heightSizeInt = getResources().getDimensionPixelSize(R.dimen.size30);
-                    int widthSizeInt = getResources().getDimensionPixelSize(R.dimen.size30);
-                    Bitmap smallMarker = Bitmap.createScaledBitmap(bitmap, widthSizeInt, heightSizeInt, false);
-                    MarkerOptions marker = new MarkerOptions().position(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude())).icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
+                       MarkerOptions marker = new MarkerOptions().position(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude())).icon(BitmapDescriptorFactory.fromBitmap(mVanMarkerBitmap));
                     mGoogleMap.addMarker(marker);
                 }
             });
@@ -575,7 +597,7 @@ public class ProviderMapFragment extends BaseFragment implements GoogleApiClient
 
             if (getActivity() != null) {
                 if (pendingDetailsRes.getResult().getAnotheruser().size() > 0 && pendingDetailsRes.getResult().getAppointments().size() > 0) {
-                    sysOut("Provider---" +mAppointmentDetails.getStatus());
+                    sysOut("Provider---" + mAppointmentDetails.getStatus());
 
                     final UserDetailsEntity userDetails = pendingDetailsRes.getResult().getAnotheruser().get(0);
                     final AppointmentDetailsEntity appointmentDetails = pendingDetailsRes.getResult().getAppointments().get(0);
@@ -641,7 +663,8 @@ public class ProviderMapFragment extends BaseFragment implements GoogleApiClient
                             });
 
                     }
-                } else {
+                } else  if (pendingDetailsRes.getResult().getAnotheruser().size() == 0 && (
+                        mIsPendingAppointmentBool || mAppointmentCardView.getVisibility() == View.VISIBLE)) {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

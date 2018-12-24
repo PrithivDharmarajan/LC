@@ -130,10 +130,9 @@ public class ProviderHome extends BaseActivity implements View.OnClickListener {
                 if (fmt != null) {
                     mFragment = fmt;
                     FragmentManager fragmentManager = getSupportFragmentManager();
-//                        if ((mFragment instanceof CustomerMapFragment && AppConstants.MAP_CURRENT_BACK_FRAGMENT instanceof CustomerMapFragment)
-//                               || (mFragment instanceof NotificationFragment && AppConstants.NOTIFICATION_CURRENT_BACK_FRAGMENT instanceof NotificationFragment)) {
-//                            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-//                        }
+                    if (mFragment instanceof ProviderMapFragment) {
+                        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    }
                     fragmentManager.beginTransaction()
                             .addToBackStack(fmt.getClass().getSimpleName())
                             .setCustomAnimations(R.anim.slide_in_right,
