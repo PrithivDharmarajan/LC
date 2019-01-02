@@ -503,9 +503,11 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
                             cancelBookAppointmentAPICallTimer();
                         } else {
                             mProviderListInt += 1;
-                            if (mProviderArrList.size() > mProviderListInt && mProviderListInt < 10) {
+//                            if (mProviderArrList.size() > mProviderListInt && mProviderListInt < 1) {
+                                if (mProviderArrList.size() > mProviderListInt && mProviderListInt < 15) {
                                 BookAppointmentInputEntity bookAppointmentInputEntity = new BookAppointmentInputEntity();
                                 bookAppointmentInputEntity.setIssueId(mIssueIdStr);
+//                                bookAppointmentInputEntity.setProviderId("6");
                                 bookAppointmentInputEntity.setProviderId(mProviderArrList.get(mProviderListInt).getUserId());
                                 bookAppointmentInputEntity.setUserId(PreferenceUtil.getUserId(getActivity()));
                                 bookAppointmentInputEntity.setDateTime(DateUtil.getCurrentDate());
@@ -703,15 +705,14 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
                     DialogManager.getInstance().showIssuesListPopup(getActivity(), issuesListResponse.getResult(), new InterfaceEdtBtnCallback() {
                         @Override
                         public void onPositiveClick(String issueIdStr) {
-                            mBookAppointmentBtn.setVisibility(View.GONE);
                             if (mGoogleMap != null) {
                                 mGoogleMap.clear();
                                 setCurrentLocation();
                             }
                             mProviderSearchDialog = DialogManager.getInstance().showSearchPopup(getActivity());
                             mIssueIdStr = issueIdStr;
-                            bookAppointmentAPICall();
                             mIsProviderSearchingBool = true;
+                            bookAppointmentAPICall();
                         }
 
                         @Override
@@ -874,8 +875,6 @@ public class CustomerMapFragment extends BaseFragment implements OnMapReadyCallb
                     MarkerOptions marker = new MarkerOptions().position(new LatLng(userLat, userLng)).icon(BitmapDescriptorFactory.fromBitmap(mVanMarkerBitmap));
                     mGoogleMap.addMarker(marker);
                     setCurrentLocMarker();
-
-
                 }
             });
         }

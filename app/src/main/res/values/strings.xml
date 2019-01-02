@@ -126,6 +126,9 @@
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
     <string name="profile_updated">Profile Updated Successfully</string>
 
+    <string name="about_us">It is proposed to establish a mobile laundering system in the state for laundering and repairing and sale of leather products and footwear.
+
+The Mobile App user shall be able to identify the nearest ‘service provider’ (laundering van) from the map and book for service. The service provider shall be able to lock a call or reject a call stating a reason. In the event of locking a call, the service provider shall be able to indicate the likely time of reaching the user. After rendering of the service, the user shall be able to provide feedback by choosing one of the feedback options.</string>
 
 
 </resources>

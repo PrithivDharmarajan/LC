@@ -596,8 +596,9 @@ public class ProviderMapFragment extends BaseFragment implements GoogleApiClient
             PendingDetailsResponse pendingDetailsRes = (PendingDetailsResponse) resObj;
 
             if (getActivity() != null) {
+                sysOut("Provider---" + pendingDetailsRes.getResult().getAnotheruser().size());
+
                 if (pendingDetailsRes.getResult().getAnotheruser().size() > 0 && pendingDetailsRes.getResult().getAppointments().size() > 0) {
-                    sysOut("Provider---" + mAppointmentDetails.getStatus());
 
                     final UserDetailsEntity userDetails = pendingDetailsRes.getResult().getAnotheruser().get(0);
                     final AppointmentDetailsEntity appointmentDetails = pendingDetailsRes.getResult().getAppointments().get(0);

@@ -2,9 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/LayoutMatch"  >
 
-         <WebView
-            android:id="@+id/web_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone" />
+
+
+    <TextView
+        android:id="@+id/header_txt"
+        style="@style/TextOpenSansSemiBold"
+        android:layout_margin="@dimen/size8"
+        android:gravity="start"
+        android:text="@string/about_us"
+        android:textColor="@color/black" />
 </LinearLayout>

@@ -30,8 +30,8 @@ public class AppConstants {
 
 
     /*Fixed Val*/
-    public static final String  CONTACT_PHONE_NUMBER= "9585465577";
-    public static final String  SUPPORT_EMAIL= "clri@gmail.com";
+    public static final String  CONTACT_PHONE_NUMBER= "9840904656";
+    public static final String  SUPPORT_EMAIL= "satclri@gmail.com";
     public static final String  ABOUT_WEB= "https://www.clri.org/";
 
 

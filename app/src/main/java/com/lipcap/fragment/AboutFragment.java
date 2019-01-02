@@ -22,9 +22,6 @@ import butterknife.ButterKnife;
 public class AboutFragment extends BaseFragment {
 
 
-    @BindView(R.id.web_view)
-    WebView mWebView;
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -67,63 +64,10 @@ public class AboutFragment extends BaseFragment {
 
         AppConstants.TAG = this.getClass().getSimpleName();
 
-        DialogManager.getInstance().showProgress(getActivity());
-        mWebView.setWebChromeClient(new WebChromeClient());
-        mWebView.setWebViewClient(new MyWebViewClient());
-        mWebView.setVerticalScrollBarEnabled(true);
-        mWebView.setHorizontalScrollBarEnabled(true);
-        mWebView.loadUrl(AppConstants.ABOUT_WEB);
+
 
     }
 
-
-
-    private class MyWebViewClient extends WebViewClient {
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            view.loadUrl(url);
-            return true;
-        }
-
-        @Override
-        public void onPageStarted(WebView view, String url, Bitmap favicon) {
-            super.onPageStarted(view, url, favicon);
-
-        }
-
-        @Override
-        public void onPageFinished(WebView view, String url) {
-            super.onPageFinished(view, url);
-            mWebView.setVisibility(View.VISIBLE);
-            DialogManager.getInstance().hideProgress();
-
-        }
-
-
-        @Override
-        public void onReceivedError(WebView view, int errorCode,
-                                    String description, String failingUrl) {
-            super.onReceivedError(view, errorCode, description, failingUrl);
-            stopWebView();
-        }
-    }
-    private void stopWebView() {
-        DialogManager.getInstance().hideProgress();
-        mWebView.stopLoading();
-        mWebView.setWebChromeClient(null);
-        mWebView.setWebViewClient(null);
-        mWebView.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        if (mWebView != null) {
-            mWebView.clearHistory();
-            mWebView.loadUrl("");
-            mWebView.stopLoading();
-        }
-    }
 
 
 

@@ -67,6 +67,8 @@ public class Splash extends BaseActivity {
                 nextScreen(nextScreenClass);
             }
         };
+
+        sysOut("USer ID---"+PreferenceUtil.getUserId(this));
         mHandler = new Handler();
         mHandler.postDelayed(mRunnable, 3000);
     }
