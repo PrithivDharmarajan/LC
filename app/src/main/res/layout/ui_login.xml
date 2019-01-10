@@ -75,8 +75,9 @@
         style="@style/LayoutWidMatch_HeiWrap">
         <TextView
             android:id="@+id/sign_up_txt"
-            style="@style/TextOpenSansRegular"
+            style="@style/TextOpenSansSemiBold"
             android:padding="@dimen/size5"
+            android:textSize="@dimen/text12"
             android:text="@string/dont_have_acc"
             android:layout_marginBottom="@dimen/size23"
             android:layout_alignParentBottom="true"/>

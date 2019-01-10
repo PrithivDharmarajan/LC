@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/LayoutMatch">
 
+
     <RelativeLayout
         style="@style/LayoutMatch"
         android:layout_above="@+id/book_appointment_btn">
@@ -31,12 +32,16 @@
                 android:contentDescription="@string/app_name"
                 android:src="@drawable/customer_location" />
             <android.support.v7.widget.CardView
-
                 android:id="@+id/appointment_card_view"
                 style="@style/LayoutWidMatch_HeiWrap"
                 android:visibility="gone"
+                app:cardBackgroundColor="@color/orange"
                 app:cardCornerRadius="@dimen/size5">
-
+            <android.support.v7.widget.CardView
+                style="@style/LayoutWidMatch_HeiWrap"
+                app:cardBackgroundColor="@color/white"
+                android:layout_margin="@dimen/size1"
+                app:cardCornerRadius="@dimen/size5">
                 <LinearLayout
                     style="@style/LayoutWidMatch_HeiWrap"
                     android:orientation="vertical">
@@ -65,30 +70,40 @@
                                 <TextView
                                     android:id="@+id/provider_name_txt"
                                     style="@style/TextOpenSansRegular"
-                                    android:layout_gravity="center"
                                     android:text="@string/app_name"
+                                    android:gravity="start"
                                     android:textColor="@color/black"
                                     android:textSize="@dimen/text12" />
 
                                 <TextView
                                     android:id="@+id/provider_rating_txt"
                                     style="@style/TextOpenSansRegular"
-                                    android:layout_gravity="center"
-                                    android:text="5.0"
+                                    android:gravity="start"
                                     android:textColor="@color/black"
                                     android:textSize="@dimen/text12" />
                             </LinearLayout>
                         </LinearLayout>
-
-                        <TextView
-                            android:id="@+id/appointment_accepted_txt"
-                            style="@style/TextOpenSansRegular"
-                            android:layout_width="0dip"
+                        <LinearLayout style="@style/LayoutWidWei_HeiWrap"
                             android:layout_gravity="center"
-                            android:layout_weight="1"
-                            android:text="@string/appointment_accepted"
-                            android:textColor="@color/green"
-                            android:textSize="@dimen/text9" />
+                            android:orientation="vertical">
+                            <TextView
+                                android:id="@+id/appointment_accepted_txt"
+                                style="@style/TextOpenSansRegular"
+                                android:layout_gravity="center"
+                                android:text="@string/appointment_accepted"
+                                android:textColor="@color/green"
+                                android:textSize="@dimen/text9" />
+
+                            <TextView
+                                android:id="@+id/arrival_time_txt"
+                                style="@style/TextOpenSansRegular"
+                                android:layout_gravity="center"
+                                android:paddingTop="@dimen/size3"
+                                android:paddingBottom="@dimen/size3"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/text10" />
+                        </LinearLayout>
+
                     </LinearLayout>
 
                     <View
@@ -151,6 +166,7 @@
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
+            </android.support.v7.widget.CardView>
             </android.support.v7.widget.CardView>
         </LinearLayout>
 

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_view"
+    style="@style/LayoutMatch"
+    android:background="@android:color/transparent">
+
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/orange"
+        tools:targetApi="lollipop" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+        <com.lidcap.utils.ZoomImageView
+            android:id="@+id/original_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/app_name"
+            android:focusableInTouchMode="true" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/close_img"
+        android:layout_width="@dimen/size40"
+        android:layout_height="@dimen/size40"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="@dimen/size5"
+        android:layout_marginTop="@dimen/size5"
+
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/app_name"
+        android:padding="@dimen/size5"
+        android:src="@drawable/close_img"
+        android:tint="@color/orange" />
+</RelativeLayout>
+

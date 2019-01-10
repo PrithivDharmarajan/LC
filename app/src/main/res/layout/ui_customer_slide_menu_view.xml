@@ -79,7 +79,39 @@
                 android:layout_height="@dimen/size1"
                 android:layout_marginStart="@dimen/size30"
                 android:background="@color/orange" />
+            <LinearLayout
+                android:id="@+id/advertisement_list_lay"
+                style="@style/LayoutWidMatch_HeiWrap"
+                android:layout_height="@dimen/size45"
+                android:background="?android:attr/selectableItemBackground"
+                android:paddingStart="@dimen/size30"
+                android:paddingEnd="0dip"
+                tools:ignore="UseCompoundDrawables">
 
+                <ImageView
+                    android:layout_width="@dimen/size27"
+                    android:layout_height="@dimen/size27"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@string/app_name"
+                    android:padding="@dimen/size5"
+                    android:src="@drawable/appointment_list" />
+
+                <TextView
+                    style="@style/TextOpenSansRegular"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/size15"
+                    android:gravity="start"
+                    android:text="@string/advertisement_list"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text13" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size1"
+                android:layout_marginStart="@dimen/size30"
+                android:background="@color/orange" />
             <LinearLayout
                 android:id="@+id/notification_lay"
                 style="@style/LayoutWidMatch_HeiWrap"

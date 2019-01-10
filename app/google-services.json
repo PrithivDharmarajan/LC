@@ -1,35 +1,43 @@
 {
   "project_info": {
-    "project_number": "280136005121",
-    "firebase_url": "https://lipcap-5807d.firebaseio.com",
-    "project_id": "lipcap-5807d",
-    "storage_bucket": "lipcap-5807d.appspot.com"
+    "project_number": "927487744891",
+    "firebase_url": "https://lidcap-b16bd.firebaseio.com",
+    "project_id": "lidcap-b16bd",
+    "storage_bucket": "lidcap-b16bd.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:280136005121:android:9a280eeeabeab516",
+        "mobilesdk_app_id": "1:927487744891:android:193f57a67ae82b78",
         "android_client_info": {
-          "package_name": "com.lipcap"
+          "package_name": "com.lidcap"
         }
       },
       "oauth_client": [
         {
-          "client_id": "280136005121-pabjfueg7nfjvtturnei420us3ok2ap2.apps.googleusercontent.com",
+          "client_id": "927487744891-elf5tneqg1ticim8uafvq0okmp2vdkru.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.lipcap",
+            "package_name": "com.lidcap",
             "certificate_hash": "53a82224e07e4501b13fd4af82ffa0c065ff498a"
           }
         },
         {
-          "client_id": "280136005121-sungpg222g2unlaummaecv4g04d85t6l.apps.googleusercontent.com",
+          "client_id": "927487744891-9k133mdvqo9k3ts24bmjscphmn0jrm56.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lidcap",
+            "certificate_hash": "ece4bfd3b84284f5384e9946eef282ac3d365bc3"
+          }
+        },
+        {
+          "client_id": "927487744891-9ivsge54ru93gq3sj4j0kgf042ogcdqg.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCz9bWZOF02LCaWPsIBY_YkEEkO-LRhrkE"
+          "current_key": "AIzaSyB4GuRusrTLlbnpvt4sEOq_0vHR15cLWno"
         }
       ],
       "services": {
@@ -40,7 +48,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "280136005121-sungpg222g2unlaummaecv4g04d85t6l.apps.googleusercontent.com",
+              "client_id": "927487744891-9ivsge54ru93gq3sj4j0kgf042ogcdqg.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

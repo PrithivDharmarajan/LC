@@ -2,7 +2,7 @@
 
     <string name="app_name">LidCap</string>
 
-    <string name="google_map_id">AIzaSyCtqgVoaaVtdq-JvOawDYIByXDpeo0Cvt0</string>
+    <string name="google_map_id">AIzaSyB4GuRusrTLlbnpvt4sEOq_0vHR15cLWno</string>
 
     <!--Login-->
     <string name="phone_num">Phone Number</string>
@@ -51,6 +51,7 @@
     <string name="cobbler_denied_work">Cobbler denied to work</string>
     <string name="others">Others</string>
     <string name="type">Type</string>
+    <string name="enter_comment">Enter your comment</string>
     <string name="dont_cancel">Don\'t Cancel</string>
     <string name="cancel">Cancel</string>
     <string name="comment">Comment</string>
@@ -113,6 +114,8 @@
     <string name="go_settings_per">You have denied the app permissions. Go to Settings and Enable the Permissions.</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="arrival_time">Arrival Time : %1$s </string>
+    <string name="reach_time">Reach Time : %1$s </string>
     <string name="no_internet"> Please Verify Your Internet Connection.</string>
     <string name="connect_time_out">Could not connect to LidCap App Server. Please try again.</string>
     <string name="retry">Retry</string>

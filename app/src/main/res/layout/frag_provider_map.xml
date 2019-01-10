@@ -33,8 +33,13 @@
             android:id="@+id/appointment_card_view"
             style="@style/LayoutWidMatch_HeiWrap"
             android:visibility="gone"
+            app:cardBackgroundColor="@color/blue"
             app:cardCornerRadius="@dimen/size5">
-
+        <android.support.v7.widget.CardView
+            style="@style/LayoutWidMatch_HeiWrap"
+            app:cardBackgroundColor="@color/white"
+            android:layout_margin="@dimen/size1"
+            app:cardCornerRadius="@dimen/size5">
             <LinearLayout
                 style="@style/LayoutWidMatch_HeiWrap"
                 android:orientation="vertical">
@@ -63,10 +68,17 @@
                             android:id="@+id/customer_name_txt"
                             style="@style/TextOpenSansRegular"
                             android:layout_gravity="bottom"
-                            android:layout_marginTop="@dimen/size10"
                             android:text="@string/app_name"
                             android:textColor="@color/black"
                             android:textSize="@dimen/text11" />
+                        <TextView
+                            android:id="@+id/reach_time_txt"
+                            style="@style/TextOpenSansRegular"
+                            android:layout_gravity="center"
+                            android:paddingTop="@dimen/size3"
+                            android:paddingBottom="@dimen/size3"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text10" />
                     </LinearLayout>
 
                     <View
@@ -167,6 +179,7 @@
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
+        </android.support.v7.widget.CardView>
         </android.support.v7.widget.CardView>
     </LinearLayout>
 
