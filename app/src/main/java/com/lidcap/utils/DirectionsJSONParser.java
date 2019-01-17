@@ -14,7 +14,7 @@ public class DirectionsJSONParser {
     /** Receives a JSONObject and returns a list of lists containing latitude and longitude */
     public List<List<HashMap<String,String>>> parse(JSONObject jObject){
 
-        List<List<HashMap<String, String>>> routes = new ArrayList<List<HashMap<String,String>>>() ;
+        ArrayList routes = new ArrayList() ;
         JSONArray jRoutes = null;
         JSONArray jLegs = null;
         JSONArray jSteps = null;
@@ -29,19 +29,19 @@ public class DirectionsJSONParser {
             for(int i=0;i<jRoutes.length();i++){
                 jLegs = ( (JSONObject)jRoutes.get(i)).getJSONArray("legs");
 
-                List<HashMap<String, String>> path = new ArrayList<HashMap<String, String>>();
+                List<HashMap<String, String>> path = new ArrayList<>();
 
                 /** Traversing all legs */
                 for(int j=0;j<jLegs.length();j++){
 
                     /** Getting distance from the json data */
                     jDistance = ((JSONObject) jLegs.get(j)).getJSONObject("distance");
-                    HashMap<String, String> hmDistance = new HashMap<String, String>();
+                    HashMap<String, String> hmDistance = new HashMap<>();
                     hmDistance.put("distance", jDistance.getString("text"));
 
                     /** Getting duration from the json data */
                     jDuration = ((JSONObject) jLegs.get(j)).getJSONObject("duration");
-                    HashMap<String, String> hmDuration = new HashMap<String, String>();
+                    HashMap<String, String> hmDuration = new HashMap<>();
                     hmDuration.put("duration", jDuration.getString("text"));
 
                     /** Adding distance object to the path */
@@ -60,7 +60,7 @@ public class DirectionsJSONParser {
 
                         /** Traversing all points */
                         for(int l=0;l<list.size();l++){
-                            HashMap<String, String> hm = new HashMap<String, String>();
+                            HashMap<String, String> hm = new HashMap<>();
                             hm.put("lat", Double.toString(((LatLng)list.get(l)).latitude) );
                             hm.put("lng", Double.toString(((LatLng)list.get(l)).longitude) );
                             path.add(hm);
@@ -69,9 +69,8 @@ public class DirectionsJSONParser {
                 }
                 routes.add(path);
             }
-        } catch (JSONException e) {
+        } catch (Exception e){
             e.printStackTrace();
-        }catch (Exception e){
         }
         return routes;
     }
@@ -82,7 +81,7 @@ public class DirectionsJSONParser {
      * */
     private List<LatLng> decodePoly(String encoded) {
 
-        List<LatLng> poly = new ArrayList<LatLng>();
+        List<LatLng> poly = new ArrayList<>();
         int index = 0, len = encoded.length();
         int lat = 0, lng = 0;
 

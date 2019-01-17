@@ -18,12 +18,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class IssueListAdapter extends RecyclerView.Adapter<IssueListAdapter.Holder> {
+public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentListAdapter.Holder> {
 
     private ArrayList<AppointmentDetailsEntity> mIssueListArrList;
     private Context mContext;
 
-    public IssueListAdapter(ArrayList<AppointmentDetailsEntity> issueListArrList, Context context) {
+    public AppointmentListAdapter(ArrayList<AppointmentDetailsEntity> issueListArrList, Context context) {
         mIssueListArrList = issueListArrList;
         mContext = context;
     }
@@ -31,23 +31,21 @@ public class IssueListAdapter extends RecyclerView.Adapter<IssueListAdapter.Hold
     @NonNull
     @Override
     public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new Holder(LayoutInflater.from(parent.getContext()).inflate(R.layout.adap_issue_list_view, parent, false));
+        return new Holder(LayoutInflater.from(parent.getContext()).inflate(R.layout.adap_appointment_list_view, parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull final Holder holder, int position) {
 
-        holder.mIssueNameTxt.setText(mIssueListArrList.get(position).getIssueName());
-        String statusStr=mIssueListArrList.get(position).getStatus();
-        String statusResultStr="";
-        if(statusStr.equalsIgnoreCase("2")){
-            statusResultStr=mContext.getString(R.string.accept);
-        } else if(statusStr.equalsIgnoreCase("3")||statusStr.equalsIgnoreCase("4")){
-            statusResultStr=mContext.getString(R.string.completed);
-        } else  {
-            statusResultStr=mContext.getString(R.string.canceled);
+        holder.mAppointmentNameTxt.setText(mIssueListArrList.get(position).getIssueName());
+        String statusStr = mIssueListArrList.get(position).getStatus();
+        String statusResultStr = mContext.getString(R.string.canceled);
+        if (statusStr.equalsIgnoreCase("2")) {
+            statusResultStr = mContext.getString(R.string.accept);
+        } else if (statusStr.equalsIgnoreCase("3") || statusStr.equalsIgnoreCase("4")) {
+            statusResultStr = mContext.getString(R.string.completed);
         }
-        holder.mIssueStatusBtn.setText( statusResultStr);
+        holder.mAppointmentStatusBtn.setText(statusResultStr);
 
     }
 
@@ -58,11 +56,11 @@ public class IssueListAdapter extends RecyclerView.Adapter<IssueListAdapter.Hold
 
     public class Holder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.issue_name_txt)
-        TextView mIssueNameTxt;
+        @BindView(R.id.appointment_name_txt)
+        TextView mAppointmentNameTxt;
 
-        @BindView(R.id.issue_status_btn)
-        Button mIssueStatusBtn;
+        @BindView(R.id.appointment_status_btn)
+        Button mAppointmentStatusBtn;
 
 
         public Holder(View itemView) {

@@ -27,7 +27,7 @@ import com.lidcap.R;
 import com.lidcap.fragment.AboutFragment;
 import com.lidcap.fragment.AdvListFragment;
 import com.lidcap.fragment.AppointmentListFragment;
-import com.lidcap.fragment.NotificationFragment;
+import com.lidcap.fragment.NotificationListFragment;
 import com.lidcap.fragment.ProviderMapFragment;
 import com.lidcap.fragment.ProviderProfileFragment;
 import com.lidcap.main.BaseActivity;
@@ -157,7 +157,7 @@ public class ProviderHome extends BaseActivity implements View.OnClickListener {
             headerStr = getString(R.string.profile);
         } else if (baseFragment instanceof AppointmentListFragment) {
             headerStr = getString(R.string.issue_list);
-        } else if (baseFragment instanceof NotificationFragment) {
+        } else if (baseFragment instanceof NotificationListFragment) {
             headerStr = getString(R.string.notification);
         } else if (baseFragment instanceof AboutFragment) {
             headerStr = getString(R.string.about_the_app);
@@ -262,8 +262,8 @@ public class ProviderHome extends BaseActivity implements View.OnClickListener {
                 break;
             case R.id.notification_lay:
                 mDrawerLayout.closeDrawer(GravityCompat.START);
-                if (!(mFragment instanceof NotificationFragment))
-                    addFragment(new NotificationFragment());
+                if (!(mFragment instanceof NotificationListFragment))
+                    addFragment(new NotificationListFragment());
                 break;
             case R.id.rate_app_lay:
                 mDrawerLayout.closeDrawer(GravityCompat.START);
@@ -320,8 +320,7 @@ public class ProviderHome extends BaseActivity implements View.OnClickListener {
 
         intent.setData(Uri.parse("tel:" + AppConstants.CONTACT_PHONE_NUMBER));
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
+             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
             //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
             //                                          int[] grantResults)

@@ -25,14 +25,12 @@ public class AppConstants {
     public static String USER_DETAILS = "USER_DETAILS";
     public static String USER_ID = "USER_ID";
     public static String PUSH_DEVICE_ID = "PUSH_DEVICE_ID";
-    public static String PUSH_CHAT_STATUS = "PUSH_CHAT_STATUS";
 
 
 
     /*Fixed Val*/
     public static final String  CONTACT_PHONE_NUMBER= "9840904656";
     public static final String  SUPPORT_EMAIL= "satclri@gmail.com";
-    public static final String  ABOUT_WEB= "https://www.clri.org/";
 
 
 

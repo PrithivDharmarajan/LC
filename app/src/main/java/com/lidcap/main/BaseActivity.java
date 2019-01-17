@@ -1,7 +1,6 @@
 package com.lidcap.main;
 
 import android.app.Activity;
-import android.app.Application;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -203,7 +202,6 @@ public class BaseActivity extends AppCompatActivity implements InterfaceTwoBtnCa
 
     /*API call_provider back failure*/
     public void onRequestFailure(Object inputModelObj, Throwable t) {
-        sysOut("Retrofit onRequestFailure" + t.toString());
         if (t.getMessage() != null && !t.getMessage().isEmpty() && !(t instanceof IOException)) {
             DialogManager.getInstance().showAlertPopup(mActivity, t.getMessage(), new InterfaceBtnCallback() {
                 @Override
@@ -309,7 +307,7 @@ public class BaseActivity extends AppCompatActivity implements InterfaceTwoBtnCa
     }
 
 
-    /*CustomerMapFragment*/
+    /*sysOut*/
     public void sysOut(String printStr) {
         System.out.println(printStr);
     }

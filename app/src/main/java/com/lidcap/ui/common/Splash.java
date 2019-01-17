@@ -63,12 +63,10 @@ public class Splash extends BaseActivity {
                 }
 
                 AppConstants.IS_FROM_PUSH = false;
-                sysOut("Push-Id " + PreferenceUtil.getStringPreferenceValue(Splash.this, AppConstants.PUSH_DEVICE_ID));
-                nextScreen(nextScreenClass);
+                 nextScreen(nextScreenClass);
             }
         };
 
-        sysOut("USer ID---"+PreferenceUtil.getUserId(this));
         mHandler = new Handler();
         mHandler.postDelayed(mRunnable, 3000);
     }

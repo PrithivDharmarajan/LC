@@ -21,6 +21,7 @@ import com.lidcap.model.output.AppointmentAcceptResponse;
 import com.lidcap.model.output.CommonResponse;
 import com.lidcap.model.output.IssuesListResponse;
 import com.lidcap.model.output.LoginResponse;
+import com.lidcap.model.output.NotificationListResponse;
 import com.lidcap.model.output.PendingDetailsResponse;
 import com.lidcap.model.output.ProviderDetailsResponse;
 import com.lidcap.model.output.SelectIssuesTypeResponse;
@@ -55,8 +56,8 @@ public class APIRequestHandler {
 
     private APICommonInterface serviceInterface() {
         final OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .readTimeout(120, TimeUnit.SECONDS)
-                .connectTimeout(120, TimeUnit.SECONDS)
+                .readTimeout(240, TimeUnit.SECONDS)
+                .connectTimeout(240, TimeUnit.SECONDS)
                 .build();
         return new Retrofit.Builder().baseUrl(AppConstants.BASE_URL)
                 .client(okHttpClient)
@@ -159,6 +160,30 @@ public class APIRequestHandler {
                 });
     }
 
+
+    /*Notification List API*/
+    public void notificationListAPICall(IssuesInputEntity issuesInputEntity,final BaseFragment baseFragment) {
+        DialogManager.getInstance().showProgress(baseFragment.getActivity());
+        mServiceInterface.notificationListAPI(issuesInputEntity)
+                .enqueue(new Callback<NotificationListResponse>() {
+                    @Override
+                    public void onResponse(@NonNull Call<NotificationListResponse> call, @NonNull Response<NotificationListResponse> response) {
+                        DialogManager.getInstance().hideProgress();
+                        if (response.isSuccessful() && response.body() != null) {
+                            baseFragment.onRequestSuccess(response.body());
+                        } else {
+                            baseFragment.onRequestFailure(new NotificationListResponse(), new Throwable(response.raw().message()));
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<NotificationListResponse> call, @NonNull Throwable t) {
+                        DialogManager.getInstance().hideProgress();
+                        baseFragment.onRequestFailure(new NotificationListResponse(), t);
+                    }
+                });
+    }
+
     /*Update Lat and Long API*/
     public void latAndLongUpdateAPICall(LocationUpdateInputEntity locationUpdateInputEntity, final BaseFragment baseFragment) {
         mServiceInterface.latAndLongUpdateAPI(locationUpdateInputEntity)
@@ -218,7 +243,6 @@ public class APIRequestHandler {
     /*Book appointment API*/
     public void bookAppointmentAPICall(BookAppointmentInputEntity bookAppointmentInputEntity, final BaseFragment baseFragment) {
 
-      System.out.println("Test");
         mServiceInterface.bookAppointmentAPI(  bookAppointmentInputEntity)
                 .enqueue(new Callback<BookAppointmentInputEntity>() {
                     @Override
@@ -395,11 +419,10 @@ public class APIRequestHandler {
     public void profileImageUploadApiCall(final AddAdvInputEntity addAdvInputEntity, String imageString, final BaseFragment baseFragment) {
         DialogManager.getInstance().showProgress(baseFragment.getActivity());
         File file = new File(imageString);
-        MultipartBody.Part imageFile = null;
 
         RequestBody imageBody = RequestBody.create(MediaType.parse("image/*"), file);
 
-        imageFile = MultipartBody.Part.createFormData("image", file.getName(), imageBody);
+        MultipartBody.Part imageFile = MultipartBody.Part.createFormData("image", file.getName(), imageBody);
 
         mServiceInterface.advImageUploadAPI ( imageFile).enqueue(new Callback<UploadedResponse>() {
             @Override

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/LayoutWidMatch_HeiWrap"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        style="@style/LayoutWidMatch_HeiWrap"
+        android:padding="@dimen/size10">
+
+        <TextView
+            android:id="@+id/appointment_name_txt"
+            style="@style/TextOpenSansRegular"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="@dimen/size4"
+            android:layout_marginEnd="@dimen/size2"
+            android:layout_marginBottom="@dimen/size4"
+            android:layout_toStartOf="@+id/appointment_status_btn"
+            android:ellipsize="end"
+            android:gravity="start|center_vertical"
+            android:maxLines="2"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text13" />
+
+        <Button
+            android:id="@+id/appointment_status_btn"
+            style="@style/ButtonOpenSansSemiBold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/orange_btn"
+            android:minWidth="0dip"
+            android:minHeight="0dip"
+            android:paddingStart="@dimen/size10"
+            android:paddingTop="@dimen/size5"
+            android:paddingEnd="@dimen/size10"
+            android:paddingBottom="@dimen/size5"
+            android:text="@string/completed"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text8"
+            tools:targetApi="lollipop" />
+    </RelativeLayout>
+
+    <View
+        style="@style/LayoutWidMatch_HeiWrap"
+        android:layout_height="@dimen/size0.5"
+        android:background="@color/gray" />
+</LinearLayout>

@@ -27,7 +27,7 @@ import com.lidcap.fragment.AboutFragment;
 import com.lidcap.fragment.AppointmentListFragment;
 import com.lidcap.fragment.CustomerMapFragment;
 import com.lidcap.fragment.CustomerProfileFragment;
-import com.lidcap.fragment.NotificationFragment;
+import com.lidcap.fragment.NotificationListFragment;
 import com.lidcap.fragment.UserAdvListFragment;
 import com.lidcap.main.BaseActivity;
 import com.lidcap.main.BaseFragment;
@@ -185,7 +185,7 @@ public class CustomerHome extends BaseActivity implements View.OnClickListener {
             headerStr = getString(R.string.profile);
         } else if (baseFragment instanceof AppointmentListFragment) {
             headerStr = getString(R.string.issue_list);
-        } else if (baseFragment instanceof NotificationFragment) {
+        } else if (baseFragment instanceof NotificationListFragment) {
             headerStr = getString(R.string.notification);
         } else if (baseFragment instanceof AboutFragment) {
             headerStr = getString(R.string.about_the_app);
@@ -258,8 +258,8 @@ public class CustomerHome extends BaseActivity implements View.OnClickListener {
                 break;
             case R.id.notification_lay:
                 mDrawerLayout.closeDrawer(GravityCompat.START);
-                if (!(mFragment instanceof NotificationFragment))
-                    addFragment(new NotificationFragment());
+                if (!(mFragment instanceof NotificationListFragment))
+                    addFragment(new NotificationListFragment());
                 break;
             case R.id.rate_app_lay:
                 mDrawerLayout.closeDrawer(GravityCompat.START);
@@ -316,7 +316,7 @@ public class CustomerHome extends BaseActivity implements View.OnClickListener {
 
         intent.setData(Uri.parse("tel:" + AppConstants.CONTACT_PHONE_NUMBER));
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
+
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
             //   public void onRequestPermissionsResult(int requestCode, String[] permissions,

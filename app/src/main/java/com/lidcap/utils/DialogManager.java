@@ -32,7 +32,6 @@ import com.bumptech.glide.Glide;
 import com.lidcap.R;
 import com.lidcap.adapter.SelectIssueListAdapter;
 import com.lidcap.model.output.IssueListEntity;
-import com.lidcap.ui.provider.ProviderHome;
 
 import java.util.ArrayList;
 
@@ -205,7 +204,7 @@ public class DialogManager {
 //        LinearLayout agentParentLay;
 
         /*Init view*/
-        issueListRecyclerView = mIssueListDialog.findViewById(R.id.issue_list_recycler_view);
+        issueListRecyclerView = mIssueListDialog.findViewById(R.id.recycler_view);
         positiveBtn = mIssueListDialog.findViewById(R.id.alert_positive_btn);
         negativeBtn = mIssueListDialog.findViewById(R.id.alert_negative_btn);
 
@@ -213,7 +212,7 @@ public class DialogManager {
         /*Set Adapter*/
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         issueListRecyclerView.setLayoutManager(linearLayoutManager);
-        issueListRecyclerView.setAdapter(new SelectIssueListAdapter(agentListArrList, dialogAlertInterface, context));
+        issueListRecyclerView.setAdapter(new SelectIssueListAdapter(agentListArrList));
 
 
         positiveBtn.setOnClickListener(new View.OnClickListener() {

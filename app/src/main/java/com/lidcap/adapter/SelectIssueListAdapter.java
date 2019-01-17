@@ -24,13 +24,10 @@ import butterknife.ButterKnife;
 public class SelectIssueListAdapter extends RecyclerView.Adapter<SelectIssueListAdapter.Holder> {
 
     private ArrayList<IssueListEntity> mIssueListArrList;
-    private InterfaceEdtBtnCallback mInterfaceEdtBtnCallback;
-    private CompoundButton mLastRadioBtn;
     private int mLastSelectedPosInt = 0;
 
-    public SelectIssueListAdapter(ArrayList<IssueListEntity> issueListArrList, InterfaceEdtBtnCallback interfaceEdtBtnCallback, Context context) {
+    public SelectIssueListAdapter(ArrayList<IssueListEntity> issueListArrList) {
         mIssueListArrList = issueListArrList;
-        mInterfaceEdtBtnCallback = interfaceEdtBtnCallback;
     }
 
     @NonNull
@@ -45,7 +42,6 @@ public class SelectIssueListAdapter extends RecyclerView.Adapter<SelectIssueList
         holder.mAgentListTxt.setText(mIssueListArrList.get(position).getIssueName());
 
         if (mLastSelectedPosInt == position) {
-            mLastRadioBtn = holder.mIssueRadioBtn;
             holder.mIssueRadioBtn.setChecked(true);
             AppConstants.ISSUE_ID=mIssueListArrList.get(position).getIssueId();
             AppConstants.ISSUE_NAME=mIssueListArrList.get(position).getIssueName();

@@ -16,6 +16,7 @@ import com.lidcap.model.output.AppointmentAcceptResponse;
 import com.lidcap.model.output.CommonResponse;
 import com.lidcap.model.output.IssuesListResponse;
 import com.lidcap.model.output.LoginResponse;
+import com.lidcap.model.output.NotificationListResponse;
 import com.lidcap.model.output.PendingDetailsResponse;
 import com.lidcap.model.output.ProviderDetailsResponse;
 import com.lidcap.model.output.SelectIssuesTypeResponse;
@@ -46,6 +47,11 @@ public interface APICommonInterface {
     /*Issue Type API*/
     @POST("user/getbookings.php")
     Call<IssuesListResponse> issueListAPI(@Body IssuesInputEntity IssuesInputEntity);
+
+
+    /*Issue Type API*/
+    @POST("user/notification.php")
+    Call<NotificationListResponse> notificationListAPI(@Body IssuesInputEntity IssuesInputEntity);
 
     /*Lat and Long Update API*/
     @POST("user/updatelocation.php")

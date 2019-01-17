@@ -27,7 +27,7 @@
             android:background="@color/gray" />
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/issue_list_recycler_view"
+            android:id="@+id/recycler_view"
             style="@style/LayoutWidMatch_HeiWrap"
             android:layout_marginStart="@dimen/size23"
             android:layout_marginTop="@dimen/size6"

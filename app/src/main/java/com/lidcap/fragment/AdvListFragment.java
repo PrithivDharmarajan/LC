@@ -65,7 +65,6 @@ public class AdvListFragment extends BaseFragment {
     RecyclerView mAdvListRecyclerView;
     private Uri mPictureFileUri;
     private String mUploadImgPathStr = "";
-    private File mCameraFile;
 
 
     @Override
@@ -193,10 +192,10 @@ public class AdvListFragment extends BaseFragment {
     /*open camera*/
     private void captureImage() {
 
-        mCameraFile = getOutputMediaFile();
-        if (getActivity() != null && mCameraFile != null) {
+        File cameraFile = getOutputMediaFile();
+        if (getActivity() != null && cameraFile != null) {
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            mPictureFileUri = (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ? FileProvider.getUriForFile(getActivity(), getActivity().getPackageName() + ".provider", mCameraFile) : Uri.fromFile(mCameraFile);
+            mPictureFileUri = (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) ? FileProvider.getUriForFile(getActivity(), getActivity().getPackageName() + ".provider", cameraFile) : Uri.fromFile(cameraFile);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, mPictureFileUri);
 
 
@@ -268,12 +267,11 @@ public class AdvListFragment extends BaseFragment {
                         Bitmap bm = BitmapFactory.decodeStream(
                                 getActivity().getContentResolver().openInputStream(mPictureFileUri));
 
-                        mUploadImgPathStr = getRealPathFromURI(getImageUri(getContext(),bm));
+                        mUploadImgPathStr = getRealPathFromURI(getImageUri(getContext(), bm));
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
 
-                    sysOut("CAMERA " + mUploadImgPathStr);
                     previewCapturedImage();
                 } else {
                     mUploadImgPathStr = "";
@@ -297,7 +295,6 @@ public class AdvListFragment extends BaseFragment {
                         cursor.close();
                     }
 
-                    sysOut("GALLERY " + mUploadImgPathStr);
                     previewCapturedImage();
 
                 } else {

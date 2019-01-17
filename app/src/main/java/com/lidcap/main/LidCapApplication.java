@@ -60,12 +60,12 @@ public class LidCapApplication extends android.app.Application {
         mInstance = this;
 
         // Set up Crashlytics, disabled for debug builds
-        Crashlytics crashlytics = new Crashlytics.Builder()
-                .core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
-                .build();
+//        Crashlytics crashlytics = new Crashlytics.Builder()
+//                .core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
+//                .build();
 
        // Initialize Fabric with the debug-disabled crashlytics.
-        Fabric.with(this, crashlytics);
+        // Fabric.with(this, new Crashlytics());
 
         /*init UncaughtException*/
         Thread.setDefaultUncaughtExceptionHandler(new unCaughtException());
@@ -89,7 +89,7 @@ public class LidCapApplication extends android.app.Application {
     private class unCaughtException implements UncaughtExceptionHandler {
         @Override
         public void uncaughtException(Thread thread, Throwable ex) {
-            Crashlytics.logException(ex);
+//            Crashlytics.logException(ex);
 
             /*Restart application*/
             if (activityVisible) {

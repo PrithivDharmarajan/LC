@@ -10,11 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.lidcap.R;
-import com.lidcap.adapter.AppointmentListAdapter;
+import com.lidcap.adapter.NotificationListAdapter;
 import com.lidcap.main.BaseFragment;
 import com.lidcap.model.input.IssuesInputEntity;
-import com.lidcap.model.output.AppointmentDetailsEntity;
-import com.lidcap.model.output.IssuesListResponse;
+import com.lidcap.model.output.NotificationDetailsEntity;
+import com.lidcap.model.output.NotificationListResponse;
 import com.lidcap.services.APIRequestHandler;
 import com.lidcap.utils.AppConstants;
 import com.lidcap.utils.DialogManager;
@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class AppointmentListFragment extends BaseFragment {
+public class NotificationListFragment extends BaseFragment {
 
 
     @BindView(R.id.recycler_view)
@@ -71,24 +71,24 @@ public class AppointmentListFragment extends BaseFragment {
     private void initView() {
 
         AppConstants.TAG = this.getClass().getSimpleName();
-         issueListAPICall();
+         appointmentListAPICall();
 
     }
 
-    private void issueListAPICall() {
+    private void appointmentListAPICall() {
         IssuesInputEntity issuesInputEntity =new IssuesInputEntity();
         issuesInputEntity.setUserId(PreferenceUtil.getUserId(getActivity()));
-        APIRequestHandler.getInstance().issueListAPICall(issuesInputEntity,this);
+        APIRequestHandler.getInstance().notificationListAPICall(issuesInputEntity,this);
     }
 
 
-    private void setAdapter(final ArrayList<AppointmentDetailsEntity> issueArrListRes) {
+    private void setAdapter(final ArrayList<NotificationDetailsEntity> notificationArrListRes) {
         if (getActivity() != null) {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                    mRecyclerView.setAdapter(new AppointmentListAdapter(issueArrListRes, getActivity()));
+                    mRecyclerView.setAdapter(new NotificationListAdapter(notificationArrListRes));
                 }
             });
         }
@@ -99,14 +99,14 @@ public class AppointmentListFragment extends BaseFragment {
     @Override
     public void onRequestSuccess(Object resObj) {
         super.onRequestSuccess(resObj);
-        if (resObj instanceof IssuesListResponse) {
-            IssuesListResponse issuesListResponse = (IssuesListResponse) resObj;
-            if (issuesListResponse.getStatusCode().equals(AppConstants.SUCCESS_CODE)) {
-                if (issuesListResponse.getResult().size() > 0) {
-                    setAdapter(issuesListResponse.getResult());
+        if (resObj instanceof NotificationListResponse) {
+            NotificationListResponse notificationListResponse = (NotificationListResponse) resObj;
+            if (notificationListResponse.getStatusCode().equals(AppConstants.SUCCESS_CODE)) {
+                if (notificationListResponse.getResult().size() > 0) {
+                    setAdapter(notificationListResponse.getResult());
                 }
             } else {
-                DialogManager.getInstance().showAlertPopup(getActivity(), issuesListResponse.getMessage(), this);
+                DialogManager.getInstance().showAlertPopup(getActivity(), notificationListResponse.getMessage(), this);
             }
 
         }

@@ -95,24 +95,20 @@ public class ProviderMapFragment extends BaseFragment implements GoogleApiClient
     private final int REQUEST_CHECK_SETTINGS_INT = 300;
     @BindView(R.id.customer_name_txt)
     TextView mCustomerNameTxt;
-
     @BindView(R.id.appointment_card_view)
     CardView mAppointmentCardView;
-
     @BindView(R.id.accept_appointment_txt)
     TextView mAcceptAppointmentTxt;
-
     @BindView(R.id.reach_time_txt)
     TextView mReachlTimeTxt;
-
     private GoogleMap mGoogleMap;
     private GoogleApiClient mGoogleApiClient;
     private boolean mIsFirstAPIBool = true, mIsPendingAppointmentBool = false;
     private Location mCurrentLocation;
     private Timer mCheckAppointmentTimer;
     private String mUserIdStr = "", mUserPhoneNumStr = "";
+    private int mOldPendingStatusInt = -1;
     private Dialog mNotificationDialog;
-    private UserDetailsEntity mPendingUserDetails = new UserDetailsEntity();
     private AppointmentDetailsEntity mAppointmentDetails = new AppointmentDetailsEntity();
     private BitmapDescriptor mVanMarkerBitmapDescriptor, mUserLocMarkerBitmapDescriptor;
     private double mUserLastLat, mUserLastLng, mCurrentUserLastLat, mCurrentUserLastLng;
@@ -158,6 +154,7 @@ public class ProviderMapFragment extends BaseFragment implements GoogleApiClient
 
         AppConstants.TAG = this.getClass().getSimpleName();
         mIsFirstAPIBool = true;
+        mOldPendingStatusInt = -1;
         mUserIdStr = PreferenceUtil.getUserId(getActivity());
 
 
@@ -262,6 +259,7 @@ public class ProviderMapFragment extends BaseFragment implements GoogleApiClient
                             userCancelEntity.setUserId(PreferenceUtil.getUserId(getActivity()));
                             userCancelEntity.setDateTime(DateUtil.getCurrentDate());
                             userCancelEntity.setCancelReason(AppConstants.CUSTOMER_CANCEL_REASON);
+                            mOldPendingStatusInt = -1;
                             APIRequestHandler.getInstance().providerCancelAppointmentAPICall(userCancelEntity, ProviderMapFragment.this);
 
                         }
@@ -307,7 +305,7 @@ public class ProviderMapFragment extends BaseFragment implements GoogleApiClient
                                     handler.postDelayed(runnable, 10000);
                                     getCheckPendingAppointmentAPICall();
                                 }
-                                if (ActivityCompat.checkSelfPermission(getActivity(),
+                                if (getActivity() != null && ActivityCompat.checkSelfPermission(getActivity(),
                                         Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                                         ActivityCompat.checkSelfPermission(getActivity(),
                                                 Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -617,22 +615,17 @@ public class ProviderMapFragment extends BaseFragment implements GoogleApiClient
             PendingDetailsResponse pendingDetailsRes = (PendingDetailsResponse) resObj;
 
             if (getActivity() != null) {
-                sysOut("getAnotheruser---" + pendingDetailsRes.getResult().getAnotheruser().size());
-                sysOut("getAppointments---" + pendingDetailsRes.getResult().getAppointments().size());
-                sysOut("getProfile---" + pendingDetailsRes.getResult().getProfile().size());
-
                 if (pendingDetailsRes.getResult().getAnotheruser().size() > 0 && pendingDetailsRes.getResult().getAppointments().size() > 0) {
+                    mIsPendingAppointmentBool = true;
 
+                    sysOut("Status : " + pendingDetailsRes.getResult().getAppointments().get(0).getStatus());
                     final UserDetailsEntity userDetails = pendingDetailsRes.getResult().getAnotheruser().get(0);
                     final AppointmentDetailsEntity appointmentDetails = pendingDetailsRes.getResult().getAppointments().get(0);
                     mAppointmentDetails = appointmentDetails;
-                    mPendingUserDetails = userDetails;
                     mUserPhoneNumStr = userDetails.getPhoneNumber();
-
-                    sysOut("getStatus---" + mAppointmentDetails.getStatus());
-                    if (!mIsPendingAppointmentBool && (appointmentDetails.getStatus().equalsIgnoreCase("1"))) {
+                    if (mOldPendingStatusInt != 1 && (appointmentDetails.getStatus().equalsIgnoreCase("1"))) {
+                        mOldPendingStatusInt = 1;
                         mIsPendingAppointmentBool = true;
-
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -651,25 +644,35 @@ public class ProviderMapFragment extends BaseFragment implements GoogleApiClient
 
                                     @Override
                                     public void onPositiveClick() {
-                                        mAppointmentCardView.setVisibility(View.VISIBLE);
-                                        mCustomerNameTxt.setText(userDetails.getUserName());
-                                        mapDirection(Double.valueOf(userDetails.getLatitude()), Double.valueOf(userDetails.getLongitude()));
 
+                                        if (getActivity() != null) {
+                                            getActivity().runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+
+                                                    mAppointmentCardView.setVisibility(View.VISIBLE);
+                                                    mAcceptAppointmentTxt.setText(getString(R.string.accept_appointment));
+                                                    mCustomerNameTxt.setText(userDetails.getUserName());
+                                                    mapDirection(Double.valueOf(userDetails.getLatitude()), Double.valueOf(userDetails.getLongitude()));
+                                                }
+                                            });
+
+                                        }
                                     }
                                 });
                             }
                         });
 
-                    } else if (appointmentDetails.getStatus().equalsIgnoreCase("2")) {
+                    } else if (getActivity() != null && mOldPendingStatusInt != 2 && appointmentDetails.getStatus().equalsIgnoreCase("2")) {
+                        mOldPendingStatusInt = 2;
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                if (!mIsPendingAppointmentBool) {
-                                    mIsPendingAppointmentBool = true;
-                                    mAppointmentCardView.setVisibility(View.VISIBLE);
-                                    mCustomerNameTxt.setText(userDetails.getUserName());
-                                    mAcceptAppointmentTxt.setText(getString(R.string.work_done));
-                                }
+                                mIsPendingAppointmentBool = true;
+                                mAppointmentCardView.setVisibility(View.VISIBLE);
+                                mCustomerNameTxt.setText(userDetails.getUserName());
+                                mAcceptAppointmentTxt.setText(getString(R.string.work_done));
+
                                 mapDirection(Double.valueOf(userDetails.getLatitude()), Double.valueOf(userDetails.getLongitude()));
                             }
                         });
@@ -681,6 +684,7 @@ public class ProviderMapFragment extends BaseFragment implements GoogleApiClient
                                 @Override
                                 public void run() {
                                     alertDismiss(mNotificationDialog);
+                                    mOldPendingStatusInt = -1;
                                     mAppointmentCardView.setVisibility(View.GONE);
                                     mIsPendingAppointmentBool = false;
                                     mIsFirstAPIBool = true;
@@ -697,23 +701,36 @@ public class ProviderMapFragment extends BaseFragment implements GoogleApiClient
 
                             alertDismiss(mNotificationDialog);
                             mIsPendingAppointmentBool = false;
+                            mOldPendingStatusInt = -1;
                             mAcceptAppointmentTxt.setText(getString(R.string.accept_appointment));
                             mAppointmentCardView.setVisibility(View.GONE);
                             mIsFirstAPIBool = true;
+                            if (mGoogleMap != null) {
+                                mGoogleMap.clear();
+                                setCurrentLocMarker();
+                            }
+
                             screenAPICall();
                         }
                     });
                 }
             }
         }
-        if (resObj instanceof UserCancelResponse) {
-            if (mIsPendingAppointmentBool) {
-                mAppointmentCardView.setVisibility(View.GONE);
-                mIsFirstAPIBool = true;
-                alertDismiss(mNotificationDialog);
-                screenAPICall();
-                mIsPendingAppointmentBool = false;
-            }
+        if (resObj instanceof UserCancelResponse && getActivity() != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (mAppointmentCardView.getVisibility() == View.VISIBLE) {
+                        mAppointmentCardView.setVisibility(View.GONE);
+                        alertDismiss(mNotificationDialog);
+                        mOldPendingStatusInt = -1;
+                        mIsPendingAppointmentBool = false;
+                        mIsFirstAPIBool = true;
+                        screenAPICall();
+                    }
+                }
+            });
+
         }
     }
 
@@ -813,7 +830,6 @@ public class ProviderMapFragment extends BaseFragment implements GoogleApiClient
 
             intent.setData(Uri.parse("tel:" + mUserPhoneNumStr));
             if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
                 //    ActivityCompat#requestPermissions
                 // here to request the missing permissions, and then overriding
                 //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
@@ -861,12 +877,6 @@ public class ProviderMapFragment extends BaseFragment implements GoogleApiClient
 
     }
 
-    @Override
-    public void onDestroy() {
-        stopLocationUpdates();
-        cancelCheckPendingAppointmentAPICallTimer();
-        super.onDestroy();
-    }
 
     // Fetches data from url passed
     private class DownloadTask extends AsyncTask<String, Void, String> {
@@ -939,7 +949,7 @@ public class ProviderMapFragment extends BaseFragment implements GoogleApiClient
 
             // Traversing through all the routes
             for (int i = 0; i < result.size(); i++) {
-                points = new ArrayList<LatLng>();
+                points = new ArrayList<>();
                 lineOptions = new PolylineOptions();
 
                 // Fetching i-th route
@@ -991,6 +1001,18 @@ public class ProviderMapFragment extends BaseFragment implements GoogleApiClient
         }
     }
 
+    @Override
+    public void onDestroyView() {
+        mOldPendingStatusInt = -1;
+        super.onDestroyView();
 
+    }
+
+    @Override
+    public void onDestroy() {
+        stopLocationUpdates();
+        cancelCheckPendingAppointmentAPICallTimer();
+        super.onDestroy();
+    }
 }
 

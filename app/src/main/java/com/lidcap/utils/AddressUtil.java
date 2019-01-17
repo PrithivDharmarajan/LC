@@ -30,48 +30,4 @@ public class AddressUtil {
     }
 
 
-    public static ArrayList<String> getAddressFromLatLng(Context context, Double latitude, Double longitude) throws IOException {
-
-        ArrayList<String> addressFromLatLonList = new ArrayList<>();
-        String addressStr = "", cityStr = "", stateStr = "", countryStr = "", addressLineStr = "";
-
-        try {
-            Geocoder geocoder = new Geocoder(context, Locale.getDefault());
-            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
-
-            if (addresses != null && addresses.size() > 0 && addresses.get(0).getAddressLine(0) != null) {
-                addressStr = addresses.get(0).getAddressLine(0);
-
-                if (!addressStr.isEmpty() && addresses.get(0).getAdminArea() != null
-                        && addresses.get(0).getCountryName() != null && addresses.get(0).getLocality() != null
-                        && !addresses.get(0).getLocality().isEmpty() && !addresses.get(0).getAdminArea().isEmpty() &&
-                        !addresses.get(0).getCountryName().isEmpty()) {
-
-                    addressLineStr = addresses.get(0).getSubLocality();
-                    cityStr = addresses.get(0).getLocality();
-                    stateStr = addresses.get(0).getAdminArea();
-                    countryStr = addresses.get(0).getCountryName();
-                    addressStr = cityStr + ", " + stateStr + ", " + countryStr;
-
-                    addressFromLatLonList.add(addressStr);
-                    addressFromLatLonList.add(cityStr);
-                    addressFromLatLonList.add(countryStr);
-                    addressFromLatLonList.add(stateStr);
-
-
-                }
-                if (addressFromLatLonList.size() == 0 && !addressStr.isEmpty()) {
-                    addressFromLatLonList.add(addressStr);
-                }
-
-                return addressFromLatLonList;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            return addressFromLatLonList;
-        } finally {
-            return addressFromLatLonList;
-        }
-
-    }
-}
+  }
