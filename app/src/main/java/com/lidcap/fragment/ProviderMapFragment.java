@@ -620,16 +620,16 @@ public class ProviderMapFragment extends BaseFragment implements GoogleApiClient
 
                     sysOut("Status : " + pendingDetailsRes.getResult().getAppointments().get(0).getStatus());
                     final UserDetailsEntity userDetails = pendingDetailsRes.getResult().getAnotheruser().get(0);
-                    final AppointmentDetailsEntity appointmentDetails = pendingDetailsRes.getResult().getAppointments().get(0);
-                    mAppointmentDetails = appointmentDetails;
+                    mAppointmentDetails = pendingDetailsRes.getResult().getAppointments().get(0);
+
                     mUserPhoneNumStr = userDetails.getPhoneNumber();
-                    if (mOldPendingStatusInt != 1 && (appointmentDetails.getStatus().equalsIgnoreCase("1"))) {
+                    if (mOldPendingStatusInt != 1 && (mAppointmentDetails.getStatus().equalsIgnoreCase("1"))) {
                         mOldPendingStatusInt = 1;
                         mIsPendingAppointmentBool = true;
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                mNotificationDialog = DialogManager.getInstance().showNotificationPopup(getActivity(), new InterfaceTwoBtnCallback() {
+                                mNotificationDialog = DialogManager.getInstance().showProviderNotificationPopup(getActivity(), new InterfaceTwoBtnCallback() {
                                     @Override
                                     public void onNegativeClick() {
                                         UserCancelEntity userCancelEntity = new UserCancelEntity();
@@ -653,7 +653,9 @@ public class ProviderMapFragment extends BaseFragment implements GoogleApiClient
                                                     mAppointmentCardView.setVisibility(View.VISIBLE);
                                                     mAcceptAppointmentTxt.setText(getString(R.string.accept_appointment));
                                                     mCustomerNameTxt.setText(userDetails.getUserName());
-                                                    mapDirection(Double.valueOf(userDetails.getLatitude()), Double.valueOf(userDetails.getLongitude()));
+                                                    if (!userDetails.getLatitude().isEmpty() && !userDetails.getLongitude().isEmpty()) {
+                                                        mapDirection(Double.valueOf(userDetails.getLatitude()), Double.valueOf(userDetails.getLongitude()));
+                                                    }
                                                 }
                                             });
 
@@ -663,7 +665,7 @@ public class ProviderMapFragment extends BaseFragment implements GoogleApiClient
                             }
                         });
 
-                    } else if (getActivity() != null && mOldPendingStatusInt != 2 && appointmentDetails.getStatus().equalsIgnoreCase("2")) {
+                    } else if (getActivity() != null && mOldPendingStatusInt != 2 && mAppointmentDetails.getStatus().equalsIgnoreCase("2")) {
                         mOldPendingStatusInt = 2;
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
@@ -677,8 +679,8 @@ public class ProviderMapFragment extends BaseFragment implements GoogleApiClient
                             }
                         });
 
-                    } else if (mIsPendingAppointmentBool && (appointmentDetails.getStatus().equalsIgnoreCase("0") || appointmentDetails.getStatus().equalsIgnoreCase("3")
-                            || appointmentDetails.getStatus().equalsIgnoreCase("4") || appointmentDetails.getStatus().equalsIgnoreCase("5"))) {
+                    } else if (mIsPendingAppointmentBool && (mAppointmentDetails.getStatus().equalsIgnoreCase("0") || mAppointmentDetails.getStatus().equalsIgnoreCase("3")
+                            || mAppointmentDetails.getStatus().equalsIgnoreCase("4") || mAppointmentDetails.getStatus().equalsIgnoreCase("5"))) {
                         if (getActivity() != null)
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override

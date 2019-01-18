@@ -9,6 +9,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -41,7 +42,7 @@ public class DialogManager {
     /*Init dialog instance*/
     private static final DialogManager sDialogInstance = new DialogManager();
     /*Init variable*/
-    private Dialog mProgressDialog, mNetworkErrorDialog, mAlertDialog, mOptionDialog, mIssueListDialog, mReasonForCancelDialog, mCommentsDialog, mSearchDialog, mNotificationDialog, mRequestDialog, mRequestCompletedDialog, mPictureAlertDialog, mAdvPictureAlertDialog, mOriginalImgDialog;
+    private Dialog mProgressDialog, mNetworkErrorDialog, mAlertDialog, mOptionDialog, mIssueListDialog, mReasonForCancelDialog, mCommentsDialog, mSearchDialog, mProviderNotificationDialog, mCustomerNotificationDialog, mRequestDialog, mRequestCompletedDialog, mPictureAlertDialog, mAdvPictureAlertDialog, mOriginalImgDialog;
     private Toast mToast;
 
     public static DialogManager getInstance() {
@@ -538,13 +539,13 @@ public class DialogManager {
         return mSearchDialog;
     }
 
-    public Dialog showNotificationPopup(final Context context,
-                                        final InterfaceTwoBtnCallback dialogAlertInterface) {
-        alertDismiss(mNotificationDialog);
-        mNotificationDialog = getDialog(context, R.layout.popup_notification_received);
+    public Dialog showProviderNotificationPopup(final Context context,
+                                                final InterfaceTwoBtnCallback dialogAlertInterface) {
+        alertDismiss(mProviderNotificationDialog);
+        mProviderNotificationDialog = getDialog(context, R.layout.popup_notification_received);
 
         WindowManager.LayoutParams LayoutParams = new WindowManager.LayoutParams();
-        Window window = mNotificationDialog.getWindow();
+        Window window = mProviderNotificationDialog.getWindow();
 
         if (window != null) {
             LayoutParams.copyFrom(window.getAttributes());
@@ -557,14 +558,14 @@ public class DialogManager {
         Button positiveBtn, negativeBtn;
 
         /*Init view*/
-        positiveBtn = mNotificationDialog.findViewById(R.id.alert_positive_btn);
-        negativeBtn = mNotificationDialog.findViewById(R.id.alert_negative_btn);
+        positiveBtn = mProviderNotificationDialog.findViewById(R.id.alert_positive_btn);
+        negativeBtn = mProviderNotificationDialog.findViewById(R.id.alert_negative_btn);
 
 
         positiveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mNotificationDialog.dismiss();
+                mProviderNotificationDialog.dismiss();
                 dialogAlertInterface.onPositiveClick();
             }
         });
@@ -579,7 +580,7 @@ public class DialogManager {
 
                     @Override
                     public void onPositiveClick() {
-                        mNotificationDialog.dismiss();
+                        mProviderNotificationDialog.dismiss();
                         dialogAlertInterface.onNegativeClick();
 
                     }
@@ -587,9 +588,69 @@ public class DialogManager {
             }
         });
 
-        alertShowing(mNotificationDialog);
+        alertShowing(mProviderNotificationDialog);
 
-        return mNotificationDialog;
+        return mProviderNotificationDialog;
+    }
+
+    public Dialog showCustomerNotificationPopup(final Context context,String msgStr,
+                                                final InterfaceTwoBtnCallback dialogAlertInterface) {
+        alertDismiss(mCustomerNotificationDialog);
+        mCustomerNotificationDialog = getDialog(context, R.layout.popup_notification_received);
+
+        WindowManager.LayoutParams LayoutParams = new WindowManager.LayoutParams();
+        Window window = mCustomerNotificationDialog.getWindow();
+
+        if (window != null) {
+            LayoutParams.copyFrom(window.getAttributes());
+            LayoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+            LayoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            window.setAttributes(LayoutParams);
+            window.setGravity(Gravity.CENTER);
+        }
+
+        Button positiveBtn, negativeBtn;
+        TextView msgTxt;
+
+        /*Init view*/
+        msgTxt = mCustomerNotificationDialog.findViewById(R.id.alert_msg_txt);
+
+        positiveBtn = mCustomerNotificationDialog.findViewById(R.id.alert_positive_btn);
+        negativeBtn = mCustomerNotificationDialog.findViewById(R.id.alert_negative_btn);
+
+        msgTxt.setText(String.format(context.getString(R.string.approximate_arrival_time),msgStr));
+        positiveBtn.setBackgroundColor(ContextCompat.getColor(context,R.color.orange));
+
+
+        positiveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCustomerNotificationDialog.dismiss();
+                dialogAlertInterface.onPositiveClick();
+            }
+        });
+        negativeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogManager.getInstance().showOptionPopup(context, context.getString(R.string.cancel_appointment), context.getString(R.string.yes), context.getString(R.string.no), new InterfaceTwoBtnCallback() {
+                    @Override
+                    public void onNegativeClick() {
+
+                    }
+
+                    @Override
+                    public void onPositiveClick() {
+                        mCustomerNotificationDialog.dismiss();
+                        dialogAlertInterface.onNegativeClick();
+
+                    }
+                });
+            }
+        });
+
+        alertShowing(mCustomerNotificationDialog);
+
+        return mCustomerNotificationDialog;
     }
 
     public Dialog showPictureUploadPopup(Context context, final InterfaceTwoBtnCallback interfaceTwoBtnCallback) {

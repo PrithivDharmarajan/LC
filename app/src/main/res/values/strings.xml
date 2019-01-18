@@ -112,6 +112,7 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="arrival_time">Arrival Time : %1$s </string>
+    <string name="approximate_arrival_time">Approximate Arrival Time : %1$s </string>
     <string name="reach_time">Reach Time : %1$s </string>
     <string name="no_internet"> Please Verify Your Internet Connection.</string>
     <string name="connect_time_out">Could not connect to LidCap App Server. Please try again.</string>
