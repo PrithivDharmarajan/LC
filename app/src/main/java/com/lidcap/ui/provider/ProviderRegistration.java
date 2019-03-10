@@ -15,6 +15,7 @@ import com.lidcap.main.BaseActivity;
 import com.lidcap.model.input.RegInputEntity;
 import com.lidcap.model.output.LoginResponse;
 import com.lidcap.services.APIRequestHandler;
+import com.lidcap.ui.common.Login;
 import com.lidcap.utils.AppConstants;
 import com.lidcap.utils.DateUtil;
 import com.lidcap.utils.DialogManager;
@@ -143,12 +144,13 @@ public class ProviderRegistration extends BaseActivity {
         if (resObj instanceof LoginResponse) {
             LoginResponse registrationResponse = (LoginResponse) resObj;
             if(registrationResponse.getStatusCode().equals(AppConstants.SUCCESS_CODE)){
-                if (registrationResponse.getResult().size() > 0) {
-                    PreferenceUtil.storeBoolPreferenceValue(this, AppConstants.LOGIN_STATUS, true);
-                    PreferenceUtil.storeUserDetails(this, registrationResponse.getResult().get(0));
-                    DialogManager.getInstance().showToast(this, getString(R.string.registered_success));
-                    nextScreen(ProviderHome.class);
-                }
+                DialogManager.getInstance().showAlertPopup(this,  getString(R.string.your_acc_activated), new InterfaceBtnCallback() {
+                    @Override
+                    public void onPositiveClick() {
+                        AppConstants.IS_FROM_PUSH = false;
+                        previousScreen(Login.class);
+                    }
+                });
             }else{
                 DialogManager.getInstance().showAlertPopup(this, registrationResponse.getMessage(),this);
             }

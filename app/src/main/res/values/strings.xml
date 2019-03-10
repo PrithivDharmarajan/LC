@@ -120,6 +120,7 @@
     <string name="ok" tools:ignore="ButtonCase,Typos">Ok</string>
     <string name="logged_in_success">Logged In Successfully</string>
     <string name="registered_success">Registered Successfully</string>
+    <string name="your_acc_activated">Your account will be shortly activated.</string>
     <string name="logout_msg">Are you sure you want to Logout?</string>
     <string name="exit_msg">Press again to exit</string>
     <string name="err_create_frag">Error in creating fragment</string>
