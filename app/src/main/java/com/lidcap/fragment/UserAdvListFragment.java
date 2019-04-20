@@ -90,7 +90,7 @@ public class UserAdvListFragment extends BaseFragment {
                 @Override
                 public void run() {
                     mAdvListRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
-                    mAdvListRecyclerView.setAdapter(new AdvListAdapter(AdvDetailsRes,getActivity()));
+                    mAdvListRecyclerView.setAdapter(new AdvListAdapter(AdvDetailsRes,UserAdvListFragment.this,getActivity()));
                 }
             });
         }

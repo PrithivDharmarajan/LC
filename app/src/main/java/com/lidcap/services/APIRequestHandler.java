@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import com.lidcap.main.BaseActivity;
 import com.lidcap.main.BaseFragment;
 import com.lidcap.model.input.AddAdvInputEntity;
+import com.lidcap.model.input.AdvDeleteInputEntity;
 import com.lidcap.model.input.AdvInputEntity;
 import com.lidcap.model.input.AppointmentAcceptEntity;
 import com.lidcap.model.input.BookAppointmentInputEntity;
@@ -18,6 +19,7 @@ import com.lidcap.model.input.UserCancelEntity;
 import com.lidcap.model.input.UserRatingInputEntity;
 import com.lidcap.model.output.AdvResponse;
 import com.lidcap.model.output.AppointmentAcceptResponse;
+import com.lidcap.model.output.CommonModelResponse;
 import com.lidcap.model.output.CommonResponse;
 import com.lidcap.model.output.IssuesListResponse;
 import com.lidcap.model.output.LoginResponse;
@@ -66,11 +68,8 @@ public class APIRequestHandler {
     }
 
 
-
-
-
     /*Login API*/
-    public void loginAPICall(LoginInputEntity  loginInputEntity, final BaseActivity baseActivity) {
+    public void loginAPICall(LoginInputEntity loginInputEntity, final BaseActivity baseActivity) {
         DialogManager.getInstance().showProgress(baseActivity);
         mServiceInterface.loginAPI(loginInputEntity).enqueue(new Callback<LoginResponse>() {
             @Override
@@ -138,7 +137,7 @@ public class APIRequestHandler {
     }
 
     /*Issues API*/
-    public void issueListAPICall(IssuesInputEntity issuesInputEntity,final BaseFragment baseFragment) {
+    public void issueListAPICall(IssuesInputEntity issuesInputEntity, final BaseFragment baseFragment) {
         DialogManager.getInstance().showProgress(baseFragment.getActivity());
         mServiceInterface.issueListAPI(issuesInputEntity)
                 .enqueue(new Callback<IssuesListResponse>() {
@@ -162,7 +161,7 @@ public class APIRequestHandler {
 
 
     /*Notification List API*/
-    public void notificationListAPICall(IssuesInputEntity issuesInputEntity,final BaseFragment baseFragment) {
+    public void notificationListAPICall(IssuesInputEntity issuesInputEntity, final BaseFragment baseFragment) {
         DialogManager.getInstance().showProgress(baseFragment.getActivity());
         mServiceInterface.notificationListAPI(issuesInputEntity)
                 .enqueue(new Callback<NotificationListResponse>() {
@@ -190,7 +189,7 @@ public class APIRequestHandler {
                 .enqueue(new Callback<LocationUpdateInputEntity>() {
                     @Override
                     public void onResponse(@NonNull Call<LocationUpdateInputEntity> call, @NonNull Response<LocationUpdateInputEntity> response) {
-                         if (response.isSuccessful() && response.body() != null) {
+                        if (response.isSuccessful() && response.body() != null) {
                             baseFragment.onRequestSuccess(response.body());
                         }
                     }
@@ -243,7 +242,7 @@ public class APIRequestHandler {
     /*Book appointment API*/
     public void bookAppointmentAPICall(BookAppointmentInputEntity bookAppointmentInputEntity, final BaseFragment baseFragment) {
 
-        mServiceInterface.bookAppointmentAPI(  bookAppointmentInputEntity)
+        mServiceInterface.bookAppointmentAPI(bookAppointmentInputEntity)
                 .enqueue(new Callback<BookAppointmentInputEntity>() {
                     @Override
                     public void onResponse(@NonNull Call<BookAppointmentInputEntity> call, @NonNull Response<BookAppointmentInputEntity> response) {
@@ -324,7 +323,7 @@ public class APIRequestHandler {
 
 
     /*User Cancel API*/
-    public void userCancelAppointmentAPICall(UserCancelEntity userCancelEntity,final BaseFragment baseFragment) {
+    public void userCancelAppointmentAPICall(UserCancelEntity userCancelEntity, final BaseFragment baseFragment) {
         DialogManager.getInstance().showProgress(baseFragment.getActivity());
         mServiceInterface.userCancelAppointmentAPI(userCancelEntity)
                 .enqueue(new Callback<UserCancelResponse>() {
@@ -347,7 +346,7 @@ public class APIRequestHandler {
     }
 
     /*Provider Cancel API*/
-    public void providerCancelAppointmentAPICall(UserCancelEntity userCancelEntity,final BaseFragment baseFragment) {
+    public void providerCancelAppointmentAPICall(UserCancelEntity userCancelEntity, final BaseFragment baseFragment) {
         DialogManager.getInstance().showProgress(baseFragment.getActivity());
         mServiceInterface.providerCancelAppointmentAPI(userCancelEntity)
                 .enqueue(new Callback<UserCancelResponse>() {
@@ -368,6 +367,7 @@ public class APIRequestHandler {
                     }
                 });
     }
+
     /*Issues API*/
     public void userRateAppointmentAPICall(UserRatingInputEntity userRatingInputEntity, final BaseFragment baseFragment) {
         DialogManager.getInstance().showProgress(baseFragment.getActivity());
@@ -424,20 +424,20 @@ public class APIRequestHandler {
 
         MultipartBody.Part imageFile = MultipartBody.Part.createFormData("image", file.getName(), imageBody);
 
-        mServiceInterface.advImageUploadAPI ( imageFile).enqueue(new Callback<UploadedResponse>() {
+        mServiceInterface.advImageUploadAPI(imageFile).enqueue(new Callback<UploadedResponse>() {
             @Override
             public void onResponse(@NonNull Call<UploadedResponse> call, @NonNull Response<UploadedResponse> response) {
-                 if (response.isSuccessful() && response.body() != null) {
-                     UploadedResponse advResponse =  response.body();
-                     if(advResponse.getStatusCode().equalsIgnoreCase(AppConstants.SUCCESS_CODE)){
-                         addAdvInputEntity.setUrl(advResponse.getResult().getUrl());
-                         addAdAPICall(addAdvInputEntity,baseFragment);
-                     }else{
-                         DialogManager.getInstance().hideProgress();
-                     }
+                if (response.isSuccessful() && response.body() != null) {
+                    UploadedResponse advResponse = response.body();
+                    if (advResponse.getStatusCode().equalsIgnoreCase(AppConstants.SUCCESS_CODE)) {
+                        addAdvInputEntity.setUrl(advResponse.getResult().getUrl());
+                        addAdAPICall(addAdvInputEntity, baseFragment);
+                    } else {
+                        DialogManager.getInstance().hideProgress();
+                    }
                 } else {
-                     DialogManager.getInstance().hideProgress();
-                     baseFragment.onRequestFailure(new UploadedResponse(),new Throwable(response.raw().message()));
+                    DialogManager.getInstance().hideProgress();
+                    baseFragment.onRequestFailure(new UploadedResponse(), new Throwable(response.raw().message()));
                 }
             }
 
@@ -453,6 +453,28 @@ public class APIRequestHandler {
     /*Issues API*/
     private void addAdAPICall(AddAdvInputEntity addAdvInputEntity, final BaseFragment baseFragment) {
         mServiceInterface.addAdvAPI(addAdvInputEntity)
+                .enqueue(new Callback<CommonResponse>() {
+                    @Override
+                    public void onResponse(@NonNull Call<CommonResponse> call, @NonNull Response<CommonResponse> response) {
+                        DialogManager.getInstance().hideProgress();
+                        if (response.isSuccessful() && response.body() != null) {
+                            baseFragment.onRequestSuccess(response.body());
+                        } else {
+                            baseFragment.onRequestFailure(new CommonResponse(), new Throwable(response.raw().message()));
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<CommonResponse> call, @NonNull Throwable t) {
+                        DialogManager.getInstance().hideProgress();
+                        baseFragment.onRequestFailure(new CommonResponse(), t);
+                    }
+                });
+    }
+
+    /*Adv Delete API*/
+    public void advDeleteAPICall(AdvDeleteInputEntity addAdvInputEntity, final BaseFragment baseFragment) {
+        mServiceInterface.advDeleteAPI(addAdvInputEntity)
                 .enqueue(new Callback<CommonResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<CommonResponse> call, @NonNull Response<CommonResponse> response) {

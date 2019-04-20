@@ -33,6 +33,7 @@ import com.bumptech.glide.Glide;
 import com.lidcap.R;
 import com.lidcap.adapter.SelectIssueListAdapter;
 import com.lidcap.model.output.IssueListEntity;
+import com.lidcap.ui.common.Login;
 
 import java.util.ArrayList;
 
@@ -593,7 +594,7 @@ public class DialogManager {
         return mProviderNotificationDialog;
     }
 
-    public Dialog showCustomerNotificationPopup(final Context context,String msgStr,
+    public Dialog showCustomerNotificationPopup(final Context context, String msgStr,
                                                 final InterfaceTwoBtnCallback dialogAlertInterface) {
         alertDismiss(mCustomerNotificationDialog);
         mCustomerNotificationDialog = getDialog(context, R.layout.popup_notification_received);
@@ -618,8 +619,8 @@ public class DialogManager {
         positiveBtn = mCustomerNotificationDialog.findViewById(R.id.alert_positive_btn);
         negativeBtn = mCustomerNotificationDialog.findViewById(R.id.alert_negative_btn);
 
-        msgTxt.setText(String.format(context.getString(R.string.approximate_arrival_time),msgStr));
-        positiveBtn.setBackgroundColor(ContextCompat.getColor(context,R.color.orange));
+        msgTxt.setText(String.format(context.getString(R.string.approximate_arrival_time), msgStr));
+        positiveBtn.setBackgroundColor(ContextCompat.getColor(context, R.color.orange));
 
 
         positiveBtn.setOnClickListener(new View.OnClickListener() {
@@ -753,7 +754,7 @@ public class DialogManager {
         alertShowing(mAdvPictureAlertDialog);
     }
 
-    public Dialog showOriginalImgPopup(final Context context, final String imgUrl) {
+    public Dialog showOriginalImgPopup(final Context context, final String imgUrl, final InterfaceTwoBtnCallback dialogAlertInterface) {
 
         alertDismiss(mOriginalImgDialog);
         LayoutInflater inflater = (LayoutInflater) context
@@ -782,16 +783,20 @@ public class DialogManager {
 
         final RelativeLayout mainView;
         ImageView originalImg, closeImg;
+        Button positiveBtn, negativeBtn;
 
-        mainView =  mOriginalImgDialog
+        mainView = mOriginalImgDialog
                 .findViewById(R.id.main_view);
-        originalImg = (ImageView) mOriginalImgDialog
+        originalImg = mOriginalImgDialog
                 .findViewById(R.id.original_img);
-        closeImg = (ImageView) mOriginalImgDialog
+        closeImg = mOriginalImgDialog
                 .findViewById(R.id.close_img);
 
+        positiveBtn = mOriginalImgDialog.findViewById(R.id.alert_positive_btn);
+        negativeBtn = mOriginalImgDialog.findViewById(R.id.alert_negative_btn);
 //        ZoomImageView imageView = new ZoomImageView(context, mOriginalImgDialog.getWindow()
-//                .getWindowManager().getDefaultDisplay().getOrientation());
+
+        negativeBtn.setVisibility(PreferenceUtil.getBoolPreferenceValue(context, AppConstants.CURRENT_USER_IS_PROVIDER) ? View.VISIBLE : View.GONE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             mainView.post(new Runnable() {
                 @Override
@@ -820,6 +825,33 @@ public class DialogManager {
                 mOriginalImgDialog.dismiss();
             }
         });
+
+        positiveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOriginalImgDialog.dismiss();
+            }
+        });
+        negativeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                DialogManager.getInstance().showOptionPopup(context, context.getString(R.string.delete_msg), context.getString(R.string.yes), context.getString(R.string.no), new InterfaceTwoBtnCallback() {
+                    @Override
+                    public void onNegativeClick() {
+                    }
+
+                    @Override
+                    public void onPositiveClick() {
+                        mOriginalImgDialog.dismiss();
+                        dialogAlertInterface.onNegativeClick();
+
+                    }
+                });
+
+            }
+        });
+
 
         alertShowing(mOriginalImgDialog);
         return mOriginalImgDialog;
@@ -926,6 +958,7 @@ public class DialogManager {
         }
 
     }
+
     private int getStatusBarHeight(Context context) {
         int result = 0;
         int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");

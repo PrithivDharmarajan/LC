@@ -131,7 +131,7 @@ public class AdvListFragment extends BaseFragment {
                 @Override
                 public void run() {
                     mAdvListRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
-                    mAdvListRecyclerView.setAdapter(new AdvListAdapter(advDetailList, getActivity()));
+                    mAdvListRecyclerView.setAdapter(new AdvListAdapter(advDetailList, AdvListFragment.this, getActivity()));
                 }
             });
         }

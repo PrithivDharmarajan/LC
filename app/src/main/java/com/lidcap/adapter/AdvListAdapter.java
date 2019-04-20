@@ -13,9 +13,14 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.lidcap.R;
+import com.lidcap.main.BaseFragment;
+import com.lidcap.model.input.AdvDeleteInputEntity;
 import com.lidcap.model.output.AdvDetailsEntity;
+import com.lidcap.services.APIRequestHandler;
 import com.lidcap.utils.AppConstants;
 import com.lidcap.utils.DialogManager;
+import com.lidcap.utils.InterfaceTwoBtnCallback;
+import com.lidcap.utils.PreferenceUtil;
 
 import java.util.ArrayList;
 
@@ -27,9 +32,11 @@ public class AdvListAdapter extends RecyclerView.Adapter<AdvListAdapter.Holder> 
 
     private ArrayList<AdvDetailsEntity> mAdvDetailsArrList;
     private Context mContext;
+    private BaseFragment mBaseFragment;
 
-    public AdvListAdapter(ArrayList<AdvDetailsEntity> advDetailsArrList, Context context) {
+    public AdvListAdapter(ArrayList<AdvDetailsEntity> advDetailsArrList, BaseFragment baseFragment, Context context) {
         mAdvDetailsArrList = advDetailsArrList;
+        mBaseFragment = baseFragment;
         mContext = context;
     }
 
@@ -61,7 +68,21 @@ public class AdvListAdapter extends RecyclerView.Adapter<AdvListAdapter.Holder> 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogManager.getInstance().showOriginalImgPopup(mContext,mAdvDetailsArrList.get(holder.getAdapterPosition()).getUrl());
+                DialogManager.getInstance().showOriginalImgPopup(mContext, mAdvDetailsArrList.get(holder.getAdapterPosition()).getUrl(), new InterfaceTwoBtnCallback() {
+                    @Override
+                    public void onNegativeClick() {
+                        AdvDeleteInputEntity advDeleteInputEntity = new AdvDeleteInputEntity();
+                        advDeleteInputEntity.setUserId(PreferenceUtil.getUserId(mContext));
+                        advDeleteInputEntity.setAdvId(mAdvDetailsArrList.get(holder.getAdapterPosition()).getAdvId());
+
+                        APIRequestHandler.getInstance().advDeleteAPICall(advDeleteInputEntity, mBaseFragment);
+                    }
+
+                    @Override
+                    public void onPositiveClick() {
+
+                    }
+                });
             }
         });
     }

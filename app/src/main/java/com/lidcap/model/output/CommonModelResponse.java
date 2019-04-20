@@ -2,7 +2,7 @@ package com.lidcap.model.output;
 
 import java.io.Serializable;
 
-class CommonModelResponse implements Serializable {
+public class CommonModelResponse implements Serializable {
 
     private String status="";
     private String statusCode="";

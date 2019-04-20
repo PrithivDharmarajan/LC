@@ -1,6 +1,7 @@
 package com.lidcap.services;
 
 import com.lidcap.model.input.AddAdvInputEntity;
+import com.lidcap.model.input.AdvDeleteInputEntity;
 import com.lidcap.model.input.AdvInputEntity;
 import com.lidcap.model.input.AppointmentAcceptEntity;
 import com.lidcap.model.input.BookAppointmentInputEntity;
@@ -13,6 +14,7 @@ import com.lidcap.model.input.UserCancelEntity;
 import com.lidcap.model.input.UserRatingInputEntity;
 import com.lidcap.model.output.AdvResponse;
 import com.lidcap.model.output.AppointmentAcceptResponse;
+import com.lidcap.model.output.CommonModelResponse;
 import com.lidcap.model.output.CommonResponse;
 import com.lidcap.model.output.IssuesListResponse;
 import com.lidcap.model.output.LoginResponse;
@@ -107,6 +109,10 @@ public interface APICommonInterface {
     /*get Adv Details*/
     @POST("user/addadv.php")
     Call<CommonResponse> addAdvAPI(@Body AddAdvInputEntity addAdvInputEntity);
+
+    /*get Adv Details*/
+    @POST("user/deleteadv.php")
+    Call<CommonResponse> advDeleteAPI(@Body AdvDeleteInputEntity addAdvInputEntity);
 
 
 }

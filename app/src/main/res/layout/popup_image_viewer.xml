@@ -1,46 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_view"
     style="@style/LayoutMatch"
     android:background="@android:color/transparent">
 
-
-    <ProgressBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_gravity="center"
-        android:indeterminate="true"
-        android:indeterminateTint="@color/orange"
-        tools:targetApi="lollipop" />
-
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true">
+        android:id="@+id/main_view"
+        android:layout_above="@+id/bottom_lay"
+        style="@style/LayoutMatch">
 
-        <com.lidcap.utils.ZoomImageView
-            android:id="@+id/original_img"
+        <ProgressBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/orange"
+            tools:targetApi="lollipop" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
+
+            <com.lidcap.utils.ZoomImageView
+                android:id="@+id/original_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/app_name"
+                android:focusableInTouchMode="true" />
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/close_img"
+            android:layout_width="@dimen/size40"
+            android:layout_height="@dimen/size40"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="@dimen/size5"
+            android:layout_marginTop="@dimen/size5"
             android:adjustViewBounds="true"
             android:contentDescription="@string/app_name"
-            android:focusableInTouchMode="true" />
+            android:padding="@dimen/size5"
+            android:src="@drawable/close_img"
+            android:tint="@color/orange" />
     </RelativeLayout>
 
-    <ImageView
-        android:id="@+id/close_img"
-        android:layout_width="@dimen/size40"
-        android:layout_height="@dimen/size40"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="@dimen/size5"
-        android:layout_marginTop="@dimen/size5"
+    <LinearLayout
+        android:id="@+id/bottom_lay"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size37"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/size15"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/size25"
+        android:paddingEnd="@dimen/size25"
+        android:weightSum="2">
 
-        android:adjustViewBounds="true"
-        android:contentDescription="@string/app_name"
-        android:padding="@dimen/size5"
-        android:src="@drawable/close_img"
-        android:tint="@color/orange" />
+        <Button
+            android:id="@+id/alert_negative_btn"
+            style="@style/ButtonOpenSansSemiBold"
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="@dimen/size10"
+            android:layout_weight="1"
+            android:textAllCaps="false"
+            android:text="@string/delete"
+            android:textSize="@dimen/text13"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/alert_positive_btn"
+            style="@style/ButtonOpenSansSemiBold"
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/size10"
+            android:layout_weight="1"
+            android:text="@string/close"
+            android:textAllCaps="false"
+            android:textSize="@dimen/text13" />
+
+    </LinearLayout>
 </RelativeLayout>
 
